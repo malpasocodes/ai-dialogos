@@ -11,3 +11,4 @@
 - Refactored homepage, Educator Hub, Resources, Podcast, Events, Modules, and Lessons pages to render data from the new collections (including dynamic module/lesson detail routes).
 - Installed project dependencies and ran an Astro build (telemetry disabled) to validate the new content pipeline and Pagefind postbuild hook.
 - Added dedicated detail pages for resources, events, and podcast episodes, wired module associations, and replaced the `/search` page with a Pagefind overlay featuring type/module filters (verified filters populate after build).
+- Relocated the Astro project from `astro-phase1-start/` into the repository root, updated ignores, validated root-level builds, and retagged the repo structure for Phase 2 readiness.
