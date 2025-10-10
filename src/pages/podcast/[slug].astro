@@ -22,23 +22,25 @@ const module = episode.data.module ? modules.find((entry) => entry.id === episod
     {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
     <meta name="pagefind:meta:duration" content={episode.data.duration ?? ''} />
   </Fragment>
-  <article class="space-y-4" data-pagefind-filter="type:podcast">
+  <article class="space-y-5" data-pagefind-filter="type:podcast">
     {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
     {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
     {episode.data.duration && <span hidden data-pagefind-meta={`duration:${episode.data.duration}`}></span>}
-    <p class="text-xs uppercase tracking-wide text-neutral-500">Podcast Episode</p>
-    <h1 class="text-3xl font-semibold">Ep {episode.data.episodeNumber} — {episode.data.title}</h1>
-    <div class="flex flex-wrap gap-3 text-sm text-neutral-400">
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Podcast Episode</p>
+    <h1 class="text-4xl font-semibold text-foreground">Ep {episode.data.episodeNumber} — {episode.data.title}</h1>
+    <div class="flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide text-muted">
       <span>{episode.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
       {episode.data.duration && <span>• {episode.data.duration}</span>}
       {module && <span>• Module {module.data.order}</span>}
     </div>
-    <p class="text-neutral-300 leading-relaxed">{episode.data.summary}</p>
-    <audio class="w-full" controls src={episode.data.audioUrl}>
-      <a href={episode.data.audioUrl}>Listen to {episode.data.title}</a>
-    </audio>
+    <p class="text-base leading-relaxed text-muted">{episode.data.summary}</p>
+    <div class="overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 p-3">
+      <audio class="w-full" controls src={episode.data.audioUrl}>
+        <a href={episode.data.audioUrl}>Listen to {episode.data.title}</a>
+      </audio>
+    </div>
     {episode.data.guests.length > 0 && (
-      <p class="text-xs uppercase tracking-wide text-neutral-500">Guests: {episode.data.guests.join(', ')}</p>
+      <p class="text-xs uppercase tracking-wide text-muted">Guests: {episode.data.guests.join(', ')}</p>
     )}
   </article>
 </Layout>

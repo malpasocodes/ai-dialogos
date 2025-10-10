@@ -29,22 +29,22 @@ const tags = resource.data.tags;
     {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
     <span hidden data-pagefind-meta={`resource_type:${resource.data.type}`}></span>
     {tags.length > 0 && <span hidden data-pagefind-meta={`tags:${tags.join(', ')}`}></span>}
-    <p class="text-xs uppercase tracking-wide text-neutral-500">Resource</p>
-    <h1 class="text-3xl font-semibold">{resource.data.title}</h1>
-    <p class="text-neutral-300 leading-relaxed">{resource.data.summary}</p>
-    <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-neutral-500">
-      <span class="rounded-full border border-neutral-700 px-3 py-1">{resource.data.type.replace('-', ' ')}</span>
-      {module && <span class="rounded-full border border-neutral-700 px-3 py-1">Module {module.data.order}</span>}
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Resource</p>
+    <h1 class="text-4xl font-semibold text-foreground">{resource.data.title}</h1>
+    <p class="text-base leading-relaxed text-muted">{resource.data.summary}</p>
+    <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted">
+      <span class="badge">{resource.data.type.replace('-', ' ')}</span>
+      {module && <span class="badge">Module {module.data.order}</span>}
       {tags.map((tag) => (
-        <span class="rounded-full border border-neutral-700 px-3 py-1">{tag}</span>
+        <span class="badge">{tag}</span>
       ))}
     </div>
     <div class="flex flex-wrap gap-3">
-      <a class="btn btn-primary" href={resource.data.href} rel="noopener" target="_blank">
+      <a class="btn-primary" href={resource.data.href} rel="noopener" target="_blank">
         Access resource
       </a>
       {resource.data.download && (
-        <a class="btn" href={resource.data.download} rel="noopener" target="_blank">
+        <a class="btn-secondary" href={resource.data.download} rel="noopener" target="_blank">
           Download
         </a>
       )}

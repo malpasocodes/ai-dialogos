@@ -55,19 +55,19 @@ const eventCards = events.map((entry) => ({
     <meta name="pagefind:filter:module" content={module.slug} />
     <meta name="pagefind:meta:module_title" content={module.data.title} />
   </Fragment>
-  <article class="space-y-4" data-pagefind-filter="type:module">
+  <article class="space-y-5" data-pagefind-filter="type:module">
     <span hidden data-pagefind-filter={`module:${module.slug}`}></span>
     <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>
-    <h1 class="text-3xl font-semibold">{module.data.title}</h1>
-    {module.data.subtitle && <p class="text-lg text-neutral-200">{module.data.subtitle}</p>}
+    <h1 class="text-4xl font-semibold text-foreground">{module.data.title}</h1>
+    {module.data.subtitle && <p class="text-lg leading-relaxed text-muted">{module.data.subtitle}</p>}
     {module.data.focusAreas.length > 0 && (
-      <ul class="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-wide text-neutral-400">
+      <ul class="mt-4 flex flex-wrap gap-2">
         {module.data.focusAreas.map((item) => (
-          <li class="rounded-full border border-neutral-700 px-3 py-1">{item}</li>
+          <li class="badge">{item}</li>
         ))}
       </ul>
     )}
-    <div class="mt-6 space-y-3 text-neutral-300 leading-relaxed">
+    <div class="mt-6 space-y-3 text-base leading-relaxed text-muted">
       <Content />
     </div>
   </article>

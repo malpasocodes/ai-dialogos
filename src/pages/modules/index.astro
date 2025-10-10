@@ -14,9 +14,11 @@ const items = modules
   }));
 ---
 <Layout title="Modules">
-  <section>
-    <h1 class="text-2xl font-semibold">Modules Overview</h1>
-    <p class="mt-2 text-neutral-300">Explore the curriculum supporting the book. Each module bundles lessons, resources, and program guidance.</p>
+  <section class="space-y-3">
+    <h1 class="text-3xl font-semibold text-foreground">Modules Overview</h1>
+    <p class="max-w-2xl text-base leading-relaxed text-muted">
+      Explore the curriculum supporting the book. Each module bundles lessons, resources, and program guidance.
+    </p>
   </section>
   <CardGrid title="All Modules" items={items} />
 </Layout>

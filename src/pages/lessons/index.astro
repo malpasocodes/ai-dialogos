@@ -16,23 +16,25 @@ const ordered = lessons.sort((a, b) => {
 });
 ---
 <Layout title="Lessons">
-  <section>
-    <h1 class="text-2xl font-semibold">Lesson Library</h1>
-    <p class="mt-2 text-neutral-300">Browse lesson plans by module. Each entry links to supporting resources and activities.</p>
+  <section class="space-y-3">
+    <h1 class="text-3xl font-semibold text-foreground">Lesson Library</h1>
+    <p class="max-w-2xl text-base leading-relaxed text-muted">
+      Browse lesson plans by module. Each entry links to supporting resources and activities.
+    </p>
   </section>
-  <div class="mt-6 grid md:grid-cols-2 gap-4">
+  <div class="mt-8 grid gap-5 md:grid-cols-2">
     {ordered.map((lesson) => {
       const module = moduleLookup.get(lesson.data.module);
       return (
         <article class="card flex flex-col gap-3">
           <div>
-            <h2 class="text-lg font-medium">
-              <a href={`/lessons/${lesson.slug}`} class="hover:text-white">{lesson.data.title}</a>
+            <h2 class="text-xl font-semibold text-foreground">
+              <a href={`/lessons/${lesson.slug}`} class="transition hover:text-accent">{lesson.data.title}</a>
             </h2>
-            {module && <p class="text-xs uppercase tracking-wide text-neutral-500">Module {module.data.order}</p>}
+            {module && <p class="text-xs font-medium uppercase tracking-wide text-muted">Module {module.data.order}</p>}
           </div>
-          <p class="text-sm text-neutral-300">{lesson.data.summary}</p>
-          <div class="flex items-center justify-between text-xs text-neutral-400">
+          <p class="text-sm leading-relaxed text-muted">{lesson.data.summary}</p>
+          <div class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted">
             <span>{lesson.data.duration}</span>
             {lesson.data.tags.length > 0 && <span>{lesson.data.tags.join(' · ')}</span>}
           </div>

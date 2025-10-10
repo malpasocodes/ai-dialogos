@@ -36,17 +36,17 @@ const formatDateRange = (start: Date, end?: Date) => {
     {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
     {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
     <span hidden data-pagefind-meta={`location:${event.data.location}`}></span>
-    <p class="text-xs uppercase tracking-wide text-neutral-500">Event</p>
-    <h1 class="text-3xl font-semibold">{event.data.title}</h1>
-    <div class="text-neutral-300 leading-relaxed">{event.data.summary}</div>
-    <div class="flex flex-wrap gap-3 text-sm text-neutral-300">
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Event</p>
+    <h1 class="text-4xl font-semibold text-foreground">{event.data.title}</h1>
+    <div class="text-base leading-relaxed text-muted">{event.data.summary}</div>
+    <div class="flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide text-muted">
       <span>{formatDateRange(event.data.startDate, event.data.endDate)}</span>
       <span>•</span>
       <span>{event.data.location}</span>
       {module && <span>• Module {module.data.order}</span>}
     </div>
     {event.data.registrationUrl && (
-      <a class="btn btn-primary" href={event.data.registrationUrl} target="_blank" rel="noopener">
+      <a class="btn-primary" href={event.data.registrationUrl} target="_blank" rel="noopener">
         Register
       </a>
     )}
