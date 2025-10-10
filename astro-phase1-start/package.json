@@ -1,0 +1,22 @@
+{
+  "name": "book-site-astro-phase1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "postbuild": "pagefind --site dist",
+    "lint": "echo \"(optional) add eslint/stylelint\" && exit 0"
+  },
+  "dependencies": {
+    "astro": "^4.10.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.18",
+    "pagefind": "^1.2.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.1"
+  }
+}

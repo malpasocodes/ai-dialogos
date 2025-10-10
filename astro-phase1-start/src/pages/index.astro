@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import CardGrid from '../components/CardGrid.astro';
+
+const modules = await getCollection('modules');
+const moduleCards = modules
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3)
+  .map((entry) => ({
+    title: entry.data.title,
+    description: entry.data.summary,
+    href: `/modules/${entry.slug}`,
+    meta: `Module ${entry.data.order}`,
+  }));
+
+const resources = await getCollection('resources');
+const resourceCards = resources.slice(0, 3).map((entry) => ({
+  title: entry.data.title,
+  description: entry.data.summary,
+  href: `/resources/${entry.slug}`,
+  meta: entry.data.type.replace('-', ' '),
+}));
+
+const episodes = await getCollection('podcast');
+const podcastCards = episodes
+  .sort((a, b) => b.data.episodeNumber - a.data.episodeNumber)
+  .slice(0, 3)
+  .map((entry) => ({
+    title: `Ep ${entry.data.episodeNumber} — ${entry.data.title}`,
+    description: entry.data.summary,
+    href: `/podcast#${entry.slug}`,
+    meta: entry.data.duration,
+  }));
+---
+<Layout>
+  <Hero
+    title="Artificial Intelligence: Shaping the Future of Innovation"
+    subtitle="An educator-friendly companion site with modules, lessons, and a podcast—built around the 2025 book."
+    ctas={[
+      { label: "Explore Educator Hub", href: "/educators", primary: true },
+      { label: "Buy Book", href: "/book" },
+      { label: "Subscribe on Substack", href: "/substack" },
+      { label: "Listen to Podcast", href: "/podcast" }
+    ]}
+  />
+  <CardGrid title="Featured Modules" items={moduleCards} moreHref="/educators" />
+  <CardGrid title="Educator Resources" items={resourceCards} moreHref="/resources" />
+  <CardGrid title="Podcast Highlights" items={podcastCards} moreHref="/podcast" />
+</Layout>

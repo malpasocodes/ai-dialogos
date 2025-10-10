@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const episodes = await getCollection('podcast');
+const ordered = episodes.sort((a, b) => b.data.episodeNumber - a.data.episodeNumber);
+---
+<Layout title="Podcast">
+  <h1 class="text-2xl font-semibold">Podcast</h1>
+  <p class="mt-2 text-neutral-300">Conversations with educators and innovators.</p>
+  <div class="mt-6 space-y-4">
+    {ordered.map((episode) => (
+      <article class="card" id={episode.slug}>
+        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <h3 class="font-medium">
+              <a href={`/podcast/${episode.slug}`} class="hover:text-white">
+                Ep {episode.data.episodeNumber} — {episode.data.title}
+              </a>
+            </h3>
+            <p class="text-sm text-neutral-400">
+              {episode.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+            </p>
+          </div>
+          {episode.data.duration && <span class="text-xs text-neutral-400">{episode.data.duration}</span>}
+        </header>
+        <p class="mt-2 text-sm text-neutral-300">{episode.data.summary}</p>
+        <div class="mt-3">
+          <audio class="w-full" controls src={episode.data.audioUrl}>
+            <a href={episode.data.audioUrl}>Listen to {episode.data.title}</a>
+          </audio>
+        </div>
+        {episode.data.guests.length > 0 && (
+          <p class="mt-2 text-xs text-neutral-400">Guests: {episode.data.guests.join(', ')}</p>
+        )}
+      </article>
+    ))}
+  </div>
+</Layout>

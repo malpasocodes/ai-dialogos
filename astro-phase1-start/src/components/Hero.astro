@@ -1,0 +1,24 @@
+---
+const { title, subtitle, ctas = [] } = Astro.props;
+---
+<section class="py-8 md:py-14">
+  <div class="grid md:grid-cols-[1.2fr,0.8fr] gap-8 items-center">
+    <div>
+      <h1 class="text-3xl md:text-5xl font-semibold leading-tight">{title}</h1>
+      <p class="mt-4 text-neutral-300 text-lg">{subtitle}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        {ctas.map((c) => (
+          <a href={c.href} class={`btn ${c.primary ? 'btn-primary' : ''}`}>{c.label}</a>
+        ))}
+      </div>
+      <div class="mt-6 flex gap-2">
+        <span class="badge">Educator-focused</span>
+        <span class="badge">Open resources</span>
+        <span class="badge">Podcast</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="aspect-[3/4] w-full bg-neutral-800 rounded-xl grid place-items-center text-neutral-400">Book Cover</div>
+    </div>
+  </div>
+</section>

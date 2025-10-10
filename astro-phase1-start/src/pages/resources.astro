@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import CardGrid from '../components/CardGrid.astro';
+
+const resources = await getCollection('resources');
+const resourceCards = resources.map((entry) => ({
+  title: entry.data.title,
+  href: `/resources/${entry.slug}`,
+  description: entry.data.summary,
+  meta: entry.data.type.replace('-', ' '),
+}));
+---
+<Layout title="Resources">
+  <CardGrid title="All Resources" items={resourceCards} />
+</Layout>

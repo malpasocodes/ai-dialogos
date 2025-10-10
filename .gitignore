@@ -1,0 +1,4 @@
+astro-phase1-start/node_modules/
+astro-phase1-start/dist/
+astro-phase1-start/.astro/
+*.zip

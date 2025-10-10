@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props as { event: CollectionEntry<'events'> };
+const modules = await getCollection('modules');
+const module = event.data.module ? modules.find((entry) => entry.id === event.data.module) ?? null : null;
+
+const formatDateRange = (start: Date, end?: Date) => {
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+  const startText = start.toLocaleDateString(undefined, options);
+  if (!end) return startText;
+  const sameMonth = start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
+  const endOptions: Intl.DateTimeFormatOptions = sameMonth ? { day: 'numeric', year: 'numeric' } : options;
+  const endText = end.toLocaleDateString(undefined, endOptions);
+  return `${startText} – ${endText}`;
+};
+---
+<Layout title={event.data.title} description={event.data.summary}>
+  <Fragment slot="head">
+    <meta name="pagefind:filter:type" content="event" />
+    {module && <meta name="pagefind:filter:module" content={module.slug} />}
+    {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
+    <meta name="pagefind:meta:location" content={event.data.location} />
+  </Fragment>
+  <article class="space-y-5" data-pagefind-filter="type:event">
+    {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
+    {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
+    <span hidden data-pagefind-meta={`location:${event.data.location}`}></span>
+    <p class="text-xs uppercase tracking-wide text-neutral-500">Event</p>
+    <h1 class="text-3xl font-semibold">{event.data.title}</h1>
+    <div class="text-neutral-300 leading-relaxed">{event.data.summary}</div>
+    <div class="flex flex-wrap gap-3 text-sm text-neutral-300">
+      <span>{formatDateRange(event.data.startDate, event.data.endDate)}</span>
+      <span>•</span>
+      <span>{event.data.location}</span>
+      {module && <span>• Module {module.data.order}</span>}
+    </div>
+    {event.data.registrationUrl && (
+      <a class="btn btn-primary" href={event.data.registrationUrl} target="_blank" rel="noopener">
+        Register
+      </a>
+    )}
+  </article>
+</Layout>

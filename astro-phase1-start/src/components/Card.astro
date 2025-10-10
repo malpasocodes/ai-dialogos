@@ -1,0 +1,10 @@
+---
+const { title, href = '#', description, meta } = Astro.props;
+---
+<a href={href} class="card block hover:border-neutral-600 transition">
+  <div class="flex items-center justify-between">
+    <h3 class="font-medium">{title}</h3>
+    {meta && <span class="text-xs text-neutral-400">{meta}</span>}
+  </div>
+  {description && <p class="mt-2 text-neutral-300 text-sm">{description}</p>}
+</a>

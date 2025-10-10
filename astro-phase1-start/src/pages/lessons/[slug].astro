@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CardGrid from '../../components/CardGrid.astro';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return lessons.map((lesson) => ({
+    params: { slug: lesson.slug },
+    props: { lesson },
+  }));
+}
+
+const { lesson } = Astro.props as { lesson: CollectionEntry<'lessons'> };
+const { Content } = await lesson.render();
+
+const modules = await getCollection('modules');
+const module = modules.find((entry) => entry.id === lesson.data.module) ?? null;
+
+const resources = await getCollection('resources', (resource) => lesson.data.resources.includes(resource.id));
+const resourceCards = resources.map((entry) => ({
+  title: entry.data.title,
+  href: `/resources/${entry.slug}`,
+  description: entry.data.summary,
+  meta: entry.data.type.replace('-', ' '),
+}));
+---
+<Layout title={lesson.data.title} description={lesson.data.summary}>
+  <Fragment slot="head">
+    <meta name="pagefind:filter:type" content="lesson" />
+    {module && <meta name="pagefind:filter:module" content={module.slug} />}
+    {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
+    {lesson.data.duration && <meta name="pagefind:meta:duration" content={lesson.data.duration} />}
+  </Fragment>
+  <article class="space-y-4" data-pagefind-filter="type:lesson">
+    {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
+    {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
+    {lesson.data.duration && <span hidden data-pagefind-meta={`duration:${lesson.data.duration}`}></span>}
+    <p class="text-xs uppercase tracking-wide text-neutral-500">Lesson Plan</p>
+    <h1 class="text-3xl font-semibold">{lesson.data.title}</h1>
+    <div class="flex flex-wrap gap-3 text-sm text-neutral-400">
+      {module && (
+        <span>
+          Part of{' '}
+          <a href={`/modules/${module.slug}`} class="text-neutral-200 hover:text-white">
+            {module.data.title}
+          </a>
+        </span>
+      )}
+      {lesson.data.duration && <span>Duration: {lesson.data.duration}</span>}
+    </div>
+    <p class="text-neutral-300 leading-relaxed">{lesson.data.summary}</p>
+    <section class="space-y-2">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-neutral-400">Learning objectives</h2>
+      <ul class="space-y-1 text-neutral-300">
+        {lesson.data.learningObjectives.map((objective) => (
+          <li class="flex items-start gap-2">
+            <span class="mt-1 h-1.5 w-1.5 rounded-full bg-neutral-500" />
+            <span>{objective}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+    {lesson.data.tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-neutral-500">
+        {lesson.data.tags.map((tag) => (
+          <span class="rounded-full border border-neutral-700 px-3 py-1">{tag}</span>
+        ))}
+      </div>
+    )}
+    <div class="space-y-3 text-neutral-300 leading-relaxed">
+      <Content />
+    </div>
+  </article>
+  {resourceCards.length > 0 && <CardGrid title="Supporting Resources" items={resourceCards} moreHref="/resources" />}
+</Layout>

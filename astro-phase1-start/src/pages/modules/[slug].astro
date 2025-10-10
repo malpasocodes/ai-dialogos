@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CardGrid from '../../components/CardGrid.astro';
+
+export async function getStaticPaths() {
+  const modules = await getCollection('modules');
+  return modules.map((module) => ({
+    params: { slug: module.slug },
+    props: { module },
+  }));
+}
+
+const { module } = Astro.props as { module: CollectionEntry<'modules'> };
+const { Content } = await module.render();
+
+const lessons = await getCollection('lessons', (lesson) => lesson.data.module === module.id);
+const lessonCards = lessons.map((entry) => ({
+  title: entry.data.title,
+  href: `/lessons/${entry.slug}`,
+  description: entry.data.summary,
+  meta: entry.data.duration,
+}));
+
+const resources = await getCollection('resources', (resource) => resource.data.module === module.id);
+const resourceCards = resources.map((entry) => ({
+  title: entry.data.title,
+  href: `/resources/${entry.slug}`,
+  description: entry.data.summary,
+  meta: entry.data.type.replace('-', ' '),
+}));
+
+const podcastEpisodes = await getCollection('podcast', (episode) => episode.data.module === module.id);
+const podcastCards = podcastEpisodes
+  .sort((a, b) => b.data.episodeNumber - a.data.episodeNumber)
+  .map((entry) => ({
+    title: `Ep ${entry.data.episodeNumber} — ${entry.data.title}`,
+    href: `/podcast#${entry.slug}`,
+    description: entry.data.summary,
+    meta: entry.data.duration,
+  }));
+
+const events = await getCollection('events', (event) => event.data.module === module.id);
+const eventCards = events.map((entry) => ({
+  title: entry.data.title,
+  href: entry.data.registrationUrl ?? '#',
+  description: entry.data.summary,
+  meta: entry.data.location,
+}));
+---
+<Layout title={module.data.title} description={module.data.summary}>
+  <Fragment slot="head">
+    <meta name="pagefind:filter:type" content="module" />
+    <meta name="pagefind:filter:module" content={module.slug} />
+    <meta name="pagefind:meta:module_title" content={module.data.title} />
+  </Fragment>
+  <article class="space-y-4" data-pagefind-filter="type:module">
+    <span hidden data-pagefind-filter={`module:${module.slug}`}></span>
+    <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>
+    <h1 class="text-3xl font-semibold">{module.data.title}</h1>
+    {module.data.subtitle && <p class="text-lg text-neutral-200">{module.data.subtitle}</p>}
+    {module.data.focusAreas.length > 0 && (
+      <ul class="mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-wide text-neutral-400">
+        {module.data.focusAreas.map((item) => (
+          <li class="rounded-full border border-neutral-700 px-3 py-1">{item}</li>
+        ))}
+      </ul>
+    )}
+    <div class="mt-6 space-y-3 text-neutral-300 leading-relaxed">
+      <Content />
+    </div>
+  </article>
+  {lessonCards.length > 0 && <CardGrid title="Lessons" items={lessonCards} moreHref="/lessons" />}
+  {resourceCards.length > 0 && <CardGrid title="Resources" items={resourceCards} moreHref="/resources" />}
+  {podcastCards.length > 0 && <CardGrid title="Podcast Episodes" items={podcastCards} moreHref="/podcast" />}
+  {eventCards.length > 0 && <CardGrid title="Events" items={eventCards} moreHref="/events" />}
+</Layout>

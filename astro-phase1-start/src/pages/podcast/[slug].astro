@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('podcast');
+  return episodes.map((episode) => ({
+    params: { slug: episode.slug },
+    props: { episode },
+  }));
+}
+
+const { episode } = Astro.props as { episode: CollectionEntry<'podcast'> };
+const modules = await getCollection('modules');
+const module = episode.data.module ? modules.find((entry) => entry.id === episode.data.module) ?? null : null;
+---
+<Layout title={`Ep ${episode.data.episodeNumber} — ${episode.data.title}`} description={episode.data.summary}>
+  <Fragment slot="head">
+    <meta name="pagefind:filter:type" content="podcast" />
+    {module && <meta name="pagefind:filter:module" content={module.slug} />}
+    {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
+    <meta name="pagefind:meta:duration" content={episode.data.duration ?? ''} />
+  </Fragment>
+  <article class="space-y-4" data-pagefind-filter="type:podcast">
+    {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
+    {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
+    {episode.data.duration && <span hidden data-pagefind-meta={`duration:${episode.data.duration}`}></span>}
+    <p class="text-xs uppercase tracking-wide text-neutral-500">Podcast Episode</p>
+    <h1 class="text-3xl font-semibold">Ep {episode.data.episodeNumber} — {episode.data.title}</h1>
+    <div class="flex flex-wrap gap-3 text-sm text-neutral-400">
+      <span>{episode.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+      {episode.data.duration && <span>• {episode.data.duration}</span>}
+      {module && <span>• Module {module.data.order}</span>}
+    </div>
+    <p class="text-neutral-300 leading-relaxed">{episode.data.summary}</p>
+    <audio class="w-full" controls src={episode.data.audioUrl}>
+      <a href={episode.data.audioUrl}>Listen to {episode.data.title}</a>
+    </audio>
+    {episode.data.guests.length > 0 && (
+      <p class="text-xs uppercase tracking-wide text-neutral-500">Guests: {episode.data.guests.join(', ')}</p>
+    )}
+  </article>
+</Layout>

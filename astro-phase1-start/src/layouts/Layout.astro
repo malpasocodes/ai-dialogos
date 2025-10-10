@@ -1,0 +1,62 @@
+---
+const { title = "AI: Shaping the Future of Innovation", description = "Educator-friendly companion site for the 2025 book." } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <slot name="head" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn">Skip to content</a>
+    <header class="border-b border-neutral-800 bg-neutral-950/80 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/60 sticky top-0 z-50">
+      <div class="container flex items-center justify-between py-3">
+        <a href="/" class="font-semibold tracking-tight">AI: Innovation (Book 2025)</a>
+        <nav class="hidden md:flex items-center gap-4 text-sm">
+          <a class="hover:text-white text-neutral-300" href="/book">Book</a>
+          <a class="hover:text-white text-neutral-300" href="/educators">Educators</a>
+          <a class="hover:text-white text-neutral-300" href="/resources">Resources</a>
+          <a class="hover:text-white text-neutral-300" href="/podcast">Podcast</a>
+          <a class="hover:text-white text-neutral-300" href="/events">Events</a>
+          <a class="hover:text-white text-neutral-300" href="/about">About</a>
+        </nav>
+        <a href="/search" class="btn">Search</a>
+      </div>
+    </header>
+    <main id="main" class="container py-10">
+      <slot />
+    </main>
+    <footer class="mt-16 border-t border-neutral-800">
+      <div class="container py-10 text-sm text-neutral-400">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <div class="font-medium text-neutral-200">About</div>
+            <p class="mt-2">Companion site for the book “Artificial Intelligence: Shaping the Future of Innovation” (De Gruyter, 2025).</p>
+          </div>
+          <div>
+            <div class="font-medium text-neutral-200">Quick links</div>
+            <ul class="mt-2 space-y-1">
+              <li><a href="/book" class="hover:text-white">Book</a></li>
+              <li><a href="/educators" class="hover:text-white">Educator Hub</a></li>
+              <li><a href="/resources" class="hover:text-white">Resources</a></li>
+              <li><a href="/podcast" class="hover:text-white">Podcast</a></li>
+              <li><a href="/events" class="hover:text-white">Events</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-medium text-neutral-200">Stay in touch</div>
+            <form class="mt-2 flex gap-2" onsubmit="return false" aria-label="Subscribe to newsletter">
+              <input type="email" placeholder="you@example.edu" class="w-full px-3 py-2 rounded-2xl bg-neutral-900 border border-neutral-800" />
+              <button class="btn btn-primary">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <p class="mt-8">© {new Date().getFullYear()} • All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

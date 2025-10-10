@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const resources = await getCollection('resources');
+  return resources.map((resource) => ({
+    params: { slug: resource.slug },
+    props: { resource },
+  }));
+}
+
+const { resource } = Astro.props as { resource: CollectionEntry<'resources'> };
+const modules = await getCollection('modules');
+const module = resource.data.module ? modules.find((entry) => entry.id === resource.data.module) ?? null : null;
+const tags = resource.data.tags;
+---
+<Layout title={resource.data.title} description={resource.data.summary}>
+  <Fragment slot="head">
+    <meta name="pagefind:filter:type" content="resource" />
+    {module && <meta name="pagefind:filter:module" content={module.slug} />}
+    {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
+    <meta name="pagefind:meta:resource_type" content={resource.data.type} />
+    {tags.length > 0 && <meta name="pagefind:meta:tags" content={tags.join(', ')} />}
+  </Fragment>
+  <article class="space-y-5" data-pagefind-filter="type:resource">
+    {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
+    {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
+    <span hidden data-pagefind-meta={`resource_type:${resource.data.type}`}></span>
+    {tags.length > 0 && <span hidden data-pagefind-meta={`tags:${tags.join(', ')}`}></span>}
+    <p class="text-xs uppercase tracking-wide text-neutral-500">Resource</p>
+    <h1 class="text-3xl font-semibold">{resource.data.title}</h1>
+    <p class="text-neutral-300 leading-relaxed">{resource.data.summary}</p>
+    <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-neutral-500">
+      <span class="rounded-full border border-neutral-700 px-3 py-1">{resource.data.type.replace('-', ' ')}</span>
+      {module && <span class="rounded-full border border-neutral-700 px-3 py-1">Module {module.data.order}</span>}
+      {tags.map((tag) => (
+        <span class="rounded-full border border-neutral-700 px-3 py-1">{tag}</span>
+      ))}
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a class="btn btn-primary" href={resource.data.href} rel="noopener" target="_blank">
+        Access resource
+      </a>
+      {resource.data.download && (
+        <a class="btn" href={resource.data.download} rel="noopener" target="_blank">
+          Download
+        </a>
+      )}
+    </div>
+  </article>
+</Layout>

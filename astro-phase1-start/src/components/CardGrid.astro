@@ -1,0 +1,13 @@
+---
+const { title, items = [], moreHref } = Astro.props;
+import Card from './Card.astro';
+---
+<section class="mt-10">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-semibold">{title}</h2>
+    {moreHref && <a href={moreHref} class="text-sm text-neutral-300 hover:text-white">View all →</a>}
+  </div>
+  <div class="mt-4 grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {items.map((it) => <Card {...it} />)}
+  </div>
+</section>

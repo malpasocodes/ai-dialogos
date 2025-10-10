@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CardGrid from '../../components/CardGrid.astro';
+
+const modules = await getCollection('modules');
+const items = modules
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((entry) => ({
+    title: entry.data.title,
+    description: entry.data.summary,
+    href: `/modules/${entry.slug}`,
+    meta: `Module ${entry.data.order}`,
+  }));
+---
+<Layout title="Modules">
+  <section>
+    <h1 class="text-2xl font-semibold">Modules Overview</h1>
+    <p class="mt-2 text-neutral-300">Explore the curriculum supporting the book. Each module bundles lessons, resources, and program guidance.</p>
+  </section>
+  <CardGrid title="All Modules" items={items} />
+</Layout>
