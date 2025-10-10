@@ -31,7 +31,10 @@ const ordered = lessons.sort((a, b) => {
             <h2 class="text-xl font-semibold text-foreground">
               <a href={`/lessons/${lesson.slug}`} class="transition hover:text-accent">{lesson.data.title}</a>
             </h2>
-            {module && <p class="text-xs font-medium uppercase tracking-wide text-muted">Module {module.data.order}</p>}
+            <div class="flex flex-wrap gap-2 text-xs font-medium uppercase tracking-wide text-muted">
+              {module && <span>Module {module.data.order}</span>}
+              <span>{lesson.data.level.charAt(0).toUpperCase() + lesson.data.level.slice(1)}</span>
+            </div>
           </div>
           <p class="text-sm leading-relaxed text-muted">{lesson.data.summary}</p>
           <div class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted">

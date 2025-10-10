@@ -14,3 +14,4 @@
 - Relocated the Astro project from `astro-phase1-start/` into the repository root, updated ignores, validated root-level builds, and retagged the repo structure for Phase 2 readiness.
 - Integrated Substack RSS feed with cached fallback, surfaced latest essays on the homepage, and launched a new `/substack` listing page.
 - Integrated podcast RSS ingestion with cached fallback, refreshed homepage highlights, and generated dynamic podcast detail pages powered by feed data.
+- Added content schema updates (`updated`, `tags`, `level`) across collections, expanded search overlay with a `level` facet, introduced JSON-LD/SEO helpers, Plausible analytics events, and committed Netlify build configuration.

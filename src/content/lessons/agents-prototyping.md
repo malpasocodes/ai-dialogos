@@ -12,6 +12,8 @@ tags:
   - "experimentation"
 resources:
   - "agents-lab"
+updated: 2025-09-22
+level: "intermediate"
 ---
 
 Designed for lab cohorts who already completed the Foundations module. Includes checkpoints for ethical considerations and data governance.

@@ -9,6 +9,7 @@ module: "foundations"
 tags:
   - "workshop"
   - "faculty-development"
+updated: 2025-09-15
 ---
 
 Participants leave with implementation roadmaps, facilitator kits, and shared metrics for program review.

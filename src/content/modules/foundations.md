@@ -9,6 +9,10 @@ focusAreas:
   - "Human-in-the-loop practices"
 ctaLabel: "Explore Module"
 ctaHref: "/modules/foundations"
+updated: 2025-09-30
+tags:
+  - "foundations"
+  - "literacy"
 ---
 
 This module sets the common language for the rest of the curriculum. Each lesson pairs concise explainers with classroom-ready activities that help faculty translate theory into practice.

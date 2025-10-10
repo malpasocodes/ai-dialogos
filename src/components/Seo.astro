@@ -1,0 +1,76 @@
+---
+interface StructuredData {
+  [key: string]: any;
+}
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: {
+    src: string;
+    alt?: string;
+    width?: number;
+    height?: number;
+  };
+  structuredData?: StructuredData | StructuredData[];
+  renderMeta?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  image,
+  structuredData,
+  renderMeta = true,
+} = Astro.props as Props;
+
+const SITE_URL = import.meta.env.SITE_URL ?? "https://ai-innov.example.com";
+const url = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
+const resolvedTitle = title ? `${title} · AI: Innovation` : "AI: Innovation";
+const resolvedDescription =
+  description ??
+  "Artificial Intelligence: Shaping the Future of Innovation — educator-friendly companion site for the 2025 book.";
+
+const structuredItems = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+---
+{renderMeta && (
+  <>
+    <title>{resolvedTitle}</title>
+    <meta name="description" content={resolvedDescription} />
+    <link rel="canonical" href={url} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
+    <meta property="og:url" content={url} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={resolvedDescription} />
+    {image && (
+      <>
+        <meta property="og:image" content={image.src} />
+        {image.alt && <meta property="og:image:alt" content={image.alt} />}
+        {image.width && <meta property="og:image:width" content={String(image.width)} />}
+        {image.height && <meta property="og:image:height" content={String(image.height)} />}
+        <meta name="twitter:image" content={image.src} />
+      </>
+    )}
+  </>
+)}
+{structuredItems.map((data, idx) => (
+  <script key={idx} type="application/ld+json">
+    {JSON.stringify(
+      {
+        '@context': 'https://schema.org',
+        ...data,
+      },
+      null,
+      2,
+    )}
+  </script>
+))}

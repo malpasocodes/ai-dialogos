@@ -11,15 +11,19 @@ const navItems = [
   { label: "About", href: "/about" },
 ];
 import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    {PLAUSIBLE_DOMAIN && (
+      <script defer data-domain={PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.manual.js"></script>
+    )}
+    <Seo title={title} description={description} />
     <slot name="head" />
-    <title>{title}</title>
   </head>
   <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn-secondary">Skip to content</a>
@@ -81,7 +85,7 @@ import '../styles/global.css';
                 placeholder="you@example.edu"
                 class="w-full rounded-pill border border-outline/20 bg-surface-soft px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               />
-              <button class="btn-primary">Subscribe</button>
+              <button class="btn-primary" data-analytics-event="subscribe_substack" data-analytics-value="footer_form">Subscribe</button>
             </form>
           </div>
         </div>
@@ -122,6 +126,30 @@ import '../styles/global.css';
             console.warn('Unable to persist theme preference', error);
           }
           updateButtons(next);
+        });
+      });
+
+      const trackEvent = (name, value) => {
+        if (typeof window === 'undefined' || !window.plausible) return;
+        if (!name) return;
+        window.plausible(name, value ? { props: { value } } : undefined);
+      };
+
+      document.querySelectorAll('[data-analytics-event]').forEach((element) => {
+        const eventName = element.dataset.analyticsEvent;
+        const eventValue = element.dataset.analyticsValue;
+        element.addEventListener('click', () => trackEvent(eventName, eventValue));
+      });
+
+      document.querySelectorAll('audio[data-analytics-event]').forEach((audio) => {
+        const eventName = audio.dataset.analyticsEvent;
+        const eventValue = audio.dataset.analyticsValue;
+        let fired = false;
+        audio.addEventListener('play', () => {
+          if (!fired) {
+            fired = true;
+            trackEvent(eventName, eventValue);
+          }
         });
       });
     </script>

@@ -9,6 +9,10 @@ focusAreas:
   - "Program governance"
 ctaLabel: "Launch Pilot"
 ctaHref: "/modules/futures-labs"
+updated: 2025-09-28
+tags:
+  - "innovation"
+  - "labs"
 ---
 
 This module equips teams with tools to turn speculative ideas into measurable pilots, emphasizing iteration speed without sacrificing safety.

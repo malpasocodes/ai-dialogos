@@ -7,6 +7,7 @@ href: "https://example.edu/resources/agents-lab"
 tags:
   - "agents"
   - "experimentation"
+updated: 2025-09-21
 ---
 
 Includes discussion notes, checkpoint rubrics, and extension ideas for advanced cohorts.

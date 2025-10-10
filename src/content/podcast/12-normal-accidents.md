@@ -11,6 +11,7 @@ guests:
 tags:
   - "risk"
   - "operations"
+updated: 2025-09-18
 ---
 
 We dive into incident post-mortems and extract patterns educators can bring into workshops and policy labs.

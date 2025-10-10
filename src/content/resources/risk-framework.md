@@ -8,6 +8,7 @@ download: "https://example.edu/resources/ai-risk-framework.pdf"
 tags:
   - "risk"
   - "governance"
+updated: 2025-09-18
 ---
 
 Use during tabletop exercises to log assumptions, triggers, and mitigations. Includes facilitation prompts and follow-up discussion guide.

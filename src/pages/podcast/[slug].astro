@@ -1,7 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Seo from '../../components/Seo.astro';
 import { getCollection } from 'astro:content';
 import { getPodcastEpisode, getPodcastEpisodes } from '../../utils/podcast';
+
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
 
 export async function getStaticPaths() {
   const episodes = await getPodcastEpisodes();
@@ -28,6 +31,26 @@ const module = episode.moduleSlug
     {module && <meta name="pagefind:filter:module" content={module.slug} />}
     {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
     {episode.duration && <meta name="pagefind:meta:duration" content={episode.duration} />}
+    <Seo
+      renderMeta={false}
+      structuredData={{
+        '@type': 'PodcastEpisode',
+        name: episode.title,
+        description: episode.summary,
+        url: new URL(Astro.url.pathname, SITE_URL).toString(),
+        datePublished: episode.published,
+        duration: episode.duration,
+        partOfSeries: {
+          '@type': 'PodcastSeries',
+          name: 'AI-Innov Podcast',
+          url: `${SITE_URL}/podcast`,
+        },
+        audio: {
+          '@type': 'AudioObject',
+          url: episode.audioUrl,
+        },
+      }}
+    />
   </Fragment>
   <article class="space-y-5" data-pagefind-filter="type:podcast">
     {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
@@ -42,7 +65,13 @@ const module = episode.moduleSlug
     </div>
     <p class="text-base leading-relaxed text-muted">{episode.summary}</p>
     <div class="overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 p-3">
-      <audio class="w-full" controls src={episode.audioUrl}>
+      <audio
+        class="w-full"
+        controls
+        src={episode.audioUrl}
+        data-analytics-event="play_episode"
+        data-analytics-value={episode.title}
+      >
         <a href={episode.audioUrl}>Listen to {episode.title}</a>
       </audio>
     </div>

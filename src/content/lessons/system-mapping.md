@@ -12,6 +12,8 @@ tags:
   - "facilitation"
 resources:
   - "risk-framework"
+updated: 2025-09-20
+level: "advanced"
 ---
 
 Facilitator guide includes setup checklist, template prompts, and debrief questions that emphasize accountability and transparency.

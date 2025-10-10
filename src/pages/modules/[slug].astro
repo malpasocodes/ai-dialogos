@@ -3,7 +3,10 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import CardGrid from '../../components/CardGrid.astro';
+import Seo from '../../components/Seo.astro';
 import { getPodcastEpisodes } from '../../utils/podcast';
+
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
 
 export async function getStaticPaths() {
   const modules = await getCollection('modules');
@@ -55,12 +58,30 @@ const eventCards = events.map((entry) => ({
     <meta name="pagefind:filter:type" content="module" />
     <meta name="pagefind:filter:module" content={module.slug} />
     <meta name="pagefind:meta:module_title" content={module.data.title} />
+    <Seo
+      renderMeta={false}
+      structuredData={{
+        '@type': 'Course',
+        name: module.data.title,
+        description: module.data.summary,
+        url: new URL(Astro.url.pathname, SITE_URL).toString(),
+        provider: {
+          '@type': 'Organization',
+          name: 'AI-Innov',
+        },
+      }}
+    />
   </Fragment>
   <article class="space-y-5" data-pagefind-filter="type:module">
     <span hidden data-pagefind-filter={`module:${module.slug}`}></span>
     <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>
+    {module.data.tags.length > 0 && <span hidden data-pagefind-meta={`tags:${module.data.tags.join(', ')}`}></span>}
     <h1 class="text-4xl font-semibold text-foreground">{module.data.title}</h1>
     {module.data.subtitle && <p class="text-lg leading-relaxed text-muted">{module.data.subtitle}</p>}
+    <p class="text-xs font-medium uppercase tracking-wide text-muted">
+      Updated {module.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+      {module.data.tags.length > 0 && ` • ${module.data.tags.join(' · ')}`}
+    </p>
     {module.data.focusAreas.length > 0 && (
       <ul class="mt-4 flex flex-wrap gap-2">
         {module.data.focusAreas.map((item) => (

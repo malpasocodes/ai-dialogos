@@ -1,7 +1,21 @@
 ---
 import coverImage from "../../images/ai-bookcover.jpeg";
 
-const { title, subtitle, ctas = [] } = Astro.props;
+interface CTA {
+  label: string;
+  href: string;
+  primary?: boolean;
+  analytics?: string;
+  analyticsValue?: string;
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  ctas?: CTA[];
+}
+
+const { title, subtitle, ctas = [] } = Astro.props as Props;
 ---
 <section class="py-10 md:py-16">
   <div class="grid items-center gap-10 md:grid-cols-[1.2fr,0.8fr]">
@@ -10,7 +24,12 @@ const { title, subtitle, ctas = [] } = Astro.props;
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{subtitle}</p>
       <div class="mt-8 flex flex-wrap gap-3">
         {ctas.map((c) => (
-          <a href={c.href} class={c.primary ? 'btn-primary' : 'btn-secondary'}>
+          <a
+            href={c.href}
+            class={c.primary ? 'btn-primary' : 'btn-secondary'}
+            data-analytics-event={c.analytics}
+            data-analytics-value={c.analyticsValue}
+          >
             {c.label}
           </a>
         ))}

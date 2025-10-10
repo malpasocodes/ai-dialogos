@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import Seo from '../../components/Seo.astro';
 
 export async function getStaticPaths() {
   const resources = await getCollection('resources');
@@ -15,6 +16,8 @@ const { resource } = Astro.props as { resource: CollectionEntry<'resources'> };
 const modules = await getCollection('modules');
 const module = resource.data.module ? modules.find((entry) => entry.id === resource.data.module) ?? null : null;
 const tags = resource.data.tags;
+
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
 ---
 <Layout title={resource.data.title} description={resource.data.summary}>
   <Fragment slot="head">
@@ -23,6 +26,17 @@ const tags = resource.data.tags;
     {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
     <meta name="pagefind:meta:resource_type" content={resource.data.type} />
     {tags.length > 0 && <meta name="pagefind:meta:tags" content={tags.join(', ')} />}
+    <Seo
+      renderMeta={false}
+      structuredData={{
+        '@type': 'LearningResource',
+        name: resource.data.title,
+        description: resource.data.summary,
+        url: new URL(Astro.url.pathname, SITE_URL).toString(),
+        learningResourceType: resource.data.type,
+        inLanguage: 'en',
+      }}
+    />
   </Fragment>
   <article class="space-y-5" data-pagefind-filter="type:resource">
     {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
@@ -32,6 +46,9 @@ const tags = resource.data.tags;
     <p class="text-xs font-semibold uppercase tracking-wide text-muted">Resource</p>
     <h1 class="text-4xl font-semibold text-foreground">{resource.data.title}</h1>
     <p class="text-base leading-relaxed text-muted">{resource.data.summary}</p>
+    <p class="text-xs font-medium uppercase tracking-wide text-muted">
+      Updated {resource.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+    </p>
     <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted">
       <span class="badge">{resource.data.type.replace('-', ' ')}</span>
       {module && <span class="badge">Module {module.data.order}</span>}
@@ -44,7 +61,14 @@ const tags = resource.data.tags;
         Access resource
       </a>
       {resource.data.download && (
-        <a class="btn-secondary" href={resource.data.download} rel="noopener" target="_blank">
+        <a
+          class="btn-secondary"
+          href={resource.data.download}
+          rel="noopener"
+          target="_blank"
+          data-analytics-event="download_resource"
+          data-analytics-value={resource.data.title}
+        >
           Download
         </a>
       )}

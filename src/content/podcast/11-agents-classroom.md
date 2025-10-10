@@ -11,6 +11,7 @@ guests:
 tags:
   - "agents"
   - "teaching"
+updated: 2025-08-22
 ---
 
 Learn how to scaffold agent experimentation while maintaining transparency, assessment integrity, and institutional trust.

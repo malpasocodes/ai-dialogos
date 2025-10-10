@@ -16,6 +16,8 @@ const modules = defineCollection({
         (value) => !value || value.startsWith('/') || value.startsWith('http'),
         { message: 'Must be an absolute URL or site-relative path' },
       ),
+    updated: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
   }),
 });
 
@@ -29,6 +31,8 @@ const lessons = defineCollection({
     learningObjectives: z.array(z.string()).min(1),
     tags: z.array(z.string()).default([]),
     resources: z.array(reference('resources')).default([]),
+    updated: z.coerce.date(),
+    level: z.enum(['introductory', 'intermediate', 'advanced']),
   }),
 });
 
@@ -42,6 +46,7 @@ const resources = defineCollection({
     href: z.string().url(),
     download: z.string().url().optional(),
     tags: z.array(z.string()).default([]),
+    updated: z.coerce.date(),
   }),
 });
 
@@ -57,6 +62,7 @@ const podcast = defineCollection({
     module: reference('modules').optional(),
     guests: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
+    updated: z.coerce.date().optional(),
   }),
 });
 
@@ -71,6 +77,7 @@ const events = defineCollection({
     registrationUrl: z.string().url().optional(),
     module: reference('modules').optional(),
     tags: z.array(z.string()).default([]),
+    updated: z.coerce.date(),
   }),
 });
 
