@@ -12,3 +12,5 @@
 - Installed project dependencies and ran an Astro build (telemetry disabled) to validate the new content pipeline and Pagefind postbuild hook.
 - Added dedicated detail pages for resources, events, and podcast episodes, wired module associations, and replaced the `/search` page with a Pagefind overlay featuring type/module filters (verified filters populate after build).
 - Relocated the Astro project from `astro-phase1-start/` into the repository root, updated ignores, validated root-level builds, and retagged the repo structure for Phase 2 readiness.
+- Integrated Substack RSS feed with cached fallback, surfaced latest essays on the homepage, and launched a new `/substack` listing page.
+- Integrated podcast RSS ingestion with cached fallback, refreshed homepage highlights, and generated dynamic podcast detail pages powered by feed data.

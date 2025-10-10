@@ -1,4 +1,6 @@
 ---
+import coverImage from "../../images/ai-bookcover.jpeg";
+
 const { title, subtitle, ctas = [] } = Astro.props;
 ---
 <section class="py-10 md:py-16">
@@ -19,9 +21,20 @@ const { title, subtitle, ctas = [] } = Astro.props;
         <span class="badge">Podcast</span>
       </div>
     </div>
-    <div class="card">
-      <div class="grid aspect-[3/4] w-full place-items-center rounded-3xl border border-outline/15 bg-surface-soft text-sm uppercase tracking-[0.2em] text-muted">
-        Book Cover
+    <div class="relative flex items-center justify-center">
+      <div class="card overflow-hidden border-outline/20 bg-gradient-to-br from-surface via-surface-soft to-surface-strong p-4">
+        <figure class="relative mx-auto w-full max-w-xs md:max-w-sm">
+          <div class="absolute inset-0 -z-10 rounded-3xl bg-accent/25 blur-3xl"></div>
+          <img
+            src={coverImage.src}
+            width={coverImage.width}
+            height={coverImage.height}
+            alt="Artificial Intelligence: Shaping the Future of Innovation book cover"
+            loading="lazy"
+            decoding="async"
+            class="w-full rounded-3xl shadow-card"
+          />
+        </figure>
       </div>
     </div>
   </div>

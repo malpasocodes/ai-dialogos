@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import CardGrid from '../../components/CardGrid.astro';
+import { getPodcastEpisodes } from '../../utils/podcast';
 
 export async function getStaticPaths() {
   const modules = await getCollection('modules');
@@ -31,15 +32,15 @@ const resourceCards = resources.map((entry) => ({
   meta: entry.data.type.replace('-', ' '),
 }));
 
-const podcastEpisodes = await getCollection('podcast', (episode) => episode.data.module === module.id);
-const podcastCards = podcastEpisodes
-  .sort((a, b) => b.data.episodeNumber - a.data.episodeNumber)
-  .map((entry) => ({
-    title: `Ep ${entry.data.episodeNumber} — ${entry.data.title}`,
-    href: `/podcast#${entry.slug}`,
-    description: entry.data.summary,
-    meta: entry.data.duration,
-  }));
+const podcastEpisodes = (await getPodcastEpisodes()).filter(
+  (episode) => episode.moduleSlug === module.slug,
+);
+const podcastCards = podcastEpisodes.map((episode) => ({
+  title: episode.title,
+  href: `/podcast/${episode.slug}`,
+  description: episode.summary,
+  meta: episode.duration,
+}));
 
 const events = await getCollection('events', (event) => event.data.module === module.id);
 const eventCards = events.map((entry) => ({

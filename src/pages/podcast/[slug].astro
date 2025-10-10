@@ -1,46 +1,53 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getPodcastEpisode, getPodcastEpisodes } from '../../utils/podcast';
 
 export async function getStaticPaths() {
-  const episodes = await getCollection('podcast');
+  const episodes = await getPodcastEpisodes();
   return episodes.map((episode) => ({
     params: { slug: episode.slug },
-    props: { episode },
   }));
 }
 
-const { episode } = Astro.props as { episode: CollectionEntry<'podcast'> };
+const { slug } = Astro.params;
+const episode = await getPodcastEpisode(slug);
+
+if (!episode) {
+  throw new Error(`Podcast episode not found for slug: ${slug}`);
+}
+
 const modules = await getCollection('modules');
-const module = episode.data.module ? modules.find((entry) => entry.id === episode.data.module) ?? null : null;
+const module = episode.moduleSlug
+  ? modules.find((entry) => entry.slug === episode.moduleSlug) ?? null
+  : null;
 ---
-<Layout title={`Ep ${episode.data.episodeNumber} — ${episode.data.title}`} description={episode.data.summary}>
+<Layout title={episode.title} description={episode.summary}>
   <Fragment slot="head">
     <meta name="pagefind:filter:type" content="podcast" />
     {module && <meta name="pagefind:filter:module" content={module.slug} />}
     {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
-    <meta name="pagefind:meta:duration" content={episode.data.duration ?? ''} />
+    {episode.duration && <meta name="pagefind:meta:duration" content={episode.duration} />}
   </Fragment>
   <article class="space-y-5" data-pagefind-filter="type:podcast">
     {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
     {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
-    {episode.data.duration && <span hidden data-pagefind-meta={`duration:${episode.data.duration}`}></span>}
+    {episode.duration && <span hidden data-pagefind-meta={`duration:${episode.duration}`}></span>}
     <p class="text-xs font-semibold uppercase tracking-wide text-muted">Podcast Episode</p>
-    <h1 class="text-4xl font-semibold text-foreground">Ep {episode.data.episodeNumber} — {episode.data.title}</h1>
+    <h1 class="text-4xl font-semibold text-foreground">{episode.title}</h1>
     <div class="flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide text-muted">
-      <span>{episode.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-      {episode.data.duration && <span>• {episode.data.duration}</span>}
+      <span>{new Date(episode.published).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+      {episode.duration && <span>• {episode.duration}</span>}
       {module && <span>• Module {module.data.order}</span>}
     </div>
-    <p class="text-base leading-relaxed text-muted">{episode.data.summary}</p>
+    <p class="text-base leading-relaxed text-muted">{episode.summary}</p>
     <div class="overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 p-3">
-      <audio class="w-full" controls src={episode.data.audioUrl}>
-        <a href={episode.data.audioUrl}>Listen to {episode.data.title}</a>
+      <audio class="w-full" controls src={episode.audioUrl}>
+        <a href={episode.audioUrl}>Listen to {episode.title}</a>
       </audio>
     </div>
-    {episode.data.guests.length > 0 && (
-      <p class="text-xs uppercase tracking-wide text-muted">Guests: {episode.data.guests.join(', ')}</p>
-    )}
+    <div class="flex items-center gap-3 text-sm text-muted">
+      <a href={episode.link} target="_blank" rel="noopener" class="btn-secondary">Open show notes</a>
+    </div>
   </article>
 </Layout>

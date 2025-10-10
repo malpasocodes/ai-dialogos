@@ -3,8 +3,11 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import CardGrid from '../components/CardGrid.astro';
+import { getSubstackPosts } from '../utils/substack';
+import { getPodcastEpisodes } from '../utils/podcast';
 
 const modules = await getCollection('modules');
+const substackPosts = await getSubstackPosts(3);
 const moduleCards = modules
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3)
@@ -15,6 +18,17 @@ const moduleCards = modules
     meta: `Module ${entry.data.order}`,
   }));
 
+const substackCards = substackPosts.map((post) => ({
+  title: post.title,
+  description: post.summary,
+  href: post.link,
+  meta: new Date(post.published).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }),
+}));
+
 const resources = await getCollection('resources');
 const resourceCards = resources.slice(0, 3).map((entry) => ({
   title: entry.data.title,
@@ -23,15 +37,14 @@ const resourceCards = resources.slice(0, 3).map((entry) => ({
   meta: entry.data.type.replace('-', ' '),
 }));
 
-const episodes = await getCollection('podcast');
-const podcastCards = episodes
-  .sort((a, b) => b.data.episodeNumber - a.data.episodeNumber)
+const podcastCards = (await getPodcastEpisodes())
+  .sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime())
   .slice(0, 3)
-  .map((entry) => ({
-    title: `Ep ${entry.data.episodeNumber} — ${entry.data.title}`,
-    description: entry.data.summary,
-    href: `/podcast#${entry.slug}`,
-    meta: entry.data.duration,
+  .map((episode) => ({
+    title: episode.title,
+    description: episode.summary,
+    href: `/podcast/${episode.slug}`,
+    meta: episode.duration,
   }));
 ---
 <Layout>
@@ -46,6 +59,7 @@ const podcastCards = episodes
     ]}
   />
   <CardGrid title="Featured Modules" items={moduleCards} moreHref="/educators" />
+  <CardGrid title="Latest Substack Essays" items={substackCards} moreHref="/substack" />
   <CardGrid title="Educator Resources" items={resourceCards} moreHref="/resources" />
   <CardGrid title="Podcast Highlights" items={podcastCards} moreHref="/podcast" />
 </Layout>
