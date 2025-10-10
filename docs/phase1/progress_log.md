@@ -15,3 +15,4 @@
 - Integrated Substack RSS feed with cached fallback, surfaced latest essays on the homepage, and launched a new `/substack` listing page.
 - Integrated podcast RSS ingestion with cached fallback, refreshed homepage highlights, and generated dynamic podcast detail pages powered by feed data.
 - Added content schema updates (`updated`, `tags`, `level`) across collections, expanded search overlay with a `level` facet, introduced JSON-LD/SEO helpers, Plausible analytics events, and committed Netlify build configuration.
+- Phase 2 acceptance checklist satisfied—styling tokens, live feeds, schemas/search facets, SEO/analytics, and deployment config are all in place; ready to begin Phase 3.
