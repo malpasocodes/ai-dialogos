@@ -16,3 +16,8 @@
 - Integrated podcast RSS ingestion with cached fallback, refreshed homepage highlights, and generated dynamic podcast detail pages powered by feed data.
 - Added content schema updates (`updated`, `tags`, `level`) across collections, expanded search overlay with a `level` facet, introduced JSON-LD/SEO helpers, Plausible analytics events, and committed Netlify build configuration.
 - Phase 2 acceptance checklist satisfied—styling tokens, live feeds, schemas/search facets, SEO/analytics, and deployment config are all in place; ready to begin Phase 3.
+
+## 2025-10-11
+- Introduced the Brill theme palette (nav, typography, card accents) and adjusted card section headings to align with the De Gruyter reference.
+- Added a responsive AI-Innov logo in the header that appears in Brill mode, while indigo and emerald themes retain an enlarged all-caps “AI-INNOV” text treatment.
+- Updated header styling (logo sizing, theme toggle cycling, button treatments) to support the mixed logo/text branding across all themes.

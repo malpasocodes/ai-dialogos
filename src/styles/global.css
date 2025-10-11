@@ -68,6 +68,36 @@
     @apply mx-auto max-w-6xl px-4;
   }
 
+  .site-header {
+    background-color: rgb(var(--color-background) / 0.82);
+    backdrop-filter: blur(18px);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .site-header {
+      background-color: rgb(var(--color-background));
+    }
+  }
+
+  .brand-logo {
+    max-height: 52px;
+    width: auto;
+    display: block;
+  }
+
+  .brand-text {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  html[data-theme="brill"] .brand-text {
+    display: none;
+  }
+
+  html:not([data-theme="brill"]) .brand-logo {
+    display: none;
+  }
+
   .card {
     @apply rounded-2xl border border-outline/15 bg-surface-soft/95 p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-outline/30 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
@@ -104,4 +134,59 @@
     content: "";
     @apply absolute inset-x-2 -bottom-1 h-0.5 rounded-full bg-accent/80;
   }
+
+  html[data-theme="brill"] .site-header {
+    background-color: #0d2240;
+    backdrop-filter: none;
+    border-color: rgba(12, 32, 64, 0.5);
+  }
+
+  html[data-theme="brill"] .site-header .brand-link {
+    color: #f4f7ff;
+  }
+
+  html[data-theme="brill"] .site-header .brand-link:hover {
+    color: #ffffff;
+  }
+
+  html[data-theme="brill"] .site-header .nav-link {
+    color: rgba(244, 247, 255, 0.75);
+  }
+
+  html[data-theme="brill"] .site-header .nav-link:hover,
+  html[data-theme="brill"] .site-header .nav-link:focus-visible {
+    color: #ffffff;
+  }
+
+  html[data-theme="brill"] .site-header .nav-link[data-active="true"] {
+    color: #ffffff;
+  }
+
+  html[data-theme="brill"] .site-header .nav-link[data-active="true"]::after {
+    background-color: #ffb500;
+  }
+
+  html[data-theme="brill"] .site-header .btn-secondary {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #f4f7ff;
+  }
+
+  html[data-theme="brill"] .site-header .btn-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.22);
+  }
+
+  html[data-theme="brill"] .site-header .btn-ghost {
+    color: rgba(244, 247, 255, 0.85);
+  }
+
+  html[data-theme="brill"] .site-header .btn-ghost:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: transparent;
+  }
 }
+  .brand-text {
+    @apply text-foreground text-2xl uppercase tracking-[0.12em];
+  }

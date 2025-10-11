@@ -27,9 +27,12 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
   </head>
   <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn-secondary">Skip to content</a>
-    <header class="sticky top-0 z-50 border-b border-outline/15 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header class="site-header sticky top-0 z-50 border-b border-outline/15">
       <div class="container flex items-center justify-between gap-4 py-3">
-        <a href="/" class="text-base font-display font-semibold tracking-tight text-foreground">AI: Innovation (Book 2025)</a>
+        <a href="/" class="brand-link inline-flex items-center gap-2 text-base font-display font-semibold tracking-tight text-foreground">
+          <span class="brand-text">AI-INNOV</span>
+          <img src="/images/ai-innov_logo.png" alt="AI-Innov home" width="156" height="40" class="brand-logo" />
+        </a>
         <nav class="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
             <a
