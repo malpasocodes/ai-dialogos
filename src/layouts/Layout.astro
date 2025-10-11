@@ -93,7 +93,7 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
       </div>
     </footer>
     <script type="module">
-      const themes = ["indigo", "emerald"];
+      const themes = ["indigo", "emerald", "brill"];
       const storageKey = "ai-innov-theme";
       const root = document.documentElement;
       const stored = typeof localStorage !== "undefined" ? localStorage.getItem(storageKey) : null;
@@ -103,13 +103,22 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
         root.dataset.theme = themes[0];
       }
 
+      const getNextTheme = (theme) => {
+        const index = themes.indexOf(theme);
+        if (index === -1) return themes[0];
+        return themes[(index + 1) % themes.length];
+      };
+
+      const formatThemeName = (theme) =>
+        theme.charAt(0).toUpperCase() + theme.slice(1);
+
       const updateButtons = (theme) => {
-        const nextTheme = theme === themes[0] ? themes[1] : themes[0];
+        const nextTheme = getNextTheme(theme);
         document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
           button.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
         });
         document.querySelectorAll('[data-theme-text]').forEach((el) => {
-          el.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+          el.textContent = formatThemeName(theme);
         });
       };
 
@@ -118,7 +127,7 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
       document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
         button.addEventListener('click', () => {
           const current = root.dataset.theme ?? themes[0];
-          const next = current === themes[0] ? themes[1] : themes[0];
+          const next = getNextTheme(current);
           root.dataset.theme = next;
           try {
             localStorage.setItem(storageKey, next);

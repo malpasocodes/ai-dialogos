@@ -20,6 +20,19 @@
     --color-outline: 52 211 153;
   }
 
+  html[data-theme="brill"] {
+    --color-background: 249 249 249;
+    --color-foreground: 26 26 26;
+    --color-muted: 85 85 85;
+    --color-surface: 255 255 255;
+    --color-surface-soft: 240 237 232;
+    --color-surface-strong: 214 214 214;
+    --color-accent: 13 34 64;
+    --color-accent-muted: 77 163 255;
+    --color-on-accent: 255 255 255;
+    --color-outline: 214 214 214;
+  }
+
   html[data-theme="indigo"],
   :root {
     --color-background: 11 12 16;
