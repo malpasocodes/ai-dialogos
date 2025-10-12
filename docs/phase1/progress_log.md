@@ -26,3 +26,4 @@
 - Replaced the legacy podcast RSS ingestion with a YouTube playlist pipeline (`src/utils/podcast.ts`) that maps video metadata and renders thumbnails, embeds, and CTAs on listing/detail pages.
 - Removed the static markdown podcast entries and RSS cache, adding a lightweight YouTube fallback cache so builds succeed when the playlist feed is offline (`src/data/youtube-playlist-cache.json`).
 - Updated podcast templates to surface video cards, structured data, and embeds aligned with the new playlist-driven episodes (`src/pages/podcast.astro`, `src/pages/podcast/[slug].astro`).
+- Tweaked podcast listing cards so thumbnails render as compact previews alongside the CTAs, improving scanability on the `/podcast` page (`src/pages/podcast.astro`).
