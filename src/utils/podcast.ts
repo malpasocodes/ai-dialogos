@@ -1,23 +1,13 @@
 import Parser from "rss-parser";
-import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
-import fallbackEpisodes from "../data/podcast-cache.json";
+import rawFallbackEpisodes from "../data/youtube-playlist-cache.json";
 
-type RSSEnclosure = {
-  url?: string;
-};
-
-type RSSEpisode = {
-  title?: string;
-  link?: string;
-  isoDate?: string;
-  pubDate?: string;
-  contentSnippet?: string;
-  "itunes:summary"?: string;
-  enclosure?: RSSEnclosure;
-  "itunes:duration"?: string;
-  "itunes:image"?: { href?: string };
-  guid?: string;
+type RawFallbackEpisode = Omit<
+  PodcastEpisode,
+  "duration" | "audioUrl" | "moduleSlug"
+> & {
+  duration?: string | null;
+  audioUrl?: string | null;
+  moduleSlug?: string | null;
 };
 
 export interface PodcastEpisode {
@@ -25,25 +15,38 @@ export interface PodcastEpisode {
   slug: string;
   link: string;
   published: string;
-  duration: string;
+  duration?: string;
   summary: string;
-  audioUrl: string;
+  audioUrl?: string;
+  videoUrl: string;
+  videoId: string;
   image?: string;
   moduleSlug?: string;
   tags: string[];
 }
 
-const FEED_URL =
-  import.meta.env.PODCAST_RSS_URL ??
-  "https://ai-innov-podcast.example.com/feed";
+const PLAYLIST_ID =
+  import.meta.env.YOUTUBE_PLAYLIST_ID ??
+  "PL2QoJOg_E8XD5V_8JKTj3fw-KKQetn_TK";
+
+const FEED_URL = `https://www.youtube.com/feeds/videos.xml?playlist_id=${PLAYLIST_ID}`;
+
+const fallbackEpisodes: PodcastEpisode[] = (
+  rawFallbackEpisodes as RawFallbackEpisode[]
+).map((episode) => ({
+  ...episode,
+  published: new Date(episode.published).toISOString(),
+  duration: episode.duration ?? undefined,
+  audioUrl: episode.audioUrl ?? undefined,
+  moduleSlug: episode.moduleSlug ?? undefined,
+}));
 
 const parser = new Parser({
   timeout: 10000,
   customFields: {
     item: [
-      ["itunes:duration", "itunes:duration"],
-      ["itunes:image", "itunes:image", { keepArray: false }],
-      ["itunes:summary", "itunes:summary"],
+      ["yt:videoId", "videoId"],
+      ["media:group", "media"],
     ],
   },
 });
@@ -54,71 +57,100 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const metadataCache: {
-  ready: boolean;
-  map: Map<string, CollectionEntry<"podcast">>;
-} = {
-  ready: false,
-  map: new Map(),
+type YouTubeMediaContent = {
+  $?: {
+    url?: string;
+    duration?: string;
+  };
 };
 
-const ensureMetadata = async () => {
-  if (metadataCache.ready) return;
-  const entries = await getCollection("podcast");
-  entries.forEach((entry) => {
-    metadataCache.map.set(entry.slug, entry);
-  });
-  metadataCache.ready = true;
+type YouTubeMediaThumbnail = {
+  $?: {
+    url?: string;
+  };
 };
 
-const resolveMetadata = (slug: string, title?: string) => {
-  const direct = metadataCache.map.get(slug);
-  if (direct) return direct;
-  if (!title) return null;
-  const normalized = slugify(title);
-  for (const entry of metadataCache.map.values()) {
-    if (slugify(entry.data.title) === normalized) return entry;
+type YouTubeMediaGroup = {
+  "media:description"?: string;
+  "media:thumbnail"?: YouTubeMediaThumbnail | YouTubeMediaThumbnail[];
+  "media:content"?: YouTubeMediaContent | YouTubeMediaContent[];
+};
+
+type YouTubeFeedItem = {
+  title?: string;
+  link?: string;
+  isoDate?: string;
+  pubDate?: string;
+  videoId?: string;
+  media?: YouTubeMediaGroup;
+};
+
+const toArray = <T>(value?: T | T[]): T[] =>
+  value === undefined ? [] : Array.isArray(value) ? value : [value];
+
+const formatDuration = (input?: string) => {
+  if (!input) return undefined;
+  const seconds = Number.parseInt(input, 10);
+  if (Number.isNaN(seconds) || seconds <= 0) return undefined;
+
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  if (hrs > 0) {
+    const hourPart = `${hrs} hr${hrs === 1 ? "" : "s"}`;
+    const minutePart = mins > 0 ? ` ${mins} min` : "";
+    return `${hourPart}${minutePart}`;
   }
-  return null;
+
+  if (mins > 0) {
+    const minutePart = `${mins} min`;
+    const secondPart = secs > 0 ? ` ${secs} sec` : "";
+    return `${minutePart}${secondPart}`;
+  }
+
+  return `${secs} sec`;
 };
 
-const mapEpisode = async (item: RSSEpisode): Promise<PodcastEpisode | null> => {
-  if (!item.title || !item.link) return null;
-  await ensureMetadata();
+const mapEpisode = (item: YouTubeFeedItem): PodcastEpisode | null => {
+  if (!item.title) return null;
 
-  const initialSlug =
-    item.guid ? slugify(item.guid) : slugify(item.title).replace(/^ep-/, "");
-  const metadata = resolveMetadata(initialSlug, item.title);
-  const slug = metadata?.slug ?? initialSlug;
-  const published =
-    item.isoDate ??
-    item.pubDate ??
-    metadata?.data.published?.toISOString();
+  const videoId = item.videoId ?? "";
+  const slug = videoId || slugify(item.title);
+  const videoUrl = item.link ?? (videoId ? `https://www.youtube.com/watch?v=${videoId}` : "");
 
-  const summary =
-    item["itunes:summary"] ??
-    item.contentSnippet ??
-    metadata?.data.summary ??
-    "";
+  if (!videoUrl) return null;
+
+  const publishedRaw = item.isoDate ?? item.pubDate ?? new Date().toISOString();
+  const published = new Date(publishedRaw).toISOString();
+
+  const media = item.media ?? {};
+  const description =
+    media["media:description"]?.trim() ??
+    "Watch this episode on YouTube.";
+  const thumbnail =
+    toArray(media["media:thumbnail"])
+      .map((entry) => entry.$?.url)
+      .find(Boolean) ?? (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined);
+  const duration =
+    toArray(media["media:content"])
+      .map((entry) => entry.$?.duration)
+      .map((value) => formatDuration(value))
+      .find(Boolean) ?? undefined;
 
   return {
     title: item.title.trim(),
     slug,
-    link: item.link,
-    published: published
-      ? new Date(published).toISOString()
-      : new Date().toISOString(),
-    duration: item["itunes:duration"] ?? metadata?.data.duration ?? "",
-    summary: summary.trim(),
-    audioUrl:
-      item.enclosure?.url ??
-      metadata?.data.audioUrl ??
-      "https://example.com/audio-placeholder.mp3",
-    image:
-      (item["itunes:image"] as { href?: string } | undefined)?.href ??
-      undefined,
-    moduleSlug: metadata?.data.module ?? undefined,
-    tags: metadata?.data.tags ?? [],
+    link: videoUrl,
+    published,
+    duration,
+    summary: description,
+    audioUrl: undefined,
+    videoUrl,
+    videoId,
+    image: thumbnail,
+    moduleSlug: undefined,
+    tags: [],
   };
 };
 
@@ -127,32 +159,34 @@ let cachedEpisodes: PodcastEpisode[] | null = null;
 export const getPodcastEpisodes = async (): Promise<PodcastEpisode[]> => {
   if (cachedEpisodes) return cachedEpisodes;
 
-  const fallback = (fallbackEpisodes as PodcastEpisode[]).map((episode) => ({
-    ...episode,
-    published: new Date(episode.published).toISOString(),
-  }));
-
   try {
     const feed = await parser.parseURL(FEED_URL);
-    const mapped = await Promise.all(
-      (feed.items ?? []).map((item) => mapEpisode(item as RSSEpisode)),
-    );
-    const filtered = mapped.filter(
-      (episode): episode is PodcastEpisode => Boolean(episode),
-    );
-    if (filtered.length > 0) {
-      cachedEpisodes = filtered;
-      return filtered;
+    const mapped = (feed.items ?? [])
+      .map((item) => mapEpisode(item as YouTubeFeedItem))
+      .filter((episode): episode is PodcastEpisode => Boolean(episode));
+
+    const sorted = mapped.sort((a, b) => {
+      return new Date(b.published).getTime() - new Date(a.published).getTime();
+    });
+
+    if (sorted.length > 0) {
+      cachedEpisodes = sorted;
+      return sorted;
     }
   } catch (error) {
     console.warn(
-      "[podcast] Failed to fetch live podcast feed, falling back to cache",
+      "[podcast] Failed to fetch YouTube playlist feed",
       error,
     );
   }
 
-  cachedEpisodes = fallback;
-  return fallback;
+  if (fallbackEpisodes.length > 0) {
+    cachedEpisodes = fallbackEpisodes;
+    return fallbackEpisodes;
+  }
+
+  cachedEpisodes = [];
+  return [];
 };
 
 export const getPodcastEpisode = async (

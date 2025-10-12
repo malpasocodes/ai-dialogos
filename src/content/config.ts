@@ -50,22 +50,6 @@ const resources = defineCollection({
   }),
 });
 
-const podcast = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    episodeNumber: z.number().min(1),
-    published: z.coerce.date(),
-    audioUrl: z.string().url(),
-    duration: z.string().optional(),
-    module: reference('modules').optional(),
-    guests: z.array(z.string()).default([]),
-    tags: z.array(z.string()).default([]),
-    updated: z.coerce.date().optional(),
-  }),
-});
-
 const events = defineCollection({
   type: 'content',
   schema: z.object({
@@ -85,6 +69,5 @@ export const collections = {
   modules,
   lessons,
   resources,
-  podcast,
   events,
 };

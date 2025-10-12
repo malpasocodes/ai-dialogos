@@ -21,3 +21,8 @@
 - Introduced the Brill theme palette (nav, typography, card accents) and adjusted card section headings to align with the De Gruyter reference.
 - Added a responsive AI-Innov logo in the header that appears in Brill mode, while indigo and emerald themes retain an enlarged all-caps “AI-INNOV” text treatment.
 - Updated header styling (logo sizing, theme toggle cycling, button treatments) to support the mixed logo/text branding across all themes.
+
+## 2025-10-12
+- Replaced the legacy podcast RSS ingestion with a YouTube playlist pipeline (`src/utils/podcast.ts`) that maps video metadata and renders thumbnails, embeds, and CTAs on listing/detail pages.
+- Removed the static markdown podcast entries and RSS cache, adding a lightweight YouTube fallback cache so builds succeed when the playlist feed is offline (`src/data/youtube-playlist-cache.json`).
+- Updated podcast templates to surface video cards, structured data, and embeds aligned with the new playlist-driven episodes (`src/pages/podcast.astro`, `src/pages/podcast/[slug].astro`).

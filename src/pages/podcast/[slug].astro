@@ -34,20 +34,17 @@ const module = episode.moduleSlug
     <Seo
       renderMeta={false}
       structuredData={{
-        '@type': 'PodcastEpisode',
+        '@type': 'VideoObject',
         name: episode.title,
         description: episode.summary,
+        uploadDate: episode.published,
         url: new URL(Astro.url.pathname, SITE_URL).toString(),
-        datePublished: episode.published,
-        duration: episode.duration,
-        partOfSeries: {
-          '@type': 'PodcastSeries',
-          name: 'AI-Innov Podcast',
-          url: `${SITE_URL}/podcast`,
-        },
-        audio: {
-          '@type': 'AudioObject',
-          url: episode.audioUrl,
+        thumbnailUrl: episode.image ? [episode.image] : undefined,
+        contentUrl: episode.videoUrl,
+        embedUrl: episode.videoId ? `https://www.youtube.com/embed/${episode.videoId}` : undefined,
+        publisher: {
+          '@type': 'Organization',
+          name: 'AI-Innov',
         },
       }}
     />
@@ -65,18 +62,34 @@ const module = episode.moduleSlug
     </div>
     <p class="text-base leading-relaxed text-muted">{episode.summary}</p>
     <div class="overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 p-3">
-      <audio
-        class="w-full"
-        controls
-        src={episode.audioUrl}
-        data-analytics-event="play_episode"
-        data-analytics-value={episode.title}
-      >
-        <a href={episode.audioUrl}>Listen to {episode.title}</a>
-      </audio>
+      {episode.videoId ? (
+        <div class="relative w-full overflow-hidden rounded-xl" style="padding-top: 56.25%;">
+          <iframe
+            src={`https://www.youtube.com/embed/${episode.videoId}`}
+            title={episode.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            class="absolute inset-0 h-full w-full border-0"
+            data-analytics-event="watch_episode"
+            data-analytics-value={episode.videoId}
+          ></iframe>
+        </div>
+      ) : (
+        <a
+          href={episode.videoUrl}
+          class="btn-secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="watch_episode"
+          data-analytics-value={episode.slug}
+        >
+          Watch on YouTube
+        </a>
+      )}
     </div>
     <div class="flex items-center gap-3 text-sm text-muted">
-      <a href={episode.link} target="_blank" rel="noopener" class="btn-secondary">Open show notes</a>
+      <a href={episode.link} target="_blank" rel="noopener" class="btn-secondary">Open on YouTube</a>
     </div>
   </article>
 </Layout>

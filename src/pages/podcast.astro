@@ -29,6 +29,18 @@ const ordered = (await getPodcastEpisodes()).sort((a, b) => {
   </Fragment>
   <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
   <p class="mt-3 max-w-2xl text-base leading-relaxed text-muted">Conversations with educators and innovators.</p>
+  <div class="mt-6 flex flex-wrap items-center gap-3">
+    <a
+      href="https://www.youtube.com/playlist?list=PL2QoJOg_E8XD5V_8JKTj3fw-KKQetn_TK"
+      class="btn-secondary"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-analytics-event="podcast_playlist"
+      data-analytics-value="youtube"
+    >
+      Watch on YouTube
+    </a>
+  </div>
   <div class="mt-8 space-y-5">
     {ordered.map((episode) => (
       <article class="card" id={episode.slug}>
@@ -52,16 +64,31 @@ const ordered = (await getPodcastEpisodes()).sort((a, b) => {
           )}
         </header>
         <p class="mt-3 text-sm leading-relaxed text-muted">{episode.summary}</p>
-        <div class="mt-4 overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 p-3">
-          <audio
-            class="w-full"
-            controls
-            src={episode.audioUrl}
-            data-analytics-event="play_episode"
-            data-analytics-value={episode.title}
+        {episode.image && (
+          <a
+            href={`/podcast/${episode.slug}`}
+            class="mt-4 block overflow-hidden rounded-2xl border border-outline/20 bg-surface-soft/80 transition hover:border-outline/30"
           >
-            <a href={episode.audioUrl}>Listen to {episode.title}</a>
-          </audio>
+            <img
+              src={episode.image}
+              alt={`Thumbnail for ${episode.title}`}
+              loading="lazy"
+              class="w-full object-cover"
+            />
+          </a>
+        )}
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a href={`/podcast/${episode.slug}`} class="btn-secondary">Episode details</a>
+          <a
+            href={episode.videoUrl}
+            class="btn-secondary"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics-event="watch_episode"
+            data-analytics-value={episode.videoId || episode.slug}
+          >
+            Watch on YouTube
+          </a>
         </div>
       </article>
     ))}
