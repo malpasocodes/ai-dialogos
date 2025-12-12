@@ -27,3 +27,8 @@
 - Removed the static markdown podcast entries and RSS cache, adding a lightweight YouTube fallback cache so builds succeed when the playlist feed is offline (`src/data/youtube-playlist-cache.json`).
 - Updated podcast templates to surface video cards, structured data, and embeds aligned with the new playlist-driven episodes (`src/pages/podcast.astro`, `src/pages/podcast/[slug].astro`).
 - Tweaked podcast listing cards so thumbnails render as compact previews alongside the CTAs, improving scanability on the `/podcast` page (`src/pages/podcast.astro`).
+
+## 2025-12-12
+- Rebranded the site navigation and hero to “AI-DIALOGOS,” added a Series overview page, and refreshed hero copy to emphasize the AI Essentials for Leaders positioning.
+- Removed the obsolete AI-Innov logo asset, theme toggle controls, and enforced the Brill theme as the default for consistency.
+- Ensured the masthead brand text remains visible by aligning its styling with the nav links and updating the global stylesheet.

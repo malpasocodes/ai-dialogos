@@ -21,7 +21,7 @@ const { title, subtitle, ctas = [] } = Astro.props as Props;
   <div class="grid items-center gap-10 md:grid-cols-[1.2fr,0.8fr]">
     <div>
       <h1 class="text-4xl font-semibold leading-tight md:text-6xl">{title}</h1>
-      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{subtitle}</p>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted" set:html={subtitle}></p>
       <div class="mt-8 flex flex-wrap gap-3">
         {ctas.map((c) => (
           <a

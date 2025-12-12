@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const themes = [
+  {
+    title: "Technology Fundamentals",
+    description:
+      "Foundations of AI technologies, including machine learning, natural language processing, generative AI, cloud computing, and robotics. Each volume explains the core principles alongside practical applications, emerging use cases, and innovation opportunities.",
+  },
+  {
+    title: "Business Strategy",
+    description:
+      "Strategic frameworks for integrating AI across industries to build durable competitive advantage. The series examines how organizations can transform business models and operations through responsible AI adoption.",
+  },
+  {
+    title: "Ethics and Privacy",
+    description:
+      "Guidance for responsible AI development and deployment through ethical frameworks that emphasize fairness, transparency, privacy protection, bias mitigation, and trustworthy systems.",
+  },
+  {
+    title: "Entrepreneurship and Innovation",
+    description:
+      "Practical insights into AI-driven innovation via case studies covering startup formation, product development methodologies, open-source strategies, service enhancement, and operational optimization.",
+  },
+  {
+    title: "Leadership and Governance",
+    description:
+      "Comprehensive playbooks for leaders navigating AI transformation, spanning change management, talent development, data governance, and stakeholder engagement.",
+  },
+  {
+    title: "Domain Applications",
+    description:
+      "Industry-specific examinations of AI implementation in finance, medicine, marketing, and other sectors. Volumes outline enduring principles while highlighting transformative use cases within each domain.",
+  },
+];
+---
+<Layout title="Series Overview" description="AI Essentials for Leaders series overview and contact details.">
+  <section class="prose max-w-3xl">
+    <h1>AI Essentials for Leaders</h1>
+    <p>
+      The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. Written by
+      leading experts, each volume synthesizes a foundational AI topic through focused lenses: technology fundamentals, business strategy, entrepreneurship and innovation, leadership and governance, and ethics and privacy. Designed for business leaders, practitioners, policymakers, and curious learners alike, these accessible guides provide succinct
+      overviews that empower readers to understand AI's core concepts and anticipate its future implications for business, technology, and public policy.
+    </p>
+    <p>The series illuminates AI’s impact through six interconnected themes:</p>
+    <div class="mt-10 grid gap-6">
+      {themes.map((theme) => (
+        <article class="rounded-2xl border border-outline/15 bg-surface-soft/40 p-6">
+          <h2 class="text-xl font-semibold text-foreground">{theme.title}</h2>
+          <p class="mt-3 text-base leading-relaxed text-muted">{theme.description}</p>
+        </article>
+      ))}
+    </div>
+    <p class="mt-10">
+      If you have proposals for submission or ideas you would like to discuss, please contact series co-editor Alfred Essa at
+      <a href="mailto:aessa@ai-essentials-for-leaders.com" class="text-primary underline decoration-dotted">aessa@ai-essentials-for-leaders.com</a>.
+    </p>
+  </section>
+</Layout>

@@ -2,6 +2,7 @@
 const { title = "AI: Shaping the Future of Innovation", description = "Educator-friendly companion site for the 2025 book." } = Astro.props;
 const currentPath = Astro.url.pathname;
 const navItems = [
+  { label: "Series", href: "/series" },
   { label: "Book", href: "/book" },
   { label: "Educators", href: "/educators" },
   { label: "Resources", href: "/resources" },
@@ -15,7 +16,7 @@ import Seo from '../components/Seo.astro';
 const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="brill">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,9 +30,8 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn-secondary">Skip to content</a>
     <header class="site-header sticky top-0 z-50 border-b border-outline/15">
       <div class="container flex items-center justify-between gap-4 py-3">
-        <a href="/" class="brand-link inline-flex items-center gap-2 text-base font-display font-semibold tracking-tight text-foreground">
-          <span class="brand-text">AI-INNOV</span>
-          <img src="/images/ai-innov_logo.png" alt="AI-Innov home" width="156" height="40" class="brand-logo" />
+        <a href="/" class="brand-link inline-flex items-center gap-2 text-base font-display font-semibold tracking-tight">
+          <span class="brand-text">AI-DIALOGOS</span>
         </a>
         <nav class="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
@@ -45,12 +45,6 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
           ))}
         </nav>
         <div class="flex items-center gap-2">
-          <button type="button" class="btn-ghost hidden md:inline-flex" data-theme-toggle aria-label="Toggle theme">
-            <span data-theme-text>Indigo</span>
-          </button>
-          <button type="button" class="btn-ghost md:hidden" data-theme-toggle aria-label="Toggle theme">
-            🎨
-          </button>
           <a href="/search" class="btn-secondary hidden shrink-0 md:inline-flex">Search</a>
           <a href="/search" class="btn-secondary md:hidden" aria-label="Search">
             🔍
@@ -96,51 +90,6 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
       </div>
     </footer>
     <script type="module">
-      const themes = ["indigo", "emerald", "brill"];
-      const storageKey = "ai-innov-theme";
-      const root = document.documentElement;
-      const stored = typeof localStorage !== "undefined" ? localStorage.getItem(storageKey) : null;
-      if (stored && themes.includes(stored)) {
-        root.dataset.theme = stored;
-      } else if (!root.dataset.theme) {
-        root.dataset.theme = themes[0];
-      }
-
-      const getNextTheme = (theme) => {
-        const index = themes.indexOf(theme);
-        if (index === -1) return themes[0];
-        return themes[(index + 1) % themes.length];
-      };
-
-      const formatThemeName = (theme) =>
-        theme.charAt(0).toUpperCase() + theme.slice(1);
-
-      const updateButtons = (theme) => {
-        const nextTheme = getNextTheme(theme);
-        document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-          button.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
-        });
-        document.querySelectorAll('[data-theme-text]').forEach((el) => {
-          el.textContent = formatThemeName(theme);
-        });
-      };
-
-      updateButtons(root.dataset.theme);
-
-      document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const current = root.dataset.theme ?? themes[0];
-          const next = getNextTheme(current);
-          root.dataset.theme = next;
-          try {
-            localStorage.setItem(storageKey, next);
-          } catch (error) {
-            console.warn('Unable to persist theme preference', error);
-          }
-          updateButtons(next);
-        });
-      });
-
       const trackEvent = (name, value) => {
         if (typeof window === 'undefined' || !window.plausible) return;
         if (!name) return;
