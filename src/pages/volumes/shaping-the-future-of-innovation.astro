@@ -4,19 +4,21 @@ import bookCover from '../../../images/shaping-future-innovation.jpeg';
 ---
 <Layout title="Shaping the Future of Innovation" description="Volume overview for Artificial Intelligence: Shaping the Future of Innovation.">
   <section class="mx-auto mt-8 max-w-4xl space-y-10 rounded-3xl bg-white/95 p-8 shadow-card sm:p-10">
-    <header>
-      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-[#1b5ed8]">Overview</p>
-      <h1 class="mt-2 text-4xl font-display font-semibold text-[#113e8c]">Artificial Intelligence: Shaping the Future of Innovation</h1>
+    <header class="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
+      <div class="flex-1 space-y-2">
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-[#1b5ed8]">Overview</p>
+        <h1 class="text-4xl font-display font-semibold text-[#113e8c]">Artificial Intelligence: Shaping the Future of Innovation</h1>
+      </div>
+      <figure class="w-full max-w-[190px] md:flex-none">
+        <img
+          src={bookCover.src}
+          width={bookCover.width}
+          height={bookCover.height}
+          alt="Artificial Intelligence: Shaping the Future of Innovation cover"
+          class="w-full rounded-3xl shadow-card"
+        />
+      </figure>
     </header>
-    <figure class="mx-auto w-full max-w-xs">
-      <img
-        src={bookCover.src}
-        width={bookCover.width}
-        height={bookCover.height}
-        alt="Artificial Intelligence: Shaping the Future of Innovation cover"
-        class="w-full rounded-3xl shadow-card"
-      />
-    </figure>
     <article class="space-y-6 text-lg leading-8 text-[#113453]">
       <h2 class="text-2xl font-semibold text-[#113e8c]">About this book</h2>
       <p>
