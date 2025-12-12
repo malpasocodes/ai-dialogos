@@ -35,25 +35,40 @@ const themes = [
 ];
 ---
 <Layout title="Series Overview" description="AI Essentials for Leaders series overview and contact details.">
-  <section class="prose max-w-3xl">
-    <h1>AI Essentials for Leaders</h1>
-    <p>
-      The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. Written by
-      leading experts, each volume synthesizes a foundational AI topic through focused lenses: technology fundamentals, business strategy, entrepreneurship and innovation, leadership and governance, and ethics and privacy. Designed for business leaders, practitioners, policymakers, and curious learners alike, these accessible guides provide succinct
-      overviews that empower readers to understand AI's core concepts and anticipate its future implications for business, technology, and public policy.
-    </p>
-    <p>The series illuminates AI’s impact through six interconnected themes:</p>
-    <div class="mt-10 grid gap-6">
-      {themes.map((theme) => (
-        <article class="rounded-2xl border border-outline/15 bg-surface-soft/40 p-6">
-          <h2 class="text-xl font-semibold text-foreground">{theme.title}</h2>
-          <p class="mt-3 text-base leading-relaxed text-muted">{theme.description}</p>
-        </article>
-      ))}
+  <section class="mx-auto max-w-4xl rounded-3xl bg-white/90 p-8 shadow-card">
+    <header class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-[#1b5ed8]">Series</p>
+        <h1 class="text-4xl font-display font-semibold tracking-tight text-[#113e8c]">Overview</h1>
+      </div>
+      <svg class="h-6 w-6 text-[#1b5ed8]" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 10l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </header>
+    <div class="mt-4 h-px w-full bg-[#1b5ed8]/60"></div>
+    <div class="mt-6 space-y-6 text-lg leading-8 text-[#113453]">
+      <p>
+        The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. Written by
+        leading experts, each volume synthesizes a foundational AI topic through focused lenses: technology fundamentals, business strategy, entrepreneurship and innovation,
+        leadership and governance, and ethics and privacy. Designed for business leaders, practitioners, policymakers, and curious learners alike, these accessible guides provide
+        succinct overviews that empower readers to understand AI's core concepts and anticipate its future implications for business, technology, and public policy.
+      </p>
+      <p>The series illuminates AI’s impact through six interconnected themes:</p>
+      <ul class="space-y-6">
+        {themes.map((theme) => (
+          <li class="flex gap-4 text-[#113453]">
+            <span class="mt-3 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#1b5ed8]"></span>
+            <div>
+              <p class="text-xl font-semibold text-[#113e8c]">{theme.title}</p>
+              <p class="mt-2 text-lg leading-7">{theme.description}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p>
+        If you have proposals for submission or ideas you would like to discuss, please contact series co-editor Alfred Essa at
+        <a href="mailto:aessa@ai-essentials-for-leaders.com" class="ml-1 text-[#1b5ed8] underline decoration-dotted">aessa@ai-essentials-for-leaders.com</a>.
+      </p>
     </div>
-    <p class="mt-10">
-      If you have proposals for submission or ideas you would like to discuss, please contact series co-editor Alfred Essa at
-      <a href="mailto:aessa@ai-essentials-for-leaders.com" class="text-primary underline decoration-dotted">aessa@ai-essentials-for-leaders.com</a>.
-    </p>
   </section>
 </Layout>

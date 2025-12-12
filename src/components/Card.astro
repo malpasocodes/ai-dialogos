@@ -1,10 +1,18 @@
 ---
-const { title, href = '#', description, meta } = Astro.props;
+const { title, href = '#', description, meta, compact = false } = Astro.props;
+const cardClasses = [
+  'card block',
+  compact ? 'px-3 py-3 space-y-2 border border-outline/20 shadow-none rounded-2xl' : '',
+].filter(Boolean).join(' ');
 ---
-<a href={href} class="card block">
-  <div class="flex items-center justify-between gap-3">
-    <h3 class="text-lg font-semibold text-foreground">{title}</h3>
-    {meta && <span class="text-xs font-medium uppercase tracking-wide text-muted">{meta}</span>}
+<a href={href} class={cardClasses}>
+  <div class="flex items-start justify-between gap-3">
+    <h3 class={`font-semibold text-foreground ${compact ? 'text-sm' : 'text-lg'}`}>{title}</h3>
+    {meta && <span class={`font-medium uppercase tracking-wide text-muted ${compact ? 'text-[9px]' : 'text-xs'}`}>{meta}</span>}
   </div>
-  {description && <p class="mt-3 text-sm leading-relaxed text-muted">{description}</p>}
+  {description && (
+    <p class={`text-muted ${compact ? 'text-xs leading-5 mt-1' : 'mt-3 text-sm leading-relaxed'}`}>
+      {description}
+    </p>
+  )}
 </a>

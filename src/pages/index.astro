@@ -91,14 +91,10 @@ const podcastCards = (await getPodcastEpisodes())
     title="AI Essentials for Leaders"
     subtitle="The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. This companion site provides curated resources, including Substack essays and podcast interviews."
     ctas={[
-      { label: "Explore Educator Hub", href: "/educators", primary: true },
-      { label: "Buy Book", href: "/book", analytics: "click_buy_book", analyticsValue: "hero_cta" },
       { label: "Subscribe on Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" },
       { label: "Listen to Podcast", href: "/podcast" }
     ]}
   />
-  <CardGrid title="Featured Modules" items={moduleCards} moreHref="/educators" />
-  <CardGrid title="Latest Substack Essays" items={substackCards} moreHref="/substack" />
-  <CardGrid title="Educator Resources" items={resourceCards} moreHref="/resources" />
-  <CardGrid title="Podcast Highlights" items={podcastCards} moreHref="/podcast" />
+  <CardGrid title="Latest Substack" items={substackCards} moreHref="/substack" compact />
+  <CardGrid title="Latest Podcast" items={podcastCards} moreHref="/podcast" compact />
 </Layout>

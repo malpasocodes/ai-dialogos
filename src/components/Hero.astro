@@ -20,7 +20,7 @@ const { title, subtitle, ctas = [] } = Astro.props as Props;
 <section class="py-10 md:py-16">
   <div class="grid items-center gap-10 md:grid-cols-[1.2fr,0.8fr]">
     <div>
-      <h1 class="text-4xl font-semibold leading-tight md:text-6xl">{title}</h1>
+      <h1 class="text-4xl font-semibold leading-tight text-[#113e8c] md:text-6xl">{title}</h1>
       <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted" set:html={subtitle}></p>
       <div class="mt-8 flex flex-wrap gap-3">
         {ctas.map((c) => (
@@ -34,15 +34,10 @@ const { title, subtitle, ctas = [] } = Astro.props as Props;
           </a>
         ))}
       </div>
-      <div class="mt-8 flex flex-wrap gap-2">
-        <span class="badge">Educator-focused</span>
-        <span class="badge">Open Resources</span>
-        <span class="badge">Podcast</span>
-      </div>
     </div>
     <div class="relative flex items-center justify-center">
       <div class="card overflow-hidden border-outline/20 bg-gradient-to-br from-surface via-surface-soft to-surface-strong p-4">
-        <figure class="relative mx-auto w-full max-w-xs md:max-w-sm">
+        <figure class="relative mx-auto w-full max-w-[192px] md:max-w-[288px]">
           <div class="absolute inset-0 -z-10 rounded-3xl bg-accent/25 blur-3xl"></div>
           <img
             src={coverImage.src}
