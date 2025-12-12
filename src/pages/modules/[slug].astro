@@ -30,7 +30,7 @@ const lessonCards = lessons.map((entry) => ({
 const resources = await getCollection('resources', (resource) => resource.data.module === module.id);
 const resourceCards = resources.map((entry) => ({
   title: entry.data.title,
-  href: `/resources/${entry.slug}`,
+  href: entry.data.href ?? '#',
   description: entry.data.summary,
   meta: entry.data.type.replace('-', ' '),
 }));
@@ -94,7 +94,7 @@ const eventCards = events.map((entry) => ({
     </div>
   </article>
   {lessonCards.length > 0 && <CardGrid title="Lessons" items={lessonCards} moreHref="/lessons" />}
-  {resourceCards.length > 0 && <CardGrid title="Resources" items={resourceCards} moreHref="/resources" />}
+  {resourceCards.length > 0 && <CardGrid title="Resources" items={resourceCards} />}
   {podcastCards.length > 0 && <CardGrid title="Podcast Episodes" items={podcastCards} moreHref="/podcast" />}
-  {eventCards.length > 0 && <CardGrid title="Events" items={eventCards} moreHref="/events" />}
+  {eventCards.length > 0 && <CardGrid title="Events" items={eventCards} />}
 </Layout>

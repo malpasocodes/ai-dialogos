@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import CardGrid from '../components/CardGrid.astro';
@@ -10,18 +9,7 @@ import { getPodcastEpisodes } from '../utils/podcast';
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
 const canonicalImage = `${SITE_URL}/images/ai-bookcover.jpeg`;
 
-const modules = await getCollection('modules');
 const substackPosts = await getSubstackPosts(3);
-const moduleCards = modules
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3)
-  .map((entry) => ({
-    title: entry.data.title,
-    description: entry.data.summary,
-    href: `/modules/${entry.slug}`,
-    meta: `Module ${entry.data.order}`,
-  }));
-
 const substackCards = substackPosts.map((post) => ({
   title: post.title,
   description: post.summary,
@@ -31,14 +19,6 @@ const substackCards = substackPosts.map((post) => ({
     day: 'numeric',
     year: 'numeric',
   }),
-}));
-
-const resources = await getCollection('resources');
-const resourceCards = resources.slice(0, 3).map((entry) => ({
-  title: entry.data.title,
-  description: entry.data.summary,
-  href: `/resources/${entry.slug}`,
-  meta: entry.data.type.replace('-', ' '),
 }));
 
 const podcastCards = (await getPodcastEpisodes())

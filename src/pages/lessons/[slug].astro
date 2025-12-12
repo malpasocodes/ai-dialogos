@@ -24,7 +24,7 @@ const module = modules.find((entry) => entry.id === lesson.data.module) ?? null;
 const resources = await getCollection('resources', (resource) => lesson.data.resources.includes(resource.id));
 const resourceCards = resources.map((entry) => ({
   title: entry.data.title,
-  href: `/resources/${entry.slug}`,
+  href: entry.data.href ?? '#',
   description: entry.data.summary,
   meta: entry.data.type.replace('-', ' '),
 }));
@@ -100,5 +100,5 @@ const resourceCards = resources.map((entry) => ({
       <Content />
     </div>
   </article>
-  {resourceCards.length > 0 && <CardGrid title="Supporting Resources" items={resourceCards} moreHref="/resources" />}
+  {resourceCards.length > 0 && <CardGrid title="Supporting Resources" items={resourceCards} />}
 </Layout>
