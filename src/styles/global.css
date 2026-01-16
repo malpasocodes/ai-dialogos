@@ -47,6 +47,50 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 263 70% 50%;
   }
+
+  .emerald {
+    --background: 160 84% 8%;
+    --foreground: 142 76% 88%;
+    --card: 160 50% 12%;
+    --card-foreground: 142 76% 88%;
+    --popover: 160 84% 8%;
+    --popover-foreground: 142 76% 88%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 160 84% 8%;
+    --secondary: 160 50% 12%;
+    --secondary-foreground: 142 76% 88%;
+    --muted: 160 50% 12%;
+    --muted-foreground: 142 30% 65%;
+    --accent: 142 76% 36%;
+    --accent-foreground: 160 84% 8%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 160 40% 18%;
+    --input: 160 40% 18%;
+    --ring: 142 76% 36%;
+  }
+
+  .ocean {
+    --background: 200 84% 10%;
+    --foreground: 199 89% 88%;
+    --card: 200 50% 14%;
+    --card-foreground: 199 89% 88%;
+    --popover: 200 84% 10%;
+    --popover-foreground: 199 89% 88%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 200 84% 10%;
+    --secondary: 200 50% 14%;
+    --secondary-foreground: 199 89% 88%;
+    --muted: 200 50% 14%;
+    --muted-foreground: 199 30% 65%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 200 84% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 200 40% 20%;
+    --input: 200 40% 20%;
+    --ring: 199 89% 48%;
+  }
 }
 
 @layer base {
