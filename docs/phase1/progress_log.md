@@ -32,3 +32,6 @@
 - Rebranded the site navigation and hero to “AI-DIALOGOS,” added a Series overview page, and refreshed hero copy to emphasize the AI Essentials for Leaders positioning.
 - Removed the obsolete AI-Innov logo asset, theme toggle controls, and enforced the Brill theme as the default for consistency.
 - Ensured the masthead brand text remains visible by aligning its styling with the nav links and updating the global stylesheet.
+- Introduced volume detail pages with cover imagery, compact homepage card layouts, and refreshed the About page to highlight the editor team.
+- Trimmed the navigation IA (Series, Volumes, Substack, Podcast, About), removed unused Educator/Resource/Event sections, and added placeholder podcast data to seed Netlify builds.
+- Completed Netlify build verification (`npm run build`) and confirmed the site deploys cleanly with the new structure.

@@ -11,7 +11,7 @@
     "lint": "echo \"(optional) add eslint/stylelint\" && exit 0"
   },
   "dependencies": {
-    "astro": "^4.10.0",
+    "astro": "^5.16.5",
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {
