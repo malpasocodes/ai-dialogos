@@ -36,9 +36,9 @@ const { title, subtitle, ctas = [] } = Astro.props as Props;
       </div>
     </div>
     <div class="relative flex items-center justify-center">
-      <div class="card overflow-hidden border-outline/20 bg-gradient-to-br from-surface via-surface-soft to-surface-strong p-4">
+      <div class="card overflow-hidden border-border/20 bg-gradient-to-br from-background via-card to-secondary p-4">
         <figure class="relative mx-auto w-full max-w-[192px] md:max-w-[288px]">
-          <div class="absolute inset-0 -z-10 rounded-3xl bg-accent/25 blur-3xl"></div>
+          <div class="absolute inset-0 -z-10 rounded-3xl bg-primary/25 blur-3xl"></div>
           <img
             src={coverImage.src}
             width={coverImage.width}

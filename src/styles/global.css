@@ -4,49 +4,55 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 263 70% 50%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263 70% 50%;
+    --radius: 0.75rem;
   }
 
-  html[data-theme="emerald"] {
-    --color-background: 9 12 11;
-    --color-foreground: 224 231 224;
-    --color-muted: 134 179 152;
-    --color-surface: 14 26 21;
-    --color-surface-soft: 19 35 28;
-    --color-surface-strong: 33 54 43;
-    --color-accent: 16 185 129;
-    --color-accent-muted: 45 212 191;
-    --color-on-accent: 2 44 34;
-    --color-outline: 52 211 153;
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
   }
+}
 
-  html[data-theme="brill"] {
-    --color-background: 249 249 249;
-    --color-foreground: 26 26 26;
-    --color-muted: 85 85 85;
-    --color-surface: 255 255 255;
-    --color-surface-soft: 240 237 232;
-    --color-surface-strong: 214 214 214;
-    --color-accent: 13 34 64;
-    --color-accent-muted: 77 163 255;
-    --color-on-accent: 255 255 255;
-    --color-outline: 214 214 214;
+@layer base {
+  * {
+    @apply border-border;
   }
-
-  html[data-theme="indigo"],
-  :root {
-    --color-background: 11 12 16;
-    --color-foreground: 226 232 240;
-    --color-muted: 148 163 184;
-    --color-surface: 17 21 29;
-    --color-surface-soft: 21 27 38;
-    --color-surface-strong: 37 45 63;
-    --color-accent: 99 102 241;
-    --color-accent-muted: 129 140 248;
-    --color-on-accent: 241 245 249;
-    --color-outline: 96 165 250;
-  }
-
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
@@ -69,58 +75,53 @@
   }
 
   .site-header {
-    background-color: rgb(var(--color-background) / 0.82);
-    backdrop-filter: blur(18px);
+    @apply bg-background/80 backdrop-blur-md;
   }
 
   @supports not (backdrop-filter: blur(1px)) {
     .site-header {
-      background-color: rgb(var(--color-background));
+      @apply bg-background;
     }
   }
 
   .brand-link {
-    color: rgb(var(--color-foreground));
-    transition: color 0.2s ease;
+    @apply text-foreground transition-colors;
   }
 
   .brand-link:hover {
-    color: rgb(var(--color-foreground));
+    @apply text-foreground;
   }
 
   .brand-text {
-    display: inline-flex;
-    align-items: center;
-    color: inherit;
-    @apply text-2xl uppercase tracking-[0.12em];
+    @apply inline-flex items-center text-2xl uppercase tracking-[0.12em];
   }
 
   .card {
-    @apply rounded-2xl border border-outline/15 bg-surface-soft/95 p-6 shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-outline/30 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply rounded-2xl border border-border bg-card p-6 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-pill px-4 py-2 text-sm font-medium tracking-[-0.01em] transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   .btn-primary {
-    @apply btn bg-accent text-accent-foreground shadow-lg shadow-accent/25 hover:bg-accent/90;
+    @apply btn bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90;
   }
 
   .btn-secondary {
-    @apply btn border border-outline/30 bg-surface-soft text-foreground hover:border-outline/60 hover:bg-surface-strong/60;
+    @apply btn border border-border bg-secondary text-secondary-foreground hover:border-primary/60 hover:bg-secondary/60;
   }
 
   .btn-ghost {
-    @apply btn border border-transparent bg-transparent text-foreground/80 hover:border-outline/30 hover:bg-surface-soft/70;
+    @apply btn border border-transparent bg-transparent text-foreground/80 hover:border-border hover:bg-card/70;
   }
 
   .badge {
-    @apply inline-flex items-center rounded-pill border border-outline/30 bg-surface-soft px-2.5 py-1 text-xs font-medium uppercase tracking-wide text-muted;
+    @apply inline-flex items-center rounded-full border border-border bg-secondary px-2.5 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground;
   }
 
   .nav-link {
-    @apply relative inline-flex items-center rounded-pill px-3 py-1.5 text-sm font-medium text-muted transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply relative inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   .nav-link[data-active="true"] {
@@ -129,11 +130,11 @@
 
   .nav-link[data-active="true"]::after {
     content: "";
-    @apply absolute inset-x-2 -bottom-1 h-0.5 rounded-full bg-accent/80;
+    @apply absolute inset-x-2 -bottom-1 h-0.5 rounded-full bg-primary/80;
   }
 
   .nav-dropdown-panel {
-    @apply absolute left-0 top-full z-30 mt-2 hidden min-w-[220px] flex-col gap-1 rounded-2xl border border-outline/30 bg-surface p-3 text-sm shadow-card;
+    @apply absolute left-0 top-full z-30 mt-2 hidden min-w-[220px] flex-col gap-1 rounded-2xl border border-border bg-card p-3 text-sm shadow-lg;
   }
 
   .nav-dropdown:hover .nav-dropdown-panel,
@@ -142,59 +143,10 @@
   }
 
   .nav-dropdown-link {
-    @apply rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-surface-soft hover:text-foreground;
+    @apply rounded-xl px-3 py-2 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground;
   }
 
   .nav-dropdown-link[data-active="true"] {
     @apply text-foreground font-semibold;
-  }
-
-  html[data-theme="brill"] .site-header {
-    background-color: #0d2240;
-    backdrop-filter: none;
-    border-color: rgba(12, 32, 64, 0.5);
-  }
-
-  html[data-theme="brill"] .site-header .brand-link,
-  html[data-theme="brill"] .site-header .brand-link:hover {
-    color: #ffffff;
-  }
-
-  html[data-theme="brill"] .site-header .nav-link {
-    color: rgba(244, 247, 255, 0.75);
-  }
-
-  html[data-theme="brill"] .site-header .nav-link:hover,
-  html[data-theme="brill"] .site-header .nav-link:focus-visible {
-    color: #ffffff;
-  }
-
-  html[data-theme="brill"] .site-header .nav-link[data-active="true"] {
-    color: #ffffff;
-  }
-
-  html[data-theme="brill"] .site-header .nav-link[data-active="true"]::after {
-    background-color: #ffb500;
-  }
-
-  html[data-theme="brill"] .site-header .btn-secondary {
-    border-color: rgba(255, 255, 255, 0.3);
-    background-color: rgba(255, 255, 255, 0.14);
-    color: #f4f7ff;
-  }
-
-  html[data-theme="brill"] .site-header .btn-secondary:hover {
-    border-color: rgba(255, 255, 255, 0.45);
-    background-color: rgba(255, 255, 255, 0.22);
-  }
-
-  html[data-theme="brill"] .site-header .btn-ghost {
-    color: rgba(244, 247, 255, 0.85);
-  }
-
-  html[data-theme="brill"] .site-header .btn-ghost:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.12);
-    border-color: transparent;
   }
 }
