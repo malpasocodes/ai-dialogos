@@ -77,8 +77,8 @@ const eventCards = events.map((entry) => ({
     <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>
     {module.data.tags.length > 0 && <span hidden data-pagefind-meta={`tags:${module.data.tags.join(', ')}`}></span>}
     <h1 class="text-4xl font-semibold text-foreground">{module.data.title}</h1>
-    {module.data.subtitle && <p class="text-lg leading-relaxed text-muted">{module.data.subtitle}</p>}
-    <p class="text-xs font-medium uppercase tracking-wide text-muted">
+    {module.data.subtitle && <p class="text-lg leading-relaxed text-muted-foreground">{module.data.subtitle}</p>}
+    <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
       Updated {module.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       {module.data.tags.length > 0 && ` • ${module.data.tags.join(' · ')}`}
     </p>
@@ -89,7 +89,7 @@ const eventCards = events.map((entry) => ({
         ))}
       </ul>
     )}
-    <div class="mt-6 space-y-3 text-base leading-relaxed text-muted">
+    <div class="mt-6 space-y-3 text-base leading-relaxed text-muted-foreground">
       <Content />
     </div>
   </article>

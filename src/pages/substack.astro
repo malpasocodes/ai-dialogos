@@ -7,18 +7,18 @@ const posts = await getSubstackPosts(20);
 <Layout title="Substack Essays">
   <section class="space-y-3">
     <h1 class="text-3xl font-semibold text-foreground">Substack Essays</h1>
-    <p class="max-w-2xl text-base leading-relaxed text-muted">
+    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
       Browse recent essays syndicated from the AI-Innov Substack feed. New posts refresh on each production build.
     </p>
   </section>
   {posts.length === 0 ? (
-    <p class="mt-8 text-sm text-muted">No essays available right now. Check back soon.</p>
+    <p class="mt-8 text-sm text-muted-foreground">No essays available right now. Check back soon.</p>
   ) : (
     <div class="mt-8 space-y-5">
       {posts.map((post) => (
         <article class="card space-y-3">
           <header class="space-y-1">
-            <p class="text-xs font-medium uppercase tracking-wide text-muted">
+            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {new Date(post.published).toLocaleDateString(undefined, {
                 month: 'short',
                 day: 'numeric',
@@ -26,14 +26,14 @@ const posts = await getSubstackPosts(20);
               })}
             </p>
             <h2 class="text-xl font-semibold text-foreground">
-              <a href={post.link} class="transition hover:text-accent" rel="noopener" target="_blank">
+              <a href={post.link} class="transition hover:text-primary" rel="noopener" target="_blank">
                 {post.title}
               </a>
             </h2>
           </header>
-          {post.summary && <p class="text-sm leading-relaxed text-muted">{post.summary}</p>}
+          {post.summary && <p class="text-sm leading-relaxed text-muted-foreground">{post.summary}</p>}
           {post.tags.length > 0 && (
-            <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted">
+            <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted-foreground">
               {post.tags.map((tag) => (
                 <span class="badge" key={tag}>{tag}</span>
               ))}

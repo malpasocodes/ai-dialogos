@@ -31,7 +31,7 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
   </head>
   <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn-secondary">Skip to content</a>
-    <header class="site-header sticky top-0 z-50 border-b border-outline/15">
+    <header class="site-header sticky top-0 z-50 border-b border-border/15">
       <div class="container flex items-center justify-between gap-4 py-3">
         <a href="/" class="brand-link inline-flex items-center gap-2 text-base font-display font-semibold tracking-tight">
           <span class="brand-text">AI-DIALOGOS</span>
@@ -88,12 +88,12 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
     <main id="main" class="container py-14">
       <slot />
     </main>
-    <footer class="mt-18 border-t border-outline/15 bg-surface-soft/60">
-      <div class="container py-10 text-sm text-muted">
+    <footer class="mt-18 border-t border-border/15 bg-card/60">
+      <div class="container py-10 text-sm text-muted-foreground">
         <div class="grid gap-8 md:grid-cols-3">
           <div>
             <div class="font-semibold text-foreground">About</div>
-            <p class="mt-3 text-sm leading-relaxed text-muted">
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
               Companion site for the book “Artificial Intelligence: Shaping the Future of Innovation” (De Gruyter, 2025).
             </p>
           </div>
@@ -113,13 +113,13 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
               <input
                 type="email"
                 placeholder="you@example.edu"
-                class="w-full rounded-pill border border-outline/20 bg-surface-soft px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                class="w-full rounded-pill border border-border/20 bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               />
               <button class="btn-primary" data-analytics-event="subscribe_substack" data-analytics-value="footer_form">Subscribe</button>
             </form>
           </div>
         </div>
-        <p class="mt-8 text-xs uppercase tracking-wide text-muted">© {new Date().getFullYear()} • All rights reserved.</p>
+        <p class="mt-8 text-xs uppercase tracking-wide text-muted-foreground">© {new Date().getFullYear()} • All rights reserved.</p>
       </div>
     </footer>
     <script type="module">

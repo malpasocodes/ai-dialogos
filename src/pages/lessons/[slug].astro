@@ -59,28 +59,28 @@ const resourceCards = resources.map((entry) => ({
     {lesson.data.duration && <span hidden data-pagefind-meta={`duration:${lesson.data.duration}`}></span>}
     <span hidden data-pagefind-filter={`level:${lesson.data.level}`}></span>
     <span hidden data-pagefind-meta={`level:${lesson.data.level}`}></span>
-    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Lesson Plan</p>
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lesson Plan</p>
     <h1 class="text-4xl font-semibold text-foreground">{lesson.data.title}</h1>
-    <div class="flex flex-wrap gap-3 text-sm font-medium text-muted">
+    <div class="flex flex-wrap gap-3 text-sm font-medium text-muted-foreground">
       {module && (
         <span>
           Part of{' '}
-          <a href={`/modules/${module.slug}`} class="text-foreground transition hover:text-accent">
+          <a href={`/modules/${module.slug}`} class="text-foreground transition hover:text-primary">
             {module.data.title}
           </a>
         </span>
       )}
       {lesson.data.duration && <span class="uppercase tracking-wide">Duration: {lesson.data.duration}</span>}
     </div>
-    <p class="text-base leading-relaxed text-muted">{lesson.data.summary}</p>
-    <p class="text-xs font-medium uppercase tracking-wide text-muted">
+    <p class="text-base leading-relaxed text-muted-foreground">{lesson.data.summary}</p>
+    <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
       Updated {lesson.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       {' • '}
       Level {lesson.data.level.charAt(0).toUpperCase() + lesson.data.level.slice(1)}
     </p>
     <section class="space-y-2">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Learning objectives</h2>
-      <ul class="space-y-1 text-muted">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Learning objectives</h2>
+      <ul class="space-y-1 text-muted-foreground">
         {lesson.data.learningObjectives.map((objective) => (
           <li class="flex items-start gap-2">
             <span class="mt-1 h-1.5 w-1.5 rounded-full bg-outline/40" />
@@ -90,13 +90,13 @@ const resourceCards = resources.map((entry) => ({
       </ul>
     </section>
     {lesson.data.tags.length > 0 && (
-      <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted">
+      <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted-foreground">
         {lesson.data.tags.map((tag) => (
           <span class="badge">{tag}</span>
         ))}
       </div>
     )}
-    <div class="space-y-3 text-base leading-relaxed text-muted">
+    <div class="space-y-3 text-base leading-relaxed text-muted-foreground">
       <Content />
     </div>
   </article>

@@ -37,38 +37,38 @@ const levelOptions = Array.from(
   <section class="py-6">
     <header class="space-y-2">
       <h1 class="text-3xl font-semibold">Search the Companion Site</h1>
-      <p class="text-muted">Type a keyword and use filters to focus by content type or module.</p>
+      <p class="text-muted-foreground">Type a keyword and use filters to focus by content type or module.</p>
     </header>
     <div class="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
       <aside class="space-y-6">
         <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Filter by type</h2>
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by type</h2>
           <div class="mt-3 flex flex-wrap gap-2" data-filter-group="type" data-filter-options={JSON.stringify(typeOptions)}></div>
         </div>
         <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Filter by module</h2>
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by module</h2>
           <div class="mt-3 flex flex-col gap-2" data-filter-group="module" data-filter-options={JSON.stringify(moduleOptions)}></div>
         </div>
         <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Filter by level</h2>
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by level</h2>
           <div class="mt-3 flex flex-wrap gap-2" data-filter-group="level" data-filter-options={JSON.stringify(levelOptions)}></div>
         </div>
       </aside>
       <div class="flex flex-col gap-4">
-        <label class="text-sm font-medium text-muted" for="site-search-input">Search query</label>
+        <label class="text-sm font-medium text-muted-foreground" for="site-search-input">Search query</label>
         <div class="relative">
           <input
             id="site-search-input"
             data-search-input
             type="search"
             placeholder="Search lessons, modules, events..."
-            class="w-full rounded-pill border border-outline/20 bg-surface-soft px-4 py-3 text-base text-foreground placeholder:text-muted/70 focus:border-outline/40 focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-background"
+            class="w-full rounded-pill border border-border/20 bg-card px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:border-border/40 focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-background"
           />
-          <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted">⌘K</span>
+          <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">⌘K</span>
         </div>
-        <div class="flex items-center justify-between text-sm text-muted">
+        <div class="flex items-center justify-between text-sm text-muted-foreground">
           <p data-search-status>Start typing to explore the content library.</p>
-          <button type="button" data-clear class="text-muted hover:text-foreground">Clear</button>
+          <button type="button" data-clear class="text-muted-foreground hover:text-foreground">Clear</button>
         </div>
         <ul data-search-results class="space-y-4"></ul>
       </div>
@@ -98,7 +98,7 @@ const levelOptions = Array.from(
       button.type = 'button';
       button.textContent = label;
       button.className =
-        'rounded-pill border border-outline/20 bg-transparent px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted transition hover:text-foreground';
+        'rounded-pill border border-border/20 bg-transparent px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground transition hover:text-foreground';
       if (!value) {
         button.dataset.reset = 'true';
       } else {
@@ -145,14 +145,14 @@ const levelOptions = Array.from(
         }
         const set = activeFilters[filterName];
         const isActive = set.has(value);
-        button.classList.toggle('bg-surface-strong/70', isActive);
+        button.classList.toggle('bg-secondary/70', isActive);
         button.classList.toggle('text-foreground', isActive);
-        button.classList.toggle('border-outline/40', isActive);
+        button.classList.toggle('border-border/40', isActive);
         if (!isActive) {
-          button.classList.remove('border-outline/40');
-          button.classList.add('border-outline/20', 'text-muted');
+          button.classList.remove('border-border/40');
+          button.classList.add('border-border/20', 'text-muted-foreground');
         } else {
-          button.classList.remove('text-muted', 'border-outline/20');
+          button.classList.remove('text-muted-foreground', 'border-border/20');
         }
       });
     };
@@ -202,19 +202,19 @@ const levelOptions = Array.from(
 
         li.innerHTML = `
           <div class="flex items-center justify-between gap-3">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted">${typeLabel}</span>
-            ${moduleLabel ? `<span class="text-xs font-medium uppercase tracking-wide text-muted">${moduleLabel}</span>` : ''}
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${typeLabel}</span>
+            ${moduleLabel ? `<span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${moduleLabel}</span>` : ''}
           </div>
-          <a href="${item.url}" class="block text-lg font-semibold text-foreground transition hover:text-accent">${item.meta?.title ?? item.url}</a>
-          ${item.excerpt ? `<p class="text-sm leading-relaxed text-muted">${item.excerpt}</p>` : ''}
+          <a href="${item.url}" class="block text-lg font-semibold text-foreground transition hover:text-primary">${item.meta?.title ?? item.url}</a>
+          ${item.excerpt ? `<p class="text-sm leading-relaxed text-muted-foreground">${item.excerpt}</p>` : ''}
           ${
             secondaryMeta
-              ? `<p class="text-xs font-medium uppercase tracking-wide text-muted">${secondaryMeta}</p>`
+              ? `<p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${secondaryMeta}</p>`
               : ''
           }
           ${
             tags
-              ? `<div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted">${tags
+              ? `<div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted-foreground">${tags
                   .split(',')
                   .map((tag) => `<span class="badge">${tag.trim()}</span>`)
                   .join('')}</div>`

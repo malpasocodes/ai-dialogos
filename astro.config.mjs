@@ -6,7 +6,7 @@ import netlify from '@astrojs/netlify';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com', // Update with actual domain when ready
-  output: 'hybrid', // Changed from static to enable serverless functions
+  output: 'static', // Static by default, can add prerender: false to specific pages for SSR
   adapter: netlify(),
   integrations: [
     react(),
