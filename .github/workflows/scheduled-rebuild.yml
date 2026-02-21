@@ -1,0 +1,16 @@
+name: Scheduled site rebuild
+
+on:
+  schedule:
+    # Rebuild once daily at 06:00 UTC to pick up new Substack / podcast content
+    - cron: "0 6 * * *"
+  workflow_dispatch: # Allow manual trigger from GitHub Actions UI
+
+jobs:
+  trigger-netlify-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify build hook
+        run: |
+          curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}" \
+            || echo "::warning::Netlify build hook failed — check the secret is set"
