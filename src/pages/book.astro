@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Seo from '../components/Seo.astro';
 
-const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 ---
 <Layout title="Book">
   <Fragment slot="head">
@@ -11,10 +11,10 @@ const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
       structuredData={{
         '@type': 'Book',
         name: 'Artificial Intelligence: Shaping the Future of Innovation',
-        description: 'Companion volume for educators adopting responsible AI practices across innovation programs.',
+        description: 'A concise, non-technical primer on artificial intelligence for business leaders, practitioners, and policymakers.',
         author: {
           '@type': 'Person',
-          name: 'Monads Collective',
+          name: 'Alfred Essa',
         },
         publisher: {
           '@type': 'Organization',

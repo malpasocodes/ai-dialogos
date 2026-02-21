@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Seo from '../components/Seo.astro';
 import { getPodcastEpisodes } from '../utils/podcast';
 
-const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 
 const ordered = (await getPodcastEpisodes()).sort((a, b) => {
   const aDate = new Date(a.published).getTime();
@@ -17,18 +17,18 @@ const ordered = (await getPodcastEpisodes()).sort((a, b) => {
       renderMeta={false}
       structuredData={{
         '@type': 'PodcastSeries',
-        name: 'AI-Innov Podcast',
-        description: 'Conversations with educators and innovators on responsible AI adoption and curriculum design.',
+        name: 'AI-Dialogos Podcast',
+        description: 'Conversations with leaders and innovators on AI strategy, ethics, and adoption.',
         url: new URL(Astro.url.pathname, SITE_URL).toString(),
         publisher: {
           '@type': 'Organization',
-          name: 'AI-Innov',
+          name: 'AI-Dialogos',
         },
       }}
     />
   </Fragment>
   <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
-  <p class="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">Conversations with educators and innovators.</p>
+  <p class="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">Conversations with leaders and innovators on AI strategy, ethics, and adoption.</p>
   <div class="mt-6 flex flex-wrap items-center gap-3">
     <a
       href="https://www.youtube.com/playlist?list=PL2QoJOg_E8XD5V_8JKTj3fw-KKQetn_TK"

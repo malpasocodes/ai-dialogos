@@ -5,7 +5,7 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com', // Update with actual domain when ready
+  site: 'https://ai-dialogos.com',
   output: 'static', // Static by default, can add prerender: false to specific pages for SSR
   adapter: netlify(),
   integrations: [

@@ -1,10 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Seo from '../../components/Seo.astro';
-import { getCollection } from 'astro:content';
 import { getPodcastEpisode, getPodcastEpisodes } from '../../utils/podcast';
 
-const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-innov.example.com';
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 
 export async function getStaticPaths() {
   const episodes = await getPodcastEpisodes();
@@ -19,17 +18,9 @@ const episode = await getPodcastEpisode(slug);
 if (!episode) {
   throw new Error(`Podcast episode not found for slug: ${slug}`);
 }
-
-const modules = await getCollection('modules');
-const module = episode.moduleSlug
-  ? modules.find((entry) => entry.slug === episode.moduleSlug) ?? null
-  : null;
 ---
 <Layout title={episode.title} description={episode.summary}>
   <Fragment slot="head">
-    <meta name="pagefind:filter:type" content="podcast" />
-    {module && <meta name="pagefind:filter:module" content={module.slug} />}
-    {module && <meta name="pagefind:meta:module_title" content={module.data.title} />}
     {episode.duration && <meta name="pagefind:meta:duration" content={episode.duration} />}
     <Seo
       renderMeta={false}
@@ -44,21 +35,18 @@ const module = episode.moduleSlug
         embedUrl: episode.videoId ? `https://www.youtube.com/embed/${episode.videoId}` : undefined,
         publisher: {
           '@type': 'Organization',
-          name: 'AI-Innov',
+          name: 'AI-Dialogos',
         },
       }}
     />
   </Fragment>
-  <article class="space-y-5" data-pagefind-filter="type:podcast">
-    {module && <span hidden data-pagefind-filter={`module:${module.slug}`}></span>}
-    {module && <span hidden data-pagefind-meta={`module_title:${module.data.title}`}></span>}
+  <article class="space-y-5">
     {episode.duration && <span hidden data-pagefind-meta={`duration:${episode.duration}`}></span>}
     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Podcast Episode</p>
     <h1 class="text-4xl font-semibold text-foreground">{episode.title}</h1>
     <div class="flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
       <span>{new Date(episode.published).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
       {episode.duration && <span>• {episode.duration}</span>}
-      {module && <span>• Module {module.data.order}</span>}
     </div>
     <p class="text-base leading-relaxed text-muted-foreground">{episode.summary}</p>
     <div class="overflow-hidden rounded-2xl border border-border/20 bg-card/80 p-3">

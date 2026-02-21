@@ -1,34 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-
-const modules = await getCollection('modules');
-const lessons = await getCollection('lessons');
-
-const moduleOptions = modules
-  .sort((a, b) => a.data.order - b.data.order)
-  .map((entry) => ({
-    value: entry.slug,
-    label: entry.data.title,
-    order: entry.data.order,
-  }));
-
-const typeOptions = [
-  { value: 'module', label: 'Modules' },
-  { value: 'lesson', label: 'Lessons' },
-  { value: 'resource', label: 'Resources' },
-  { value: 'podcast', label: 'Podcast' },
-  { value: 'event', label: 'Events' },
-];
-
-const levelOptions = Array.from(
-  new Set(lessons.map((lesson) => lesson.data.level)),
-)
-  .map((value) => ({
-    value,
-    label: value.charAt(0).toUpperCase() + value.slice(1),
-  }))
-  .sort((a, b) => a.label.localeCompare(b.label));
 ---
 <Layout title="Search">
   <Fragment slot="head">
@@ -36,24 +7,10 @@ const levelOptions = Array.from(
   </Fragment>
   <section class="py-6">
     <header class="space-y-2">
-      <h1 class="text-3xl font-semibold">Search the Companion Site</h1>
-      <p class="text-muted-foreground">Type a keyword and use filters to focus by content type or module.</p>
+      <h1 class="text-3xl font-semibold">Search</h1>
+      <p class="text-muted-foreground">Type a keyword to search across the site.</p>
     </header>
-    <div class="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
-      <aside class="space-y-6">
-        <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by type</h2>
-          <div class="mt-3 flex flex-wrap gap-2" data-filter-group="type" data-filter-options={JSON.stringify(typeOptions)}></div>
-        </div>
-        <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by module</h2>
-          <div class="mt-3 flex flex-col gap-2" data-filter-group="module" data-filter-options={JSON.stringify(moduleOptions)}></div>
-        </div>
-        <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Filter by level</h2>
-          <div class="mt-3 flex flex-wrap gap-2" data-filter-group="level" data-filter-options={JSON.stringify(levelOptions)}></div>
-        </div>
-      </aside>
+    <div class="mt-8 max-w-2xl">
       <div class="flex flex-col gap-4">
         <label class="text-sm font-medium text-muted-foreground" for="site-search-input">Search query</label>
         <div class="relative">
@@ -61,13 +18,13 @@ const levelOptions = Array.from(
             id="site-search-input"
             data-search-input
             type="search"
-            placeholder="Search lessons, modules, events..."
+            placeholder="Search books, podcast, essays..."
             class="w-full rounded-pill border border-border/20 bg-card px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:border-border/40 focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-background"
           />
           <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">⌘K</span>
         </div>
         <div class="flex items-center justify-between text-sm text-muted-foreground">
-          <p data-search-status>Start typing to explore the content library.</p>
+          <p data-search-status>Start typing to search.</p>
           <button type="button" data-clear class="text-muted-foreground hover:text-foreground">Clear</button>
         </div>
         <ul data-search-results class="space-y-4"></ul>
@@ -75,95 +32,10 @@ const levelOptions = Array.from(
     </div>
   </section>
   <script type="module">
-    const moduleOptions = JSON.parse(document.querySelector('[data-filter-group="module"]').dataset.filterOptions);
-    const typeOptions = JSON.parse(document.querySelector('[data-filter-group="type"]').dataset.filterOptions);
-    const levelOptions = JSON.parse(document.querySelector('[data-filter-group="level"]').dataset.filterOptions);
-    const moduleLookup = Object.fromEntries(moduleOptions.map((option) => [option.value, option]));
-    const typeLabels = Object.fromEntries(typeOptions.map((option) => [option.value, option.label]));
-    const levelLabels = Object.fromEntries(levelOptions.map((option) => [option.value, option.label]));
-
     const searchInput = document.querySelector('[data-search-input]');
     const resultsList = document.querySelector('[data-search-results]');
     const statusEl = document.querySelector('[data-search-status]');
     const clearButton = document.querySelector('[data-clear]');
-
-    const activeFilters = {
-      type: new Set(),
-      module: new Set(),
-      level: new Set(),
-    };
-
-    const createFilterButton = (label, value, filterName) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = label;
-      button.className =
-        'rounded-pill border border-border/20 bg-transparent px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground transition hover:text-foreground';
-      if (!value) {
-        button.dataset.reset = 'true';
-      } else {
-        button.dataset.value = value;
-        button.dataset.filter = filterName;
-      }
-      return button;
-    };
-
-    const renderFilterGroup = (container, filterName, options) => {
-      if (filterName === 'type') {
-        const allButton = createFilterButton('All types', '', filterName);
-        allButton.classList.add('font-medium');
-        allButton.addEventListener('click', () => {
-          activeFilters.type.clear();
-          updateActiveFilterStyles(container, filterName);
-          triggerSearch(searchInput.value);
-        });
-        container.appendChild(allButton);
-      }
-
-      options.forEach((option) => {
-        const optionValue = option.value ?? option.slug ?? '';
-        const optionLabel = option.label ?? option.title ?? optionValue;
-        const button = createFilterButton(optionLabel, optionValue, filterName);
-        button.addEventListener('click', () => {
-          const set = activeFilters[filterName];
-          set.has(optionValue) ? set.delete(optionValue) : set.add(optionValue);
-          updateActiveFilterStyles(container, filterName);
-          triggerSearch(searchInput.value);
-        });
-        container.appendChild(button);
-      });
-    };
-
-    const updateActiveFilterStyles = (container, filterName) => {
-      container.querySelectorAll('button').forEach((button) => {
-        const value = button.dataset.value;
-        if (!value) {
-          if (filterName === 'type') {
-            button.classList.toggle('text-foreground', activeFilters.type.size === 0);
-          }
-          return;
-        }
-        const set = activeFilters[filterName];
-        const isActive = set.has(value);
-        button.classList.toggle('bg-secondary/70', isActive);
-        button.classList.toggle('text-foreground', isActive);
-        button.classList.toggle('border-border/40', isActive);
-        if (!isActive) {
-          button.classList.remove('border-border/40');
-          button.classList.add('border-border/20', 'text-muted-foreground');
-        } else {
-          button.classList.remove('text-muted-foreground', 'border-border/20');
-        }
-      });
-    };
-
-    const filterGroups = document.querySelectorAll('[data-filter-group]');
-    filterGroups.forEach((group) => {
-      const filterName = group.dataset.filterGroup;
-      const options = JSON.parse(group.dataset.filterOptions);
-      renderFilterGroup(group, filterName, options);
-      updateActiveFilterStyles(group, filterName);
-    });
 
     let pagefindModule;
     const ensurePagefind = async () => {
@@ -175,14 +47,11 @@ const levelOptions = Array.from(
     };
 
     let searchToken = 0;
-    let keyboardShortcutBound = false;
-
-    const humanizeType = (value) => typeLabels[value] ?? value ?? 'Page';
 
     const renderResults = (items) => {
       resultsList.innerHTML = '';
       if (!items.length) {
-        statusEl.textContent = 'No matches yet. Try a different keyword or adjust filters.';
+        statusEl.textContent = 'No matches found. Try a different keyword.';
         return;
       }
 
@@ -190,36 +59,9 @@ const levelOptions = Array.from(
       items.forEach((item) => {
         const li = document.createElement('li');
         li.className = 'card space-y-3';
-        const typeLabel = humanizeType(item.filters?.type?.[0]);
-        const moduleSlug = item.filters?.module?.[0];
-        const moduleLabel = item.meta?.module_title ?? moduleLookup[moduleSlug]?.label;
-        const tags = item.meta?.tags;
-        const levelValue = item.meta?.level ?? item.filters?.level?.[0];
-        const levelLabel = levelValue ? (levelLabels[levelValue] ?? levelValue) : null;
-        const secondaryMeta = [moduleLabel, levelLabel, item.meta?.resource_type?.replace('-', ' '), item.meta?.duration]
-          .filter(Boolean)
-          .join(' • ');
-
         li.innerHTML = `
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${typeLabel}</span>
-            ${moduleLabel ? `<span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${moduleLabel}</span>` : ''}
-          </div>
           <a href="${item.url}" class="block text-lg font-semibold text-foreground transition hover:text-primary">${item.meta?.title ?? item.url}</a>
           ${item.excerpt ? `<p class="text-sm leading-relaxed text-muted-foreground">${item.excerpt}</p>` : ''}
-          ${
-            secondaryMeta
-              ? `<p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">${secondaryMeta}</p>`
-              : ''
-          }
-          ${
-            tags
-              ? `<div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-muted-foreground">${tags
-                  .split(',')
-                  .map((tag) => `<span class="badge">${tag.trim()}</span>`)
-                  .join('')}</div>`
-              : ''
-          }
         `;
         fragment.appendChild(li);
       });
@@ -230,19 +72,7 @@ const levelOptions = Array.from(
     const performSearch = async (query) => {
       const token = ++searchToken;
       const pf = await ensurePagefind();
-
-      const filters = {};
-      if (activeFilters.type.size) {
-        filters.type = Array.from(activeFilters.type);
-      }
-      if (activeFilters.module.size) {
-        filters.module = Array.from(activeFilters.module);
-      }
-      if (activeFilters.level.size) {
-        filters.level = Array.from(activeFilters.level);
-      }
-
-      const response = await pf.search(query, { filters });
+      const response = await pf.search(query);
       if (token !== searchToken) return;
       if (!response || !response.results) {
         statusEl.textContent = 'Search unavailable.';
@@ -260,6 +90,11 @@ const levelOptions = Array.from(
     let debounceHandle;
     const triggerSearch = (value) => {
       const query = value.trim();
+      if (!query) {
+        resultsList.innerHTML = '';
+        statusEl.textContent = 'Start typing to search.';
+        return;
+      }
       statusEl.textContent = 'Searching...';
       if (debounceHandle) window.clearTimeout(debounceHandle);
       debounceHandle = window.setTimeout(() => {
@@ -273,25 +108,15 @@ const levelOptions = Array.from(
 
     clearButton.addEventListener('click', () => {
       searchInput.value = '';
-      activeFilters.type.clear();
-      activeFilters.module.clear();
-      activeFilters.level.clear();
-      filterGroups.forEach((group) => updateActiveFilterStyles(group, group.dataset.filterGroup));
-      triggerSearch('');
+      resultsList.innerHTML = '';
+      statusEl.textContent = 'Start typing to search.';
     });
 
-    const bindKeyboardShortcut = () => {
-      if (keyboardShortcutBound) return;
-      keyboardShortcutBound = true;
-      window.addEventListener('keydown', (event) => {
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-          event.preventDefault();
-          searchInput.focus();
-        }
-      });
-    };
-
-    bindKeyboardShortcut();
-    triggerSearch('');
+    window.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        searchInput.focus();
+      }
+    });
   </script>
 </Layout>
