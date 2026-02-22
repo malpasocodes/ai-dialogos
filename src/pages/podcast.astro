@@ -4,12 +4,7 @@ import Seo from '../components/Seo.astro';
 import { getPodcastEpisodes } from '../utils/podcast';
 
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
-
-const ordered = (await getPodcastEpisodes()).sort((a, b) => {
-  const aDate = new Date(a.published).getTime();
-  const bDate = new Date(b.published).getTime();
-  return bDate - aDate;
-});
+const episodes = await getPodcastEpisodes();
 ---
 <Layout title="Podcast">
   <Fragment slot="head">
@@ -18,7 +13,7 @@ const ordered = (await getPodcastEpisodes()).sort((a, b) => {
       structuredData={{
         '@type': 'PodcastSeries',
         name: 'AI-Dialogos Podcast',
-        description: 'Conversations with leaders and innovators on AI strategy, ethics, and adoption.',
+        description: 'Structured conversations on AI strategy, governance, ethics, and leadership — companion to the AI Essentials for Leaders book series.',
         url: new URL(Astro.url.pathname, SITE_URL).toString(),
         publisher: {
           '@type': 'Organization',
@@ -27,72 +22,64 @@ const ordered = (await getPodcastEpisodes()).sort((a, b) => {
       }}
     />
   </Fragment>
-  <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
-  <p class="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">Conversations with leaders and innovators on AI strategy, ethics, and adoption.</p>
+  <section class="space-y-3">
+    <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
+    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
+      Structured conversations on AI strategy, governance, ethics, and leadership. New episodes refresh on each production build.
+    </p>
+  </section>
   <div class="mt-6 flex flex-wrap items-center gap-3">
     <a
-      href="https://www.youtube.com/playlist?list=PL2QoJOg_E8XD5V_8JKTj3fw-KKQetn_TK"
+      href="https://aidialogos.substack.com"
       class="btn-secondary"
       target="_blank"
       rel="noopener noreferrer"
-      data-analytics-event="podcast_playlist"
-      data-analytics-value="youtube"
+      data-analytics-event="podcast_subscribe"
+      data-analytics-value="substack"
     >
-      Watch on YouTube
+      Subscribe on Substack
     </a>
   </div>
-  <div class="mt-8 space-y-5">
-    {ordered.map((episode) => (
-      <article class="card" id={episode.slug}>
-        <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h3 class="text-lg font-semibold text-foreground">
-              <a href={`/podcast/${episode.slug}`} class="transition hover:text-primary">
-                {episode.title}
-              </a>
-            </h3>
-            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {new Date(episode.published).toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </p>
-          </div>
-          {episode.duration && (
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{episode.duration}</span>
-          )}
-        </header>
-        <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{episode.summary}</p>
-        <div class="mt-4 flex flex-wrap items-center gap-3">
-          {episode.image && (
+  {episodes.length === 0 ? (
+    <p class="mt-8 text-sm text-muted-foreground">No episodes available yet. Check back soon.</p>
+  ) : (
+    <div class="mt-8 space-y-5">
+      {episodes.map((episode) => (
+        <article class="card space-y-3">
+          <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div class="space-y-1">
+              <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {new Date(episode.published).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </p>
+              <h2 class="text-xl font-semibold text-foreground">
+                <a href={episode.link} class="transition hover:text-primary" rel="noopener" target="_blank">
+                  {episode.title}
+                </a>
+              </h2>
+            </div>
+            {episode.duration && (
+              <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{episode.duration}</span>
+            )}
+          </header>
+          {episode.summary && <p class="text-sm leading-relaxed text-muted-foreground">{episode.summary}</p>}
+          <div class="flex flex-wrap items-center gap-3">
             <a
-              href={`/podcast/${episode.slug}`}
-              class="block w-full max-w-[140px] overflow-hidden rounded-2xl border border-border/20 bg-card/80 transition hover:border-border/30"
-            >
-              <img
-                src={episode.image}
-                alt={`Thumbnail for ${episode.title}`}
-                loading="lazy"
-                class="h-auto w-full object-cover"
-              />
-            </a>
-          )}
-          <div class="flex flex-wrap gap-2">
-            <a href={`/podcast/${episode.slug}`} class="btn-secondary">Episode details</a>
-            <a
-              href={episode.videoUrl}
+              href={episode.link}
               class="btn-secondary"
               target="_blank"
               rel="noopener noreferrer"
-              data-analytics-event="watch_episode"
-              data-analytics-value={episode.videoId || episode.slug}
+              data-analytics-event="listen_episode"
+              data-analytics-value={episode.title}
             >
-              Watch on YouTube
+              Listen on Substack
             </a>
           </div>
-        </div>
-      </article>
-    ))}
-  </div>
+        </article>
+      ))}
+    </div>
+  )}
 </Layout>

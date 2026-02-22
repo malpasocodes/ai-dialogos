@@ -22,12 +22,11 @@ const substackCards = substackPosts.map((post) => ({
 }));
 
 const podcastCards = (await getPodcastEpisodes())
-  .sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime())
   .slice(0, 3)
   .map((episode) => ({
     title: episode.title,
     description: episode.summary,
-    href: `/podcast/${episode.slug}`,
+    href: episode.link,
     meta: episode.duration,
   }));
 ---
