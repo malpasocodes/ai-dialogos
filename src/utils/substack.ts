@@ -20,7 +20,7 @@ export interface SubstackPost {
 }
 
 const FEED_URL =
-  import.meta.env.SUBSTACK_RSS_URL ?? "https://ai-innov.substack.com/feed";
+  import.meta.env.SUBSTACK_RSS_URL ?? "https://aidialogos.substack.com/feed";
 
 const parser = new Parser({ timeout: 10000 });
 

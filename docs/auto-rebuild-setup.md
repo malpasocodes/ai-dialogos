@@ -24,14 +24,14 @@ This fires a rebuild within minutes of a new Substack post.
 
 | Step | App | Action |
 |------|-----|--------|
-| 1 | **RSS by Zapier** | New Item in Feed — use `https://ai-innov.substack.com/feed` |
+| 1 | **RSS by Zapier** | New Item in Feed — use `https://aidialogos.substack.com/feed` |
 | 2 | **Webhooks by Zapier** | POST to your Netlify build hook URL |
 
 ### Make (Integromat)
 
 | Module | Config |
 |--------|--------|
-| **RSS** | Watch feed `https://ai-innov.substack.com/feed`, poll every 15 min |
+| **RSS** | Watch feed `https://aidialogos.substack.com/feed`, poll every 15 min |
 | **HTTP** | POST to Netlify build hook URL, empty body |
 
 ---
