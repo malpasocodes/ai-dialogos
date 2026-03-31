@@ -11,7 +11,13 @@ const navItems = [
     ],
   },
   { label: "Substack", href: "/substack" },
-  { label: "Podcast", href: "/podcast" },
+  {
+    label: "Podcast",
+    children: [
+      { label: "Overview", href: "/podcast" },
+      { label: "Guests", href: "/podcast/guests" },
+    ],
+  },
   { label: "About", href: "/about" },
 ];
 import '../styles/global.css';
