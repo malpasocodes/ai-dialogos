@@ -14,12 +14,15 @@ type RSSItem = {
 
 export interface PodcastEpisode {
   title: string;
+  slug: string;
   link: string;
   published: string;
   summary: string;
   duration?: string;
   audioUrl?: string;
   image?: string;
+  videoUrl?: string;
+  videoId?: string;
 }
 
 const FEED_URL =
@@ -62,8 +65,15 @@ const mapItem = (item: RSSItem): PodcastEpisode | null => {
     item.contentSnippet ??
     (item.content ? item.content.replace(/<[^>]+>/g, "").slice(0, 300) : "");
 
+  const slug = item.title
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
   return {
     title: item.title.trim(),
+    slug,
     link: item.link,
     published: new Date(published).toISOString(),
     summary: summary.trim(),
@@ -106,4 +116,11 @@ export const getPodcastEpisodes = async (
 
   cachedEpisodes = cachedFallback;
   return cachedFallback.slice(0, limit);
+};
+
+export const getPodcastEpisode = async (
+  slug: string,
+): Promise<PodcastEpisode | undefined> => {
+  const episodes = await getPodcastEpisodes();
+  return episodes.find((ep) => ep.slug === slug);
 };

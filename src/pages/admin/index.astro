@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const { userId } = Astro.locals.auth();
+
+if (!userId) {
+  return Astro.redirect('/sign-in');
+}
+---
+<Layout title="Admin">
+  <section class="space-y-4">
+    <h1 class="text-3xl font-semibold text-foreground">Admin</h1>
+    <p class="text-base leading-relaxed text-muted-foreground">
+      Welcome. You are signed in as admin.
+    </p>
+    <div class="mt-6 rounded-2xl border border-border/20 bg-card p-6 space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Content Management</h2>
+      <p class="text-sm text-muted-foreground">Page editing features coming soon.</p>
+    </div>
+  </section>
+</Layout>

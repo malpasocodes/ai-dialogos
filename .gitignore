@@ -3,5 +3,9 @@ dist/
 .astro/
 *.zip
 
+# Environment variables
+.env
+.env.local
+
 # Local Netlify folder
 .netlify

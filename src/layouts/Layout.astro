@@ -23,6 +23,7 @@ const navItems = [
 import '../styles/global.css';
 import Seo from '../components/Seo.astro';
 import { ThemeSelector } from '../components/ThemeSelector';
+import { UserButton } from '../components/UserButton';
 const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
 ---
 <!doctype html>
@@ -86,10 +87,7 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
         </nav>
         <div class="flex items-center gap-2">
           <ThemeSelector client:load />
-          <a href="/search" class="btn-secondary hidden shrink-0 md:inline-flex">Search</a>
-          <a href="/search" class="btn-secondary md:hidden" aria-label="Search">
-            🔍
-          </a>
+          <UserButton client:only="react" />
         </div>
       </div>
     </header>

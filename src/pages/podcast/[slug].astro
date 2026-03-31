@@ -1,0 +1,84 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+import Seo from '../../components/Seo.astro';
+import { getPodcastEpisode, getPodcastEpisodes } from '../../utils/podcast';
+
+const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
+
+export async function getStaticPaths() {
+  const episodes = await getPodcastEpisodes();
+  return episodes.map((episode) => ({
+    params: { slug: episode.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const episode = await getPodcastEpisode(slug);
+
+if (!episode) {
+  throw new Error(`Podcast episode not found for slug: ${slug}`);
+}
+---
+<Layout title={episode.title} description={episode.summary}>
+  <Fragment slot="head">
+    {episode.duration && <meta name="pagefind:meta:duration" content={episode.duration} />}
+    <Seo
+      renderMeta={false}
+      structuredData={{
+        '@type': 'VideoObject',
+        name: episode.title,
+        description: episode.summary,
+        uploadDate: episode.published,
+        url: new URL(Astro.url.pathname, SITE_URL).toString(),
+        thumbnailUrl: episode.image ? [episode.image] : undefined,
+        contentUrl: episode.videoUrl,
+        embedUrl: episode.videoId ? `https://www.youtube.com/embed/${episode.videoId}` : undefined,
+        publisher: {
+          '@type': 'Organization',
+          name: 'AI-Dialogos',
+        },
+      }}
+    />
+  </Fragment>
+  <article class="space-y-5">
+    {episode.duration && <span hidden data-pagefind-meta={`duration:${episode.duration}`}></span>}
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Podcast Episode</p>
+    <h1 class="text-4xl font-semibold text-foreground">{episode.title}</h1>
+    <div class="flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <span>{new Date(episode.published).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+      {episode.duration && <span>• {episode.duration}</span>}
+    </div>
+    <p class="text-base leading-relaxed text-muted-foreground">{episode.summary}</p>
+    <div class="overflow-hidden rounded-2xl border border-border/20 bg-card/80 p-3">
+      {episode.videoId ? (
+        <div class="relative w-full overflow-hidden rounded-xl" style="padding-top: 56.25%;">
+          <iframe
+            src={`https://www.youtube.com/embed/${episode.videoId}`}
+            title={episode.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            class="absolute inset-0 h-full w-full border-0"
+            data-analytics-event="watch_episode"
+            data-analytics-value={episode.videoId}
+          ></iframe>
+        </div>
+      ) : (
+        <a
+          href={episode.videoUrl}
+          class="btn-secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="watch_episode"
+          data-analytics-value={episode.slug}
+        >
+          Watch on YouTube
+        </a>
+      )}
+    </div>
+    <div class="flex items-center gap-3 text-sm text-muted-foreground">
+      <a href={episode.link} target="_blank" rel="noopener" class="btn-secondary">Open on YouTube</a>
+    </div>
+  </article>
+</Layout>
