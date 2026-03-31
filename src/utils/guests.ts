@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { join, dirname } from 'node:path';
 
 export interface Guest {
   id: string;
@@ -10,7 +11,8 @@ export interface Guest {
   headshot: string | null;
 }
 
-const filePath = join(process.cwd(), 'src/data/guests.json');
+const thisDir = dirname(fileURLToPath(import.meta.url));
+const filePath = join(thisDir, '..', 'data', 'guests.json');
 
 export function getGuests(): Guest[] {
   const raw = readFileSync(filePath, 'utf-8');

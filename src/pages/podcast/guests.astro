@@ -1,8 +1,10 @@
 ---
+export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import { getGuests } from '../../utils/guests';
+import type { Guest } from '../../utils/guests';
+import guestData from '../../data/guests.json';
 
-const guests = getGuests();
+const guests = guestData as Guest[];
 ---
 <Layout title="Podcast Guests">
   <section class="space-y-3">
