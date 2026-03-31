@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { GuestManager } from '../../components/GuestManager';
+
+const { userId } = Astro.locals.auth();
+
+if (!userId) {
+  return Astro.redirect('/sign-in');
+}
+
+if (userId !== import.meta.env.ADMIN_USER_ID) {
+  return Astro.redirect('/');
+}
+---
+<Layout title="Manage Guests">
+  <section class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-semibold text-foreground">Manage Guests</h1>
+      <a href="/admin" class="btn-secondary">Back to Admin</a>
+    </div>
+    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
+      Add, edit, or remove podcast guests.
+    </p>
+  </section>
+  <div class="mt-8">
+    <GuestManager client:load />
+  </div>
+</Layout>

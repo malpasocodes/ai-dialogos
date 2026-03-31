@@ -13,9 +13,11 @@ if (!userId) {
     <p class="text-base leading-relaxed text-muted-foreground">
       Welcome. You are signed in as admin.
     </p>
-    <div class="mt-6 rounded-2xl border border-border/20 bg-card p-6 space-y-3">
-      <h2 class="text-lg font-semibold text-foreground">Content Management</h2>
-      <p class="text-sm text-muted-foreground">Page editing features coming soon.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <a href="/admin/guests" class="card flex flex-col gap-2 transition hover:border-primary/40">
+        <h2 class="text-lg font-semibold text-foreground">Podcast Guests</h2>
+        <p class="text-sm text-muted-foreground">Add, edit, or remove podcast guests.</p>
+      </a>
     </div>
   </section>
 </Layout>

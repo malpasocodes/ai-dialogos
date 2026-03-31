@@ -1,0 +1,26 @@
+[
+  {
+    "id": "guest_aosei",
+    "name": "Dr. Amara Osei",
+    "initials": "AO",
+    "bio": "Chief AI Officer at Meridian Health Systems and former MIT research fellow. Dr. Osei specializes in the ethical deployment of machine learning in healthcare and has advised the WHO on AI governance frameworks.",
+    "episodeTitle": "Responsible AI in Healthcare: From Lab to Bedside",
+    "headshot": null
+  },
+  {
+    "id": "guest_mchenramirez",
+    "name": "Marcus Chen-Ramirez",
+    "initials": "MC",
+    "bio": "Managing Director of Venture Intelligence at Horizon Capital and co-author of The Algorithmic Enterprise. He has led over $2B in AI-focused investments across fintech, logistics, and defense sectors.",
+    "episodeTitle": "Venture Capital's Bet on Generative AI: Hype vs. Reality",
+    "headshot": null
+  },
+  {
+    "id": "guest_isolberg",
+    "name": "Prof. Ingrid Solberg",
+    "initials": "IS",
+    "bio": "Chair of Digital Strategy at INSEAD and Senior Fellow at the Brookings Institution. Prof. Solberg's research focuses on how executive teams integrate AI into corporate decision-making without losing organizational agility.",
+    "episodeTitle": "Boardroom AI: How Leaders Make Decisions with Machines",
+    "headshot": null
+  }
+]
