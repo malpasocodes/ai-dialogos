@@ -115,7 +115,8 @@ export function GuestManager() {
 
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      setError(data.error || 'Failed to save.');
+      const detail = data.debug ? ` (${JSON.stringify(data.debug)})` : '';
+      setError((data.error || `Failed to save (HTTP ${res.status})`) + detail);
       setSaving(false);
       return;
     }
