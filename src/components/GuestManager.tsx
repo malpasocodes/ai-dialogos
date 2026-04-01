@@ -255,7 +255,7 @@ export function GuestManager() {
             )}
             <div className="flex-1 space-y-1">
               <h3 className="text-base font-semibold text-foreground">{guest.name}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">{guest.bio}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">{guest.bio}</p>
               <p className="text-xs text-muted-foreground">
                 <span className="font-medium uppercase tracking-wide">Episode:</span>{' '}
                 {guest.episodeTitle}
