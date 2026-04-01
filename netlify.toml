@@ -8,13 +8,13 @@
 [functions]
   directory = "netlify/functions"
 
-# Add these redirects for future API endpoints
-[[redirects]]
-  from = "/trpc/*"
-  to = "/.netlify/functions/trpc/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
+# Uncomment these when using standalone Netlify Functions (not Astro SSR routes)
+# [[redirects]]
+#   from = "/trpc/*"
+#   to = "/.netlify/functions/trpc/:splat"
+#   status = 200
+#
+# [[redirects]]
+#   from = "/api/*"
+#   to = "/.netlify/functions/api/:splat"
+#   status = 200
