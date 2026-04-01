@@ -22,6 +22,7 @@ const navItems = [
 ];
 import '../styles/global.css';
 import Seo from '../components/Seo.astro';
+import { MainNav } from '../components/MainNav';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { UserButton } from '../components/UserButton';
 const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
@@ -44,47 +45,7 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
         <a href="/" class="brand-link inline-flex items-center gap-2 text-base font-display font-semibold tracking-tight">
           <span class="brand-text">AI-DIALOGOS</span>
         </a>
-        <nav class="hidden items-center gap-2 md:flex">
-          {navItems.map((item) => {
-            const children = item.children ?? [];
-            const isActive = item.href
-              ? currentPath === item.href || currentPath.startsWith(`${item.href}/`)
-              : children.some((child) => currentPath === child.href || currentPath.startsWith(`${child.href}/`));
-            if (children.length > 0) {
-              return (
-                <div class="nav-dropdown group relative">
-                  <button class="nav-link inline-flex items-center gap-1" type="button" data-active={isActive}>
-                    {item.label}
-                    <svg
-                      class="h-3 w-3 transition-transform group-hover:-rotate-180"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                  <div class="nav-dropdown-panel">
-                    {children.map((child) => (
-                      <a
-                        href={child.href}
-                        class="nav-dropdown-link"
-                        data-active={currentPath === child.href || currentPath.startsWith(`${child.href}/`)}
-                      >
-                        {child.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <a href={item.href} class="nav-link" data-active={isActive}>
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
+        <MainNav items={navItems} currentPath={currentPath} client:load />
         <div class="flex items-center gap-2">
           <ThemeSelector client:load />
           <UserButton client:only="react" />
