@@ -7,6 +7,7 @@ interface Guest {
   bio: string;
   episodeTitle: string;
   headshot: string | null;
+  position: number;
 }
 
 interface GuestForm {
@@ -14,9 +15,10 @@ interface GuestForm {
   initials: string;
   bio: string;
   episodeTitle: string;
+  position: string;
 }
 
-const emptyForm: GuestForm = { name: '', initials: '', bio: '', episodeTitle: '' };
+const emptyForm: GuestForm = { name: '', initials: '', bio: '', episodeTitle: '', position: '0' };
 
 export function GuestManager() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -57,6 +59,7 @@ export function GuestManager() {
       initials: guest.initials,
       bio: guest.bio,
       episodeTitle: guest.episodeTitle,
+      position: String(guest.position),
     });
     setImagePreview(guest.headshot);
     setImageFile(null);
@@ -108,6 +111,7 @@ export function GuestManager() {
     body.append('bio', form.bio);
     body.append('episodeTitle', form.episodeTitle);
     if (form.initials) body.append('initials', form.initials);
+    body.append('position', form.position);
     if (imageFile) body.append('headshot', imageFile);
     if (removeHeadshot) body.append('removeHeadshot', 'true');
 
@@ -185,7 +189,7 @@ export function GuestManager() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-3">
             <label className="space-y-1">
               <span className="text-sm font-medium text-foreground">Name <span className="text-red-500">*</span></span>
               <input
@@ -203,6 +207,17 @@ export function GuestManager() {
                 maxLength={3}
                 placeholder="e.g. AO"
                 onChange={(e) => updateField('initials', e.target.value.toUpperCase())}
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+              />
+            </label>
+            <label className="space-y-1">
+              <span className="text-sm font-medium text-foreground">Position</span>
+              <input
+                type="number"
+                value={form.position}
+                min={0}
+                placeholder="0"
+                onChange={(e) => updateField('position', e.target.value)}
                 className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
               />
             </label>
@@ -254,7 +269,10 @@ export function GuestManager() {
               </div>
             )}
             <div className="flex-1 space-y-1">
-              <h3 className="text-base font-semibold text-foreground">{guest.name}</h3>
+              <h3 className="text-base font-semibold text-foreground">
+                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded bg-primary/15 text-xs font-medium text-primary">{guest.position}</span>
+                {guest.name}
+              </h3>
               <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">{guest.bio}</p>
               <p className="text-xs text-muted-foreground">
                 <span className="font-medium uppercase tracking-wide">Episode:</span>{' '}

@@ -18,6 +18,7 @@ export const PUT: APIRoute = async ({ locals, params, request }) => {
   const initials = formData.get('initials') as string | null;
   const imageFile = formData.get('headshot') as File | null;
   const removeHeadshot = formData.get('removeHeadshot') === 'true';
+  const positionStr = formData.get('position') as string | null;
 
   if (!name || !bio || !episodeTitle) {
     return new Response(JSON.stringify({ error: 'Name, bio, and episode title are required' }), { status: 400 });
@@ -38,6 +39,7 @@ export const PUT: APIRoute = async ({ locals, params, request }) => {
     episodeTitle,
     initials: initials || undefined,
     headshot,
+    position: positionStr ? parseInt(positionStr, 10) : undefined,
   });
 
   if (!guest) {

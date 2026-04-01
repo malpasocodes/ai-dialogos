@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { guests as guestsTable } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, asc } from 'drizzle-orm';
 
 export interface Guest {
   id: string;
@@ -9,6 +9,7 @@ export interface Guest {
   bio: string;
   episodeTitle: string;
   headshot: string | null;
+  position: number;
 }
 
 function deriveInitials(name: string): string {
@@ -28,11 +29,12 @@ function toGuest(row: typeof guestsTable.$inferSelect): Guest {
     bio: row.bio,
     episodeTitle: row.episodeTitle,
     headshot: row.headshot,
+    position: row.position,
   };
 }
 
 export async function getGuests(): Promise<Guest[]> {
-  const rows = await db.select().from(guestsTable);
+  const rows = await db.select().from(guestsTable).orderBy(asc(guestsTable.position));
   return rows.map(toGuest);
 }
 
@@ -47,6 +49,7 @@ export async function createGuest(data: {
   episodeTitle: string;
   initials?: string;
   headshot?: string | null;
+  position?: number;
 }): Promise<Guest> {
   const [row] = await db.insert(guestsTable).values({
     name: data.name,
@@ -54,6 +57,7 @@ export async function createGuest(data: {
     bio: data.bio,
     episodeTitle: data.episodeTitle,
     headshot: data.headshot ?? null,
+    position: data.position ?? 0,
   }).returning();
   return toGuest(row);
 }
@@ -64,6 +68,7 @@ export async function updateGuest(id: string, data: {
   episodeTitle?: string;
   initials?: string;
   headshot?: string | null;
+  position?: number;
 }): Promise<Guest | undefined> {
   const updates: Record<string, unknown> = {};
   if (data.name !== undefined) updates.name = data.name;
@@ -71,6 +76,7 @@ export async function updateGuest(id: string, data: {
   if (data.episodeTitle !== undefined) updates.episodeTitle = data.episodeTitle;
   if (data.initials !== undefined) updates.initials = data.initials;
   if (data.headshot !== undefined) updates.headshot = data.headshot;
+  if (data.position !== undefined) updates.position = data.position;
 
   // Auto-derive initials if name changed and initials not explicitly set
   if (data.name && !data.initials) {
