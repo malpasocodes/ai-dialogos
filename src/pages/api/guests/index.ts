@@ -8,7 +8,7 @@ function isAdmin(locals: App.Locals): boolean {
 }
 
 export const GET: APIRoute = async () => {
-  const guests = getGuests();
+  const guests = await getGuests();
   return new Response(JSON.stringify(guests), {
     headers: { 'Content-Type': 'application/json' },
   });
@@ -26,11 +26,11 @@ export const POST: APIRoute = async ({ locals, request }) => {
     return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
   }
 
-  const guests = getGuests();
+  const guests = await getGuests();
   const id = `guest_${Date.now()}`;
   const newGuest: Guest = { id, name, initials, bio, episodeTitle, headshot: null };
   guests.push(newGuest);
-  saveGuests(guests);
+  await saveGuests(guests);
 
   return new Response(JSON.stringify(newGuest), {
     status: 201,

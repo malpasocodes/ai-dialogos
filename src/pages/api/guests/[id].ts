@@ -12,7 +12,7 @@ export const PUT: APIRoute = async ({ locals, params, request }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const guests = getGuests();
+  const guests = await getGuests();
   const index = guests.findIndex((g) => g.id === params.id);
   if (index === -1) {
     return new Response(JSON.stringify({ error: 'Guest not found' }), { status: 404 });
@@ -26,7 +26,7 @@ export const PUT: APIRoute = async ({ locals, params, request }) => {
   }
 
   guests[index] = { ...guests[index], name, initials, bio, episodeTitle };
-  saveGuests(guests);
+  await saveGuests(guests);
 
   return new Response(JSON.stringify(guests[index]), {
     headers: { 'Content-Type': 'application/json' },
@@ -38,14 +38,14 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const guests = getGuests();
+  const guests = await getGuests();
   const index = guests.findIndex((g) => g.id === params.id);
   if (index === -1) {
     return new Response(JSON.stringify({ error: 'Guest not found' }), { status: 404 });
   }
 
   guests.splice(index, 1);
-  saveGuests(guests);
+  await saveGuests(guests);
 
   return new Response(JSON.stringify({ ok: true }), {
     headers: { 'Content-Type': 'application/json' },

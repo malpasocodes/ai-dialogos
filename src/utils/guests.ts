@@ -1,6 +1,5 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { join, dirname } from 'node:path';
+import { getStore } from '@netlify/blobs';
+import seedData from '../data/guests.json';
 
 export interface Guest {
   id: string;
@@ -11,14 +10,23 @@ export interface Guest {
   headshot: string | null;
 }
 
-const thisDir = dirname(fileURLToPath(import.meta.url));
-const filePath = join(thisDir, '..', 'data', 'guests.json');
+const STORE_NAME = 'guests';
+const BLOB_KEY = 'guests-list';
 
-export function getGuests(): Guest[] {
-  const raw = readFileSync(filePath, 'utf-8');
-  return JSON.parse(raw) as Guest[];
+export async function getGuests(): Promise<Guest[]> {
+  try {
+    const store = getStore(STORE_NAME);
+    const data = await store.get(BLOB_KEY);
+    if (data) {
+      return JSON.parse(data) as Guest[];
+    }
+  } catch {
+    // Blobs not available (local dev without netlify dev) — fall through to seed data
+  }
+  return seedData as Guest[];
 }
 
-export function saveGuests(guests: Guest[]): void {
-  writeFileSync(filePath, JSON.stringify(guests, null, 2) + '\n', 'utf-8');
+export async function saveGuests(guests: Guest[]): Promise<void> {
+  const store = getStore(STORE_NAME);
+  await store.set(BLOB_KEY, JSON.stringify(guests));
 }
