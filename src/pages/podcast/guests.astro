@@ -1,10 +1,8 @@
 ---
-export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import type { Guest } from '../../utils/guests';
-import guestData from '../../data/guests.json';
+import { getGuests } from '../../utils/guests';
 
-const guests = guestData as Guest[];
+const guests = await getGuests();
 ---
 <Layout title="Podcast Guests">
   <section class="space-y-3">
@@ -17,9 +15,13 @@ const guests = guestData as Guest[];
   <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {guests.map((guest) => (
       <article class="card flex flex-col items-center text-center space-y-4">
-        <div class="flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 text-2xl font-semibold text-primary">
-          {guest.initials}
-        </div>
+        {guest.headshot ? (
+          <img src={guest.headshot} alt={guest.name} class="h-24 w-24 rounded-full object-cover border border-border" />
+        ) : (
+          <div class="flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 text-2xl font-semibold text-primary">
+            {guest.initials}
+          </div>
+        )}
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-foreground">{guest.name}</h2>
           <p class="text-sm leading-relaxed text-muted-foreground">{guest.bio}</p>

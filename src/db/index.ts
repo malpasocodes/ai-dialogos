@@ -1,10 +1,6 @@
-// Database client will be configured here
-// See technical-guide-astro.md for Drizzle setup
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from './schema';
 
-// Example:
-// import { drizzle } from 'drizzle-orm/postgres-js'
-// import postgres from 'postgres'
-// import * as schema from './schema'
-//
-// const client = postgres(process.env.DATABASE_URL!)
-// export const db = drizzle(client, { schema })
+const client = postgres(import.meta.env.DATABASE_URL || process.env.DATABASE_URL || '');
+export const db = drizzle(client, { schema });

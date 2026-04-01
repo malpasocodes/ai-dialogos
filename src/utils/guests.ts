@@ -1,5 +1,6 @@
-import { getStore } from '@netlify/blobs';
-import seedData from '../data/guests.json';
+import { db } from '../db';
+import { guests as guestsTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 export interface Guest {
   id: string;
@@ -10,23 +11,80 @@ export interface Guest {
   headshot: string | null;
 }
 
-const STORE_NAME = 'guests';
-const BLOB_KEY = 'guests-list';
-
-export async function getGuests(): Promise<Guest[]> {
-  try {
-    const store = getStore(STORE_NAME);
-    const data = await store.get(BLOB_KEY);
-    if (data) {
-      return JSON.parse(data) as Guest[];
-    }
-  } catch {
-    // Blobs not available (local dev without netlify dev) — fall through to seed data
-  }
-  return seedData as Guest[];
+function deriveInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter((w) => w.length > 0)
+    .map((w) => w[0].toUpperCase())
+    .slice(0, 2)
+    .join('');
 }
 
-export async function saveGuests(guests: Guest[]): Promise<void> {
-  const store = getStore(STORE_NAME);
-  await store.set(BLOB_KEY, JSON.stringify(guests));
+function toGuest(row: typeof guestsTable.$inferSelect): Guest {
+  return {
+    id: row.id,
+    name: row.name,
+    initials: row.initials || deriveInitials(row.name),
+    bio: row.bio,
+    episodeTitle: row.episodeTitle,
+    headshot: row.headshot,
+  };
+}
+
+export async function getGuests(): Promise<Guest[]> {
+  const rows = await db.select().from(guestsTable);
+  return rows.map(toGuest);
+}
+
+export async function getGuest(id: string): Promise<Guest | undefined> {
+  const [row] = await db.select().from(guestsTable).where(eq(guestsTable.id, id));
+  return row ? toGuest(row) : undefined;
+}
+
+export async function createGuest(data: {
+  name: string;
+  bio: string;
+  episodeTitle: string;
+  initials?: string;
+  headshot?: string | null;
+}): Promise<Guest> {
+  const [row] = await db.insert(guestsTable).values({
+    name: data.name,
+    initials: data.initials || deriveInitials(data.name),
+    bio: data.bio,
+    episodeTitle: data.episodeTitle,
+    headshot: data.headshot ?? null,
+  }).returning();
+  return toGuest(row);
+}
+
+export async function updateGuest(id: string, data: {
+  name?: string;
+  bio?: string;
+  episodeTitle?: string;
+  initials?: string;
+  headshot?: string | null;
+}): Promise<Guest | undefined> {
+  const updates: Record<string, unknown> = {};
+  if (data.name !== undefined) updates.name = data.name;
+  if (data.bio !== undefined) updates.bio = data.bio;
+  if (data.episodeTitle !== undefined) updates.episodeTitle = data.episodeTitle;
+  if (data.initials !== undefined) updates.initials = data.initials;
+  if (data.headshot !== undefined) updates.headshot = data.headshot;
+
+  // Auto-derive initials if name changed and initials not explicitly set
+  if (data.name && !data.initials) {
+    updates.initials = deriveInitials(data.name);
+  }
+
+  const [row] = await db.update(guestsTable)
+    .set(updates)
+    .where(eq(guestsTable.id, id))
+    .returning();
+  return row ? toGuest(row) : undefined;
+}
+
+export async function deleteGuest(id: string): Promise<boolean> {
+  const result = await db.delete(guestsTable).where(eq(guestsTable.id, id)).returning();
+  return result.length > 0;
 }

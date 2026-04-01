@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getGuests, saveGuests } from '../../../utils/guests';
-import type { Guest } from '../../../utils/guests';
+import { getGuests, createGuest } from '../../../utils/guests';
 
 function isAdmin(locals: App.Locals): boolean {
   const { userId } = locals.auth();
@@ -19,20 +18,33 @@ export const POST: APIRoute = async ({ locals, request }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const body = await request.json();
-  const { name, initials, bio, episodeTitle } = body as Partial<Guest>;
+  const formData = await request.formData();
+  const name = formData.get('name') as string;
+  const bio = formData.get('bio') as string;
+  const episodeTitle = formData.get('episodeTitle') as string;
+  const initials = formData.get('initials') as string | null;
+  const imageFile = formData.get('headshot') as File | null;
 
-  if (!name || !initials || !bio || !episodeTitle) {
-    return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
+  if (!name || !bio || !episodeTitle) {
+    return new Response(JSON.stringify({ error: 'Name, bio, and episode title are required' }), { status: 400 });
   }
 
-  const guests = await getGuests();
-  const id = `guest_${Date.now()}`;
-  const newGuest: Guest = { id, name, initials, bio, episodeTitle, headshot: null };
-  guests.push(newGuest);
-  await saveGuests(guests);
+  let headshot: string | null = null;
+  if (imageFile && imageFile.size > 0) {
+    const buffer = await imageFile.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    headshot = `data:${imageFile.type};base64,${base64}`;
+  }
 
-  return new Response(JSON.stringify(newGuest), {
+  const guest = await createGuest({
+    name,
+    bio,
+    episodeTitle,
+    initials: initials || undefined,
+    headshot,
+  });
+
+  return new Response(JSON.stringify(guest), {
     status: 201,
     headers: { 'Content-Type': 'application/json' },
   });
