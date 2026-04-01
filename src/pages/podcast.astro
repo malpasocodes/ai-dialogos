@@ -26,21 +26,12 @@ const episodes = await getPodcastEpisodes();
   <section class="space-y-3">
     <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
     <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
-      Structured conversations on AI strategy, governance, ethics, and leadership. New episodes refresh on each production build.
+      Structured conversations on AI strategy, governance, ethics, and leadership.
+    </p>
+    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
+      Podcasts will begin in May 2026.
     </p>
   </section>
-  <div class="mt-6 flex flex-wrap items-center gap-3">
-    <a
-      href="https://aidialogos.substack.com"
-      class="btn-secondary"
-      target="_blank"
-      rel="noopener noreferrer"
-      data-analytics-event="podcast_subscribe"
-      data-analytics-value="substack"
-    >
-      Subscribe on Substack
-    </a>
-  </div>
   {episodes.length === 0 ? (
     <p class="mt-8 text-sm text-muted-foreground">No episodes available yet. Check back soon.</p>
   ) : (
