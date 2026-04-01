@@ -24,7 +24,7 @@ const guests = await getGuests();
         )}
         <div class="space-y-2">
           <h2 class="text-lg font-semibold text-foreground">{guest.name}</h2>
-          <p class="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{guest.bio}</p>
+          <p class="text-sm leading-relaxed text-muted-foreground whitespace-pre-line" set:html={guest.bio} />
         </div>
         <div class="mt-auto pt-2 w-full border-t border-border/20">
           <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Episode</p>
