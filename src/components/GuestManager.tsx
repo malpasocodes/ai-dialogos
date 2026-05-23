@@ -6,9 +6,11 @@ interface Guest {
   initials: string;
   bio: string;
   episodeTitle: string;
-  headshot: string | null;
+  hasHeadshot: boolean;
   position: number;
 }
+
+const headshotUrl = (id: string) => `/api/headshots/${id}?t=${Date.now()}`;
 
 interface GuestForm {
   name: string;
@@ -61,7 +63,7 @@ export function GuestManager() {
       episodeTitle: guest.episodeTitle,
       position: String(guest.position),
     });
-    setImagePreview(guest.headshot);
+    setImagePreview(guest.hasHeadshot ? headshotUrl(guest.id) : null);
     setImageFile(null);
     setRemoveHeadshot(false);
     setError(null);
@@ -82,7 +84,8 @@ export function GuestManager() {
       reader.onload = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(editing !== 'new' ? guests.find((g) => g.id === editing)?.headshot ?? null : null);
+      const current = editing !== 'new' ? guests.find((g) => g.id === editing) : null;
+      setImagePreview(current?.hasHeadshot ? headshotUrl(current.id) : null);
     }
   };
 
@@ -257,10 +260,12 @@ export function GuestManager() {
         )}
         {guests.map((guest) => (
           <div key={guest.id} className="card flex items-start gap-4">
-            {guest.headshot ? (
+            {guest.hasHeadshot ? (
               <img
-                src={guest.headshot}
+                src={`/api/headshots/${guest.id}`}
                 alt={guest.name}
+                loading="lazy"
+                decoding="async"
                 className="h-14 w-14 shrink-0 rounded-full object-cover border border-border"
               />
             ) : (

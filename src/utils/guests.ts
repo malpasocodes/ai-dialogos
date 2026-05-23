@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { guests as guestsTable } from '../db/schema';
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, sql } from 'drizzle-orm';
 
 export interface Guest {
   id: string;
@@ -8,7 +8,7 @@ export interface Guest {
   initials: string;
   bio: string;
   episodeTitle: string;
-  headshot: string | null;
+  hasHeadshot: boolean;
   position: number;
 }
 
@@ -21,26 +21,77 @@ function deriveInitials(name: string): string {
     .join('');
 }
 
-function toGuest(row: typeof guestsTable.$inferSelect): Guest {
+export async function getGuests(): Promise<Guest[]> {
+  const rows = await db
+    .select({
+      id: guestsTable.id,
+      name: guestsTable.name,
+      initials: guestsTable.initials,
+      bio: guestsTable.bio,
+      episodeTitle: guestsTable.episodeTitle,
+      position: guestsTable.position,
+      hasHeadshot: sql<boolean>`${guestsTable.headshot} IS NOT NULL`,
+    })
+    .from(guestsTable)
+    .orderBy(asc(guestsTable.position));
+
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    initials: row.initials || deriveInitials(row.name),
+    bio: row.bio,
+    episodeTitle: row.episodeTitle,
+    position: row.position,
+    hasHeadshot: Boolean(row.hasHeadshot),
+  }));
+}
+
+export async function getGuest(id: string): Promise<Guest | undefined> {
+  const [row] = await db
+    .select({
+      id: guestsTable.id,
+      name: guestsTable.name,
+      initials: guestsTable.initials,
+      bio: guestsTable.bio,
+      episodeTitle: guestsTable.episodeTitle,
+      position: guestsTable.position,
+      hasHeadshot: sql<boolean>`${guestsTable.headshot} IS NOT NULL`,
+    })
+    .from(guestsTable)
+    .where(eq(guestsTable.id, id));
+
+  if (!row) return undefined;
   return {
     id: row.id,
     name: row.name,
     initials: row.initials || deriveInitials(row.name),
     bio: row.bio,
     episodeTitle: row.episodeTitle,
-    headshot: row.headshot,
     position: row.position,
+    hasHeadshot: Boolean(row.hasHeadshot),
   };
 }
 
-export async function getGuests(): Promise<Guest[]> {
-  const rows = await db.select().from(guestsTable).orderBy(asc(guestsTable.position));
-  return rows.map(toGuest);
+export interface HeadshotData {
+  contentType: string;
+  body: Buffer;
 }
 
-export async function getGuest(id: string): Promise<Guest | undefined> {
-  const [row] = await db.select().from(guestsTable).where(eq(guestsTable.id, id));
-  return row ? toGuest(row) : undefined;
+// Parse a `data:<mime>;base64,<payload>` URL into mime + raw bytes.
+export async function getGuestHeadshot(id: string): Promise<HeadshotData | undefined> {
+  const [row] = await db
+    .select({ headshot: guestsTable.headshot })
+    .from(guestsTable)
+    .where(eq(guestsTable.id, id));
+
+  if (!row?.headshot) return undefined;
+
+  const match = row.headshot.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return undefined;
+  return {
+    contentType: match[1],
+    body: Buffer.from(match[2], 'base64'),
+  };
 }
 
 export async function createGuest(data: {
@@ -59,7 +110,15 @@ export async function createGuest(data: {
     headshot: data.headshot ?? null,
     position: data.position ?? 0,
   }).returning();
-  return toGuest(row);
+  return {
+    id: row.id,
+    name: row.name,
+    initials: row.initials || deriveInitials(row.name),
+    bio: row.bio,
+    episodeTitle: row.episodeTitle,
+    position: row.position,
+    hasHeadshot: row.headshot !== null,
+  };
 }
 
 export async function updateGuest(id: string, data: {
@@ -78,7 +137,6 @@ export async function updateGuest(id: string, data: {
   if (data.headshot !== undefined) updates.headshot = data.headshot;
   if (data.position !== undefined) updates.position = data.position;
 
-  // Auto-derive initials if name changed and initials not explicitly set
   if (data.name && !data.initials) {
     updates.initials = deriveInitials(data.name);
   }
@@ -87,7 +145,17 @@ export async function updateGuest(id: string, data: {
     .set(updates)
     .where(eq(guestsTable.id, id))
     .returning();
-  return row ? toGuest(row) : undefined;
+
+  if (!row) return undefined;
+  return {
+    id: row.id,
+    name: row.name,
+    initials: row.initials || deriveInitials(row.name),
+    bio: row.bio,
+    episodeTitle: row.episodeTitle,
+    position: row.position,
+    hasHeadshot: row.headshot !== null,
+  };
 }
 
 export async function deleteGuest(id: string): Promise<boolean> {

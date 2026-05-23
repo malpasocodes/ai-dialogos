@@ -9,3 +9,6 @@ dist/
 
 # Local Netlify folder
 .netlify
+
+# One-off resize script backups
+scripts/backup-headshots/

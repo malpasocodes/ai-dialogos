@@ -3,6 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 import { getGuests } from '../../utils/guests';
 
 const guests = await getGuests();
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, max-age=60, s-maxage=300, stale-while-revalidate=86400',
+);
 ---
 <Layout title="Podcast Guests">
   <section class="space-y-3">
@@ -15,8 +20,16 @@ const guests = await getGuests();
   <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {guests.map((guest) => (
       <article class="card flex flex-col items-center text-center space-y-4">
-        {guest.headshot ? (
-          <img src={guest.headshot} alt={guest.name} class="h-24 w-24 rounded-full object-cover border border-border" />
+        {guest.hasHeadshot ? (
+          <img
+            src={`/api/headshots/${guest.id}`}
+            alt={guest.name}
+            loading="lazy"
+            decoding="async"
+            width="96"
+            height="96"
+            class="h-24 w-24 rounded-full object-cover border border-border"
+          />
         ) : (
           <div class="flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 text-2xl font-semibold text-primary">
             {guest.initials}
