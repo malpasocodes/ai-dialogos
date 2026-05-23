@@ -4,17 +4,3 @@
 
 [build.environment]
   NODE_VERSION = "20"
-
-[functions]
-  directory = "netlify/functions"
-
-# Uncomment these when using standalone Netlify Functions (not Astro SSR routes)
-# [[redirects]]
-#   from = "/trpc/*"
-#   to = "/.netlify/functions/trpc/:splat"
-#   status = 200
-#
-# [[redirects]]
-#   from = "/api/*"
-#   to = "/.netlify/functions/api/:splat"
-#   status = 200
