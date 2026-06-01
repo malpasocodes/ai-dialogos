@@ -26,10 +26,7 @@ const episodes = await getPodcastEpisodes();
   <section class="space-y-3">
     <h1 class="text-3xl font-semibold text-foreground">Podcast</h1>
     <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
-      Structured conversations on AI strategy, governance, ethics, and leadership.
-    </p>
-    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
-      Podcasts will begin in May 2026.
+      Structured conversations on AI strategy, governance, ethics, and leadership. Watch the video, listen on your podcast app, or read the companion essay.
     </p>
   </section>
   {episodes.length === 0 ? (
@@ -48,7 +45,7 @@ const episodes = await getPodcastEpisodes();
                 })}
               </p>
               <h2 class="text-xl font-semibold text-foreground">
-                <a href={episode.link} class="transition hover:text-primary" rel="noopener" target="_blank">
+                <a href={`/podcast/${episode.slug}`} class="transition hover:text-primary">
                   {episode.title}
                 </a>
               </h2>
@@ -59,6 +56,16 @@ const episodes = await getPodcastEpisodes();
           </header>
           {episode.summary && <p class="text-sm leading-relaxed text-muted-foreground">{episode.summary}</p>}
           <div class="flex flex-wrap items-center gap-3">
+            {episode.videoId && (
+              <a
+                href={`/podcast/${episode.slug}`}
+                class="btn-primary"
+                data-analytics-event="watch_episode"
+                data-analytics-value={episode.title}
+              >
+                Watch episode
+              </a>
+            )}
             <a
               href={episode.link}
               class="btn-secondary"

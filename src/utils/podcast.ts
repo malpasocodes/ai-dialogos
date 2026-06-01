@@ -1,5 +1,6 @@
 import Parser from "rss-parser";
 import cacheData from "../data/podcast-cache.json";
+import { findVideoForTitle, getYoutubeVideos } from "./youtube";
 
 type RSSItem = {
   title?: string;
@@ -25,9 +26,12 @@ export interface PodcastEpisode {
   videoId?: string;
 }
 
+// Substack does not expose a separate /feed/podcast endpoint for this
+// publication — the main feed already carries each post's audio enclosure, so
+// it is the single source of truth. Episodes are the items that have an
+// <enclosure> (audio); plain text essays are filtered out below.
 const FEED_URL =
-  import.meta.env.PODCAST_RSS_URL ??
-  "https://aidialogos.substack.com/feed/podcast";
+  import.meta.env.PODCAST_RSS_URL ?? "https://aidialogos.substack.com/feed";
 
 const parser = new Parser<Record<string, unknown>, RSSItem>({
   timeout: 10000,
@@ -87,6 +91,28 @@ const cachedFallback = cacheData as PodcastEpisode[];
 
 let cachedEpisodes: PodcastEpisode[] | null = null;
 
+// The Substack feed carries audio but not the YouTube video id. Match each
+// episode to its YouTube upload by title so the episode page can embed the
+// real player. A failed YouTube fetch leaves episodes audio-only — never fatal.
+const attachVideos = async (
+  episodes: PodcastEpisode[],
+): Promise<PodcastEpisode[]> => {
+  const videos = await getYoutubeVideos();
+  if (videos.length === 0) return episodes;
+
+  return episodes.map((episode) => {
+    const video = findVideoForTitle(videos, episode.title);
+    if (!video) return episode;
+
+    return {
+      ...episode,
+      videoId: video.videoId,
+      videoUrl: video.url,
+      image: episode.image ?? video.thumbnail,
+    };
+  });
+};
+
 export const getPodcastEpisodes = async (
   limit = 50,
 ): Promise<PodcastEpisode[]> => {
@@ -96,9 +122,13 @@ export const getPodcastEpisodes = async (
     const feed = await parser.parseURL(FEED_URL);
     const mapped = (feed.items ?? [])
       .map(mapItem)
-      .filter((item): item is PodcastEpisode => Boolean(item));
+      .filter((item): item is PodcastEpisode => Boolean(item))
+      // Only posts with audio are episodes; skip any plain text essays.
+      .filter((episode) => Boolean(episode.audioUrl));
 
-    const sorted = mapped.sort(
+    const withVideo = await attachVideos(mapped);
+
+    const sorted = withVideo.sort(
       (a, b) =>
         new Date(b.published).getTime() - new Date(a.published).getTime(),
     );
