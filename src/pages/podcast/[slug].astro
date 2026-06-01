@@ -2,7 +2,7 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Seo from '../../components/Seo.astro';
-import { getPodcastEpisode, getPodcastEpisodes } from '../../utils/podcast';
+import { getPodcastEpisode, getPodcastEpisodes, PODCAST_SHOW_LINKS } from '../../utils/podcast';
 
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 
@@ -77,8 +77,41 @@ if (!episode) {
         </a>
       )}
     </div>
-    <div class="flex items-center gap-3 text-sm text-muted-foreground">
-      <a href={episode.link} target="_blank" rel="noopener" class="btn-secondary">Open on YouTube</a>
+    <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+      <a
+        href={episode.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-secondary"
+        data-analytics-event="listen_episode"
+        data-analytics-value={`${episode.title} · Substack`}
+      >
+        Listen on Substack
+      </a>
+      {PODCAST_SHOW_LINKS.spotify && (
+        <a
+          href={PODCAST_SHOW_LINKS.spotify}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-secondary"
+          data-analytics-event="listen_episode"
+          data-analytics-value={`${episode.title} · Spotify`}
+        >
+          Listen on Spotify
+        </a>
+      )}
+      {PODCAST_SHOW_LINKS.apple && (
+        <a
+          href={PODCAST_SHOW_LINKS.apple}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-secondary"
+          data-analytics-event="listen_episode"
+          data-analytics-value={`${episode.title} · Apple Podcasts`}
+        >
+          Listen on Apple Podcasts
+        </a>
+      )}
     </div>
   </article>
 </Layout>

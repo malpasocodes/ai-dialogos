@@ -32,6 +32,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - `PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — Clerk auth.
 - `ADMIN_USER_ID` — single Clerk user id allowed to hit admin routes / mutating APIs.
 - Optional: `SUBSTACK_RSS_URL`, `PODCAST_RSS_URL`, `PLAUSIBLE_DOMAIN`.
+- Optional feed/link overrides: `YOUTUBE_CHANNEL_ID` / `YOUTUBE_CHANNEL_RSS_URL` (defaults to the AI-Dialogos channel), `SPOTIFY_SHOW_URL`, `APPLE_PODCASTS_URL` (the show-level "Listen on…" buttons; Apple's button only renders once its URL is set).
 
 ## Architecture
 

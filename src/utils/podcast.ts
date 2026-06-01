@@ -87,6 +87,20 @@ const mapItem = (item: RSSItem): PodcastEpisode | null => {
   };
 };
 
+// Public listening pages for the show. These are show-level (the same on every
+// episode): Substack distributes the audio to Spotify/Apple but exposes no
+// per-episode deep links in its feed, so listeners land on the show and pick
+// the episode. A link only renders when set; override either via env without
+// touching the pages.
+export const PODCAST_SHOW_LINKS: { spotify?: string; apple?: string } = {
+  spotify:
+    import.meta.env.SPOTIFY_SHOW_URL ??
+    "https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI",
+  apple:
+    import.meta.env.APPLE_PODCASTS_URL ??
+    "https://podcasts.apple.com/us/podcast/ai-dialogos-podcast/id1884134654",
+};
+
 const cachedFallback = cacheData as PodcastEpisode[];
 
 let cachedEpisodes: PodcastEpisode[] | null = null;
