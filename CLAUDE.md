@@ -31,8 +31,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - `DATABASE_URL` — Neon Postgres connection string (pooled URL).
 - `PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — Clerk auth.
 - `ADMIN_USER_ID` — single Clerk user id allowed to hit admin routes / mutating APIs.
-- Optional: `SUBSTACK_RSS_URL`, `PODCAST_RSS_URL`, `PLAUSIBLE_DOMAIN`.
-- Optional feed/link overrides: `YOUTUBE_CHANNEL_ID` / `YOUTUBE_CHANNEL_RSS_URL` (defaults to the AI-Dialogos channel), `SPOTIFY_SHOW_URL`, `APPLE_PODCASTS_URL` (the show-level "Listen on…" buttons; Apple's button only renders once its URL is set).
+- Optional: `SUBSTACK_RSS_URL`, `PLAUSIBLE_DOMAIN`.
 
 ## Architecture
 
@@ -56,14 +55,13 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - Served as binary via `GET /api/headshots/[id]` with `Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800` so Netlify's edge caches them. Cache key is the guest id; admin edits propagate within `max-age`.
 - Public guests page references `<img src="/api/headshots/{id}" loading="lazy">`.
 
-### External feeds (Substack + Podcast + YouTube)
-- `src/utils/substack.ts`, `src/utils/podcast.ts`, and `src/utils/youtube.ts` fetch RSS at **build time** with an in-process memo. If the live fetch fails or returns empty, they fall back to the JSON snapshots in `src/data/*-cache.json`.
-- **Single source of truth is the Substack main feed** (`https://aidialogos.substack.com/feed`). Substack does *not* serve a working `/feed/podcast` for this publication. `substack.ts` reads it for essays; `podcast.ts` reads the same feed and keeps only items that have an audio `<enclosure>` (those are the episodes).
-- The Substack feed has the audio but not the YouTube video id. `youtube.ts` pulls the **AI-Dialogos channel's public Atom feed** (`youtube.com/feeds/videos.xml?channel_id=…`, no API key; channel `UCDx9LSSz1jwT4j0rmtXLkjw`, override via `YOUTUBE_CHANNEL_ID`/`YOUTUBE_CHANNEL_RSS_URL`). `podcast.ts` matches each episode to its upload by normalized title and attaches `videoId`/`videoUrl`/thumbnail so `/podcast/[slug]` embeds the real player. Shorts (`/shorts/` links) are excluded.
+### External feeds (Substack essays)
+- `src/utils/substack.ts` fetches the Substack RSS feed (`https://aidialogos.substack.com/feed`) at **build time** with an in-process memo, powering the `/substack` essays list and the homepage "Latest Substack" cards. If the live fetch fails or returns empty, it falls back to the JSON snapshot in `src/data/substack-cache.json`.
+- **The podcast is not hosted on-site.** The Podcast nav menu links straight out to the listening services (Apple Podcasts `id1884134654`, Spotify show `033qQQeIiEKw63qWMdFmPI`, the Substack podcast page) — those URLs are hardcoded in the nav (`src/layouts/Layout.astro`) and the homepage podcast CTA (`src/pages/index.astro`). There is no episode-pulling code; an earlier `podcast.ts`/`youtube.ts` feed-merge approach was removed once the site switched to external links. Only `/podcast/guests` lives under `/podcast`.
 - Consequence: **new Substack posts don't appear until the site rebuilds.** A Netlify build hook is triggered by a Zapier/Make RSS watcher and a daily GitHub Actions cron (`.github/workflows/`). Details in `docs/auto-rebuild-setup.md`.
 
 ### Page structure
-- Top-level routes: `index`, `about`, `book`, `series`, `substack`, `search`, `podcast` (+ `/podcast/guests`, `/podcast/[slug]`), `volumes/*`, `sign-in`, `admin/*`, `api/*`.
+- Top-level routes: `index`, `about`, `book`, `series`, `substack`, `search`, `podcast/guests`, `volumes/*`, `sign-in`, `admin/*`, `api/*`. (The Podcast nav menu otherwise links out to external listening services; there is no on-site `/podcast` index or episode page.)
 - Nav lives in `src/layouts/Layout.astro` (server-side definition passed to the `MainNav` React island).
 
 ## Operational notes

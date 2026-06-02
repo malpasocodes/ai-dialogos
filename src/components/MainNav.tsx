@@ -44,20 +44,27 @@ export function MainNav({ items, currentPath }: MainNavProps) {
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="min-w-[220px]">
                   <div className="flex flex-col gap-1 p-3">
-                    {children.map((child) => (
-                      <NavigationMenuLink key={child.href} asChild>
-                        <a
-                          href={child.href}
-                          className="nav-dropdown-link"
-                          data-active={
-                            currentPath === child.href ||
-                            currentPath.startsWith(`${child.href}/`)
-                          }
-                        >
-                          {child.label}
-                        </a>
-                      </NavigationMenuLink>
-                    ))}
+                    {children.map((child) => {
+                      const isExternal = child.href.startsWith("http");
+                      return (
+                        <NavigationMenuLink key={child.href} asChild>
+                          <a
+                            href={child.href}
+                            className="nav-dropdown-link"
+                            data-active={
+                              !isExternal &&
+                              (currentPath === child.href ||
+                                currentPath.startsWith(`${child.href}/`))
+                            }
+                            {...(isExternal
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                          >
+                            {child.label}
+                          </a>
+                        </NavigationMenuLink>
+                      );
+                    })}
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>

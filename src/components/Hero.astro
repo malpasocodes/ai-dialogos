@@ -29,6 +29,7 @@ const { title, subtitle, ctas = [] } = Astro.props as Props;
             class={c.primary ? 'btn-primary' : 'btn-secondary'}
             data-analytics-event={c.analytics}
             data-analytics-value={c.analyticsValue}
+            {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           >
             {c.label}
           </a>
