@@ -15,6 +15,8 @@ export const GET: APIRoute = async ({ params }) => {
   return new Response(new Uint8Array(headshot.body), {
     headers: {
       'Content-Type': headshot.contentType,
+      // Stored MIME is admin-supplied; stop the browser sniffing it into HTML.
+      'X-Content-Type-Options': 'nosniff',
       // Browser caches for an hour; Netlify edge caches longer and serves stale
       // while revalidating. Cache key is the guest id, so admin updates show up
       // within max-age for end users.

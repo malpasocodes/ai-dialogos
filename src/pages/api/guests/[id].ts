@@ -6,6 +6,8 @@ function isAdmin(locals: App.Locals): boolean {
   return !!userId && userId === import.meta.env.ADMIN_USER_ID;
 }
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 export const PUT: APIRoute = async ({ locals, params, request }) => {
   if (!isAdmin(locals)) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
@@ -28,6 +30,9 @@ export const PUT: APIRoute = async ({ locals, params, request }) => {
   if (removeHeadshot) {
     headshot = null;
   } else if (imageFile && imageFile.size > 0) {
+    if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
+      return new Response(JSON.stringify({ error: 'Unsupported image type' }), { status: 400 });
+    }
     const buffer = await imageFile.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
     headshot = `data:${imageFile.type};base64,${base64}`;
