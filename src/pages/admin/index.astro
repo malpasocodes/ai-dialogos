@@ -6,6 +6,10 @@ const { userId } = Astro.locals.auth();
 if (!userId) {
   return Astro.redirect('/sign-in');
 }
+
+if (userId !== import.meta.env.ADMIN_USER_ID) {
+  return Astro.redirect('/');
+}
 ---
 <Layout title="Admin">
   <section class="space-y-4">
