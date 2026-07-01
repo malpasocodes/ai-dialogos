@@ -66,6 +66,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 
 ## Operational notes
 
+- **Keep `CHANGELOG.md` current.** Every time you make a commit, add a matching entry under the `[Unreleased]` section at the top of `CHANGELOG.md` (Keep a Changelog format: Added / Changed / Fixed / Removed / Security). Include the changelog edit in the same commit as the change it describes.
 - **Don't bypass the admin gate** by loosening the `userId === ADMIN_USER_ID` check — it's the only auth on mutating endpoints.
 - Netlify's serverless filesystem is read-only. Past attempts to persist guest data to JSON files or Netlify Blobs both failed in production; Postgres is the only durable path. Don't reach for `writeFileSync` in request handlers.
 - `scripts/seed-guests.mjs` and `scripts/resize-headshot.sh` are one-off operational tools, not part of the app runtime.

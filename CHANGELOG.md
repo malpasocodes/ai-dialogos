@@ -8,7 +8,8 @@ are grouped by the date the work landed on `main`.
 
 ## [Unreleased]
 
-_Nothing yet._
+### Docs
+- Added a note in `CLAUDE.md` requiring `CHANGELOG.md` to be updated with every commit.
 
 ## 2026-06-30
 
