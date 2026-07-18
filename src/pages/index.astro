@@ -3,12 +3,17 @@ export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import CardGrid from '../components/CardGrid.astro';
+import EpisodeCard from '../components/EpisodeCard.astro';
 import Seo from '../components/Seo.astro';
 import { getSubstackPosts } from '../utils/substack';
+import { getPodcastEpisodes, YOUTUBE_PLAYLIST_URL } from '../utils/youtube';
 
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 const canonicalImage = `${SITE_URL}/images/ai-bookcover.jpeg`;
 const APPLE_PODCASTS_URL = 'https://podcasts.apple.com/us/podcast/ai-dialogos-podcast/id1884134654';
+const SPOTIFY_URL = 'https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI';
+
+const episodes = await getPodcastEpisodes(12);
 
 const substackPosts = await getSubstackPosts(3);
 const substackCards = substackPosts.map((post) => ({
@@ -50,6 +55,7 @@ const substackCards = substackPosts.map((post) => ({
           description:
             'Conversations with leaders and innovators on AI strategy, ethics, and adoption.',
           url: APPLE_PODCASTS_URL,
+          sameAs: [YOUTUBE_PLAYLIST_URL, SPOTIFY_URL],
           publisher: {
             '@type': 'Organization',
             name: 'AI-Dialogos',
@@ -60,11 +66,31 @@ const substackCards = substackPosts.map((post) => ({
   </Fragment>
   <Hero
     title="AI Essentials for Leaders"
-    subtitle="The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. This companion site provides curated resources, including Substack essays and podcast interviews."
+    subtitle="The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. Watch the AI-Dialogos podcast conversations below, or explore the companion Substack essays."
     ctas={[
-      { label: "Subscribe on Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" },
-      { label: "Listen to Podcast", href: APPLE_PODCASTS_URL, analytics: "listen_podcast", analyticsValue: "hero_cta" }
+      { label: "Watch on YouTube", href: YOUTUBE_PLAYLIST_URL, primary: true, analytics: "watch_youtube", analyticsValue: "hero_cta" },
+      { label: "Subscribe on Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" }
     ]}
   />
+  <section class="mt-4 space-y-5">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">Podcast Episodes</h2>
+        <p class="mt-1 text-sm text-muted-foreground">
+          Conversations with leaders and innovators on AI strategy, ethics, and adoption.
+          Also available on
+          <a href={APPLE_PODCASTS_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_apple">Apple Podcasts</a>
+          and
+          <a href={SPOTIFY_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_spotify">Spotify</a>.
+        </p>
+      </div>
+      <a href="/podcast/guests" class="text-sm font-medium text-muted-foreground transition hover:text-foreground">
+        Meet the guests →
+      </a>
+    </div>
+    <div class="grid gap-6 sm:grid-cols-2">
+      {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+    </div>
+  </section>
   <CardGrid title="Latest Substack" items={substackCards} moreHref="/substack" compact />
 </Layout>

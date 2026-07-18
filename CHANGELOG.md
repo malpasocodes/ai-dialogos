@@ -8,6 +8,17 @@ are grouped by the date the work landed on `main`.
 
 ## [Unreleased]
 
+### Added
+- Homepage now lists published podcast episodes from the AI-Dialogos YouTube
+  playlist, fetched at build time via the playlist RSS feed (no API key) with a
+  JSON snapshot fallback in `src/data/youtube-cache.json` — same pattern as the
+  Substack feed. New `src/utils/youtube.ts` and `EpisodeCard.astro`; episode
+  cards link out to YouTube (thumbnail, date, summary).
+
+### Changed
+- Homepage hero CTA now points at the YouTube playlist ("Watch on YouTube");
+  the podcast section links to Apple Podcasts and Spotify for audio.
+
 ### Docs
 - Added a note in `CLAUDE.md` requiring `CHANGELOG.md` to be updated with every commit.
 
