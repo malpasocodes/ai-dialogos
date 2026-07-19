@@ -1,4 +1,4 @@
-CREATE TABLE "guests" (
+CREATE TABLE IF NOT EXISTS "guests" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"initials" text,

@@ -6,6 +6,7 @@ export const guests = pgTable('guests', {
   name: text('name').notNull(),
   initials: text('initials'),
   bio: text('bio').notNull(),
+  shortBio: text('short_bio'),
   episodeTitle: text('episode_title').notNull(),
   headshot: text('headshot'),
   position: integer('position').notNull().default(0),

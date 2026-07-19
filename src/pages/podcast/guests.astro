@@ -18,7 +18,10 @@ Astro.response.headers.set(
   </section>
 
   <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    {guests.map((guest) => (
+    {guests.map((guest) => {
+      const preview = guest.shortBio?.trim() || guest.bio;
+      const expandable = preview !== guest.bio || guest.bio.length > 220;
+      return (
       <article class="card flex flex-col items-center text-center space-y-4">
         {guest.hasHeadshot ? (
           <img
@@ -35,15 +38,27 @@ Astro.response.headers.set(
             {guest.initials}
           </div>
         )}
-        <div class="space-y-2">
+        <div class="space-y-2 w-full">
           <h2 class="text-lg font-semibold text-foreground">{guest.name}</h2>
-          <p class="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{guest.bio}</p>
+          {expandable ? (
+            <details class="group">
+              <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <p class="text-sm leading-relaxed text-muted-foreground line-clamp-3 group-open:hidden">{preview}</p>
+                <span class="mt-1 inline-block text-xs font-medium text-primary group-open:hidden">Read more</span>
+                <span class="mt-1 hidden text-xs font-medium text-primary group-open:inline-block">Show less</span>
+              </summary>
+              <p class="mt-1 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{guest.bio}</p>
+            </details>
+          ) : (
+            <p class="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{guest.bio}</p>
+          )}
         </div>
         <div class="mt-auto pt-2 w-full border-t border-border/20">
           <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Episode</p>
           <p class="mt-1 text-sm font-medium text-foreground">{guest.episodeTitle}</p>
         </div>
       </article>
-    ))}
+      );
+    })}
   </div>
 </Layout>

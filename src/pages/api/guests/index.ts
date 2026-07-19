@@ -30,6 +30,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const formData = await request.formData();
     const name = formData.get('name') as string;
     const bio = formData.get('bio') as string;
+    const shortBio = formData.get('shortBio') as string | null;
     const episodeTitle = formData.get('episodeTitle') as string;
     const initials = formData.get('initials') as string | null;
     const imageFile = formData.get('headshot') as File | null;
@@ -52,6 +53,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const guest = await createGuest({
       name,
       bio,
+      shortBio: shortBio?.trim() || null,
       episodeTitle,
       initials: initials || undefined,
       headshot,

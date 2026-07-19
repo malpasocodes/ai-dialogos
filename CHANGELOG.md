@@ -9,6 +9,10 @@ are grouped by the date the work landed on `main`.
 ## [Unreleased]
 
 ### Added
+- Optional `short_bio` column on `guests` (Drizzle migration `0001`), editable
+  via a new "Short Bio" field in the admin guest form and accepted by the
+  guest POST/PUT API routes.
+
 - Homepage now lists published podcast episodes from the AI-Dialogos YouTube
   playlist, fetched at build time via the playlist RSS feed (no API key) with a
   JSON snapshot fallback in `src/data/youtube-cache.json` — same pattern as the
@@ -16,6 +20,13 @@ are grouped by the date the work landed on `main`.
   cards link out to YouTube (thumbnail, date, summary).
 
 ### Changed
+- Guest cards on `/podcast/guests` now show a 2–3 line bio preview (curated
+  short bio, or the full bio clamped to three lines) with a native
+  `<details>` "Read more" toggle that expands the full bio in place, instead
+  of always rendering the entire bio.
+- Made migrations `0000`/`0001` idempotent (`IF NOT EXISTS`) so
+  `drizzle-kit migrate` can adopt the existing database, which had been
+  synced with `db:push` and had no migration-tracking table.
 - Homepage hero CTA now points at the YouTube playlist ("Watch on YouTube");
   the podcast section links to Apple Podcasts and Spotify for audio.
 

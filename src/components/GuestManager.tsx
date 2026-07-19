@@ -5,6 +5,7 @@ interface Guest {
   name: string;
   initials: string;
   bio: string;
+  shortBio: string | null;
   episodeTitle: string;
   hasHeadshot: boolean;
   position: number;
@@ -16,11 +17,12 @@ interface GuestForm {
   name: string;
   initials: string;
   bio: string;
+  shortBio: string;
   episodeTitle: string;
   position: string;
 }
 
-const emptyForm: GuestForm = { name: '', initials: '', bio: '', episodeTitle: '', position: '0' };
+const emptyForm: GuestForm = { name: '', initials: '', bio: '', shortBio: '', episodeTitle: '', position: '0' };
 
 export function GuestManager() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -60,6 +62,7 @@ export function GuestManager() {
       name: guest.name,
       initials: guest.initials,
       bio: guest.bio,
+      shortBio: guest.shortBio ?? '',
       episodeTitle: guest.episodeTitle,
       position: String(guest.position),
     });
@@ -112,6 +115,7 @@ export function GuestManager() {
     const body = new FormData();
     body.append('name', form.name);
     body.append('bio', form.bio);
+    body.append('shortBio', form.shortBio);
     body.append('episodeTitle', form.episodeTitle);
     if (form.initials) body.append('initials', form.initials);
     body.append('position', form.position);
@@ -231,6 +235,15 @@ export function GuestManager() {
               value={form.bio}
               rows={3}
               onChange={(e) => updateField('bio', e.target.value)}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+            />
+          </label>
+          <label className="block space-y-1">
+            <span className="text-sm font-medium text-foreground">Short Bio <span className="text-xs text-muted-foreground">(1–2 lines shown on guest cards; falls back to a truncated bio if blank)</span></span>
+            <textarea
+              value={form.shortBio}
+              rows={2}
+              onChange={(e) => updateField('shortBio', e.target.value)}
               className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
             />
           </label>
