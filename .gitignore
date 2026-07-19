@@ -13,3 +13,6 @@ dist/
 
 # One-off resize script backups
 scripts/backup-headshots/
+
+# Claude Code local settings (project agents in .claude/agents/ ARE tracked)
+.claude/settings.local.json

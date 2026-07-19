@@ -9,10 +9,16 @@ are grouped by the date the work landed on `main`.
 ## [Unreleased]
 
 ### Added
+- `guest-bio` Claude Code agent (`.claude/agents/guest-bio.md`): given a guest
+  name and LinkedIn URL, researches the guest, drafts a full bio + short bio in
+  house style (plain text only), and publishes them to the guests table via the
+  new `scripts/upsert-guest-bio.mjs` (case-insensitive name upsert, `--dry-run`
+  support, rejects HTML). Documented in `CLAUDE.md`; `.gitignore` now excludes
+  `.claude/settings.local.json`.
+
 - Optional `short_bio` column on `guests` (Drizzle migration `0001`), editable
   via a new "Short Bio" field in the admin guest form and accepted by the
   guest POST/PUT API routes.
-
 - Homepage now lists published podcast episodes from the AI-Dialogos YouTube
   playlist, fetched at build time via the playlist RSS feed (no API key) with a
   JSON snapshot fallback in `src/data/youtube-cache.json` — same pattern as the
@@ -29,6 +35,11 @@ are grouped by the date the work landed on `main`.
   synced with `db:push` and had no migration-tracking table.
 - Homepage hero CTA now points at the YouTube playlist ("Watch on YouTube");
   the podcast section links to Apple Podcasts and Spotify for audio.
+
+### Fixed
+- Guest bios in the database contained literal `<em>` tags (visible on the page
+  since bios became HTML-escaped) — cleaned all four existing bios to plain
+  text and backfilled their previously empty short bios.
 
 ### Docs
 - Added a note in `CLAUDE.md` requiring `CHANGELOG.md` to be updated with every commit.
