@@ -9,13 +9,16 @@ are grouped by the date the work landed on `main`.
 ## [Unreleased]
 
 ### Added
+- Optional `episode_url` column on `guests` (migration `0002`): when set, the
+  episode title on the guest card links out to it (new-tab). Editable in the
+  admin form and via `--episode-url` in `scripts/upsert-guest-bio.mjs`.
+
 - `guest-bio` Claude Code agent (`.claude/agents/guest-bio.md`): given a guest
   name and LinkedIn URL, researches the guest, drafts a full bio + short bio in
   house style (plain text only), and publishes them to the guests table via the
   new `scripts/upsert-guest-bio.mjs` (case-insensitive name upsert, `--dry-run`
   support, rejects HTML). Documented in `CLAUDE.md`; `.gitignore` now excludes
   `.claude/settings.local.json`.
-
 - Optional `short_bio` column on `guests` (Drizzle migration `0001`), editable
   via a new "Short Bio" field in the admin guest form and accepted by the
   guest POST/PUT API routes.
@@ -26,6 +29,11 @@ are grouped by the date the work landed on `main`.
   cards link out to YouTube (thumbnail, date, summary).
 
 ### Changed
+- `episode_title` is now nullable, and a null title is the convention for
+  upcoming guests: cards render a "Coming soon" badge instead of a title, the
+  admin form and guest APIs no longer require an episode title, and the
+  upsert script defaults new guests to null (previously "Episode TBD" — Matt
+  Sigelman's placeholder row was cleaned up accordingly).
 - Guest cards on `/podcast/guests` now show a 2–3 line bio preview (curated
   short bio, or the full bio clamped to three lines) with a native
   `<details>` "Read more" toggle that expands the full bio in place, instead

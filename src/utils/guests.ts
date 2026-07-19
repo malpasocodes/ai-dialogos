@@ -8,7 +8,8 @@ export interface Guest {
   initials: string;
   bio: string;
   shortBio: string | null;
-  episodeTitle: string;
+  episodeTitle: string | null;
+  episodeUrl: string | null;
   hasHeadshot: boolean;
   position: number;
 }
@@ -31,6 +32,7 @@ export async function getGuests(): Promise<Guest[]> {
       bio: guestsTable.bio,
       shortBio: guestsTable.shortBio,
       episodeTitle: guestsTable.episodeTitle,
+      episodeUrl: guestsTable.episodeUrl,
       position: guestsTable.position,
       hasHeadshot: sql<boolean>`${guestsTable.headshot} IS NOT NULL`,
     })
@@ -44,6 +46,7 @@ export async function getGuests(): Promise<Guest[]> {
     bio: row.bio,
     shortBio: row.shortBio,
     episodeTitle: row.episodeTitle,
+    episodeUrl: row.episodeUrl,
     position: row.position,
     hasHeadshot: Boolean(row.hasHeadshot),
   }));
@@ -58,6 +61,7 @@ export async function getGuest(id: string): Promise<Guest | undefined> {
       bio: guestsTable.bio,
       shortBio: guestsTable.shortBio,
       episodeTitle: guestsTable.episodeTitle,
+      episodeUrl: guestsTable.episodeUrl,
       position: guestsTable.position,
       hasHeadshot: sql<boolean>`${guestsTable.headshot} IS NOT NULL`,
     })
@@ -72,6 +76,7 @@ export async function getGuest(id: string): Promise<Guest | undefined> {
     bio: row.bio,
     shortBio: row.shortBio,
     episodeTitle: row.episodeTitle,
+    episodeUrl: row.episodeUrl,
     position: row.position,
     hasHeadshot: Boolean(row.hasHeadshot),
   };
@@ -103,7 +108,8 @@ export async function createGuest(data: {
   name: string;
   bio: string;
   shortBio?: string | null;
-  episodeTitle: string;
+  episodeTitle?: string | null;
+  episodeUrl?: string | null;
   initials?: string;
   headshot?: string | null;
   position?: number;
@@ -113,7 +119,8 @@ export async function createGuest(data: {
     initials: data.initials || deriveInitials(data.name),
     bio: data.bio,
     shortBio: data.shortBio ?? null,
-    episodeTitle: data.episodeTitle,
+    episodeTitle: data.episodeTitle ?? null,
+    episodeUrl: data.episodeUrl ?? null,
     headshot: data.headshot ?? null,
     position: data.position ?? 0,
   }).returning();
@@ -124,6 +131,7 @@ export async function createGuest(data: {
     bio: row.bio,
     shortBio: row.shortBio,
     episodeTitle: row.episodeTitle,
+    episodeUrl: row.episodeUrl,
     position: row.position,
     hasHeadshot: row.headshot !== null,
   };
@@ -133,7 +141,8 @@ export async function updateGuest(id: string, data: {
   name?: string;
   bio?: string;
   shortBio?: string | null;
-  episodeTitle?: string;
+  episodeTitle?: string | null;
+  episodeUrl?: string | null;
   initials?: string;
   headshot?: string | null;
   position?: number;
@@ -143,6 +152,7 @@ export async function updateGuest(id: string, data: {
   if (data.bio !== undefined) updates.bio = data.bio;
   if (data.shortBio !== undefined) updates.shortBio = data.shortBio;
   if (data.episodeTitle !== undefined) updates.episodeTitle = data.episodeTitle;
+  if (data.episodeUrl !== undefined) updates.episodeUrl = data.episodeUrl;
   if (data.initials !== undefined) updates.initials = data.initials;
   if (data.headshot !== undefined) updates.headshot = data.headshot;
   if (data.position !== undefined) updates.position = data.position;
@@ -164,6 +174,7 @@ export async function updateGuest(id: string, data: {
     bio: row.bio,
     shortBio: row.shortBio,
     episodeTitle: row.episodeTitle,
+    episodeUrl: row.episodeUrl,
     position: row.position,
     hasHeadshot: row.headshot !== null,
   };

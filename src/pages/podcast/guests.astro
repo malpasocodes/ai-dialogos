@@ -55,7 +55,20 @@ Astro.response.headers.set(
         </div>
         <div class="mt-auto pt-2 w-full border-t border-border/20">
           <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Episode</p>
-          <p class="mt-1 text-sm font-medium text-foreground">{guest.episodeTitle}</p>
+          {guest.episodeTitle ? (
+            guest.episodeUrl ? (
+              <a
+                href={guest.episodeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-1 inline-block text-sm font-medium text-foreground underline decoration-border underline-offset-4 hover:text-primary hover:decoration-primary"
+              >{guest.episodeTitle}</a>
+            ) : (
+              <p class="mt-1 text-sm font-medium text-foreground">{guest.episodeTitle}</p>
+            )
+          ) : (
+            <p class="mt-1"><span class="inline-block rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary">Coming soon</span></p>
+          )}
         </div>
       </article>
       );

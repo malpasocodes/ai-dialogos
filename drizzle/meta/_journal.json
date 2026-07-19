@@ -15,6 +15,13 @@
       "when": 1784489301706,
       "tag": "0001_premium_taskmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784496504046,
+      "tag": "0002_loose_marauders",
+      "breakpoints": true
     }
   ]
 }

@@ -4,11 +4,13 @@
 //
 // Usage:
 //   node scripts/upsert-guest-bio.mjs --name "Jane Doe" --bio-file bio.txt \
-//     [--short-bio "One-line summary."] [--episode-title "..."] [--position N] [--dry-run]
+//     [--short-bio "One-line summary."] [--episode-title "..."] [--episode-url "https://..."] \
+//     [--position N] [--dry-run]
 //
 // Matches an existing guest case-insensitively by name and updates bio /
-// short_bio (and episode_title/position if given). If no guest matches, creates
-// one — episode_title defaults to "Episode TBD" and position to max+1.
+// short_bio (and episode_title/episode_url/position if given). If no guest
+// matches, creates one — a null episode_title marks the guest as upcoming
+// ("Coming soon" on the site), position defaults to max+1.
 // Requires DATABASE_URL (loaded from .env).
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
@@ -24,11 +26,17 @@ const name = arg('--name');
 const bioFile = arg('--bio-file');
 const shortBio = arg('--short-bio')?.trim();
 const episodeTitle = arg('--episode-title')?.trim();
+const episodeUrl = arg('--episode-url')?.trim();
 const positionArg = arg('--position');
 const dryRun = has('--dry-run');
 
 if (!name || !bioFile) {
   console.error('Required: --name "Guest Name" --bio-file path/to/bio.txt');
+  process.exit(1);
+}
+
+if (episodeUrl && !/^https?:\/\//.test(episodeUrl)) {
+  console.error('--episode-url must start with http(s)://');
   process.exit(1);
 }
 
@@ -53,6 +61,7 @@ try {
   if (existing) {
     const updates = { bio, short_bio: shortBio ?? null };
     if (episodeTitle) updates.episode_title = episodeTitle;
+    if (episodeUrl) updates.episode_url = episodeUrl;
     if (positionArg !== undefined) updates.position = parseInt(positionArg, 10);
 
     if (dryRun) {
@@ -71,7 +80,8 @@ try {
       initials,
       bio,
       short_bio: shortBio ?? null,
-      episode_title: episodeTitle || 'Episode TBD',
+      episode_title: episodeTitle || null,
+      episode_url: episodeUrl || null,
       position: positionArg !== undefined ? parseInt(positionArg, 10) : Number(next),
     };
 
@@ -85,7 +95,7 @@ try {
         INSERT INTO guests ${sql({ id: createId(), ...row })} RETURNING id, name, position
       `;
       console.log(`Created guest ${created.id} (${created.name}) at position ${created.position}.`);
-      if (!episodeTitle) console.log('Episode title defaulted to "Episode TBD" — update it when known.');
+      if (!episodeTitle) console.log('No episode title — guest will show as "Coming soon" until one is set.');
     }
   }
 } finally {

@@ -31,13 +31,17 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const name = formData.get('name') as string;
     const bio = formData.get('bio') as string;
     const shortBio = formData.get('shortBio') as string | null;
-    const episodeTitle = formData.get('episodeTitle') as string;
+    const episodeTitle = formData.get('episodeTitle') as string | null;
+    const episodeUrl = formData.get('episodeUrl') as string | null;
     const initials = formData.get('initials') as string | null;
     const imageFile = formData.get('headshot') as File | null;
     const positionStr = formData.get('position') as string | null;
 
-    if (!name || !bio || !episodeTitle) {
-      return new Response(JSON.stringify({ error: 'Name, bio, and episode title are required' }), { status: 400 });
+    if (!name || !bio) {
+      return new Response(JSON.stringify({ error: 'Name and bio are required' }), { status: 400 });
+    }
+    if (episodeUrl?.trim() && !/^https?:\/\//.test(episodeUrl.trim())) {
+      return new Response(JSON.stringify({ error: 'Episode URL must start with http(s)://' }), { status: 400 });
     }
 
     let headshot: string | null = null;
@@ -54,7 +58,8 @@ export const POST: APIRoute = async ({ locals, request }) => {
       name,
       bio,
       shortBio: shortBio?.trim() || null,
-      episodeTitle,
+      episodeTitle: episodeTitle?.trim() || null,
+      episodeUrl: episodeUrl?.trim() || null,
       initials: initials || undefined,
       headshot,
       position: positionStr ? parseInt(positionStr, 10) : undefined,

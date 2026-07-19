@@ -6,7 +6,8 @@ interface Guest {
   initials: string;
   bio: string;
   shortBio: string | null;
-  episodeTitle: string;
+  episodeTitle: string | null;
+  episodeUrl: string | null;
   hasHeadshot: boolean;
   position: number;
 }
@@ -19,10 +20,11 @@ interface GuestForm {
   bio: string;
   shortBio: string;
   episodeTitle: string;
+  episodeUrl: string;
   position: string;
 }
 
-const emptyForm: GuestForm = { name: '', initials: '', bio: '', shortBio: '', episodeTitle: '', position: '0' };
+const emptyForm: GuestForm = { name: '', initials: '', bio: '', shortBio: '', episodeTitle: '', episodeUrl: '', position: '0' };
 
 export function GuestManager() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -63,7 +65,8 @@ export function GuestManager() {
       initials: guest.initials,
       bio: guest.bio,
       shortBio: guest.shortBio ?? '',
-      episodeTitle: guest.episodeTitle,
+      episodeTitle: guest.episodeTitle ?? '',
+      episodeUrl: guest.episodeUrl ?? '',
       position: String(guest.position),
     });
     setImagePreview(guest.hasHeadshot ? headshotUrl(guest.id) : null);
@@ -100,8 +103,8 @@ export function GuestManager() {
   };
 
   const handleSave = async () => {
-    if (!form.name || !form.bio || !form.episodeTitle) {
-      setError('Name, bio, and episode title are required.');
+    if (!form.name || !form.bio) {
+      setError('Name and bio are required.');
       return;
     }
 
@@ -117,6 +120,7 @@ export function GuestManager() {
     body.append('bio', form.bio);
     body.append('shortBio', form.shortBio);
     body.append('episodeTitle', form.episodeTitle);
+    body.append('episodeUrl', form.episodeUrl);
     if (form.initials) body.append('initials', form.initials);
     body.append('position', form.position);
     if (imageFile) body.append('headshot', imageFile);
@@ -247,15 +251,27 @@ export function GuestManager() {
               className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
             />
           </label>
-          <label className="block space-y-1">
-            <span className="text-sm font-medium text-foreground">Episode Title <span className="text-red-500">*</span></span>
-            <input
-              type="text"
-              value={form.episodeTitle}
-              onChange={(e) => updateField('episodeTitle', e.target.value)}
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
-            />
-          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="space-y-1">
+              <span className="text-sm font-medium text-foreground">Episode Title <span className="text-xs text-muted-foreground">(blank = upcoming guest)</span></span>
+              <input
+                type="text"
+                value={form.episodeTitle}
+                onChange={(e) => updateField('episodeTitle', e.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+              />
+            </label>
+            <label className="space-y-1">
+              <span className="text-sm font-medium text-foreground">Episode URL <span className="text-xs text-muted-foreground">(optional; links the title)</span></span>
+              <input
+                type="url"
+                value={form.episodeUrl}
+                placeholder="https://www.youtube.com/watch?v=..."
+                onChange={(e) => updateField('episodeUrl', e.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+              />
+            </label>
+          </div>
           <div className="flex gap-2">
             <button type="button" className="btn-primary" onClick={handleSave} disabled={saving}>
               {saving ? 'Saving...' : 'Save'}
@@ -294,7 +310,7 @@ export function GuestManager() {
               <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">{guest.bio}</p>
               <p className="text-xs text-muted-foreground">
                 <span className="font-medium uppercase tracking-wide">Episode:</span>{' '}
-                {guest.episodeTitle}
+                {guest.episodeTitle ?? 'Coming soon'}
               </p>
             </div>
             <div className="flex shrink-0 gap-2">

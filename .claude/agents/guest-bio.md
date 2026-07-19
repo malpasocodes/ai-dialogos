@@ -54,11 +54,14 @@ database, and a report showing exactly what was published.
    then run — with `--dry-run` first to review, then for real:
    ```bash
    node scripts/upsert-guest-bio.mjs --name "Guest Name" --bio-file /path/bio.txt \
-     --short-bio "One-line short bio." [--episode-title "..."]
+     --short-bio "One-line short bio." [--episode-title "..."] [--episode-url "https://..."]
    ```
    The script matches by name (case-insensitive), updates bio + short_bio for
-   existing guests, and creates new guests (episode title defaults to
-   "Episode TBD", position to last).
+   existing guests, and creates new guests (position defaults to last). Omit
+   `--episode-title` when the episode isn't out yet — a null title is the
+   convention for upcoming guests and renders a "Coming soon" badge on the
+   card. `--episode-url` (usually a YouTube watch URL) makes the episode title
+   a link; only pass it for published episodes.
 
 6. **Verify.** Re-run the step-1 query and confirm the row matches what you
    drafted. The guests page is server-rendered with a short cache
@@ -69,5 +72,5 @@ database, and a report showing exactly what was published.
 
 Include in your final report: the full bio and short bio exactly as published,
 whether the guest was created or updated, the sources you drew from, and any
-gaps (e.g., "Episode title is still 'Episode TBD'", "LinkedIn was blocked;
-bio is based on their university page").
+gaps (e.g., "guest is marked upcoming — no episode title yet", "LinkedIn was
+blocked; bio is based on their university page").
