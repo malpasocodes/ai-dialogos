@@ -137,7 +137,7 @@
   }
 
   .brand-text {
-    @apply inline-flex items-center text-2xl uppercase tracking-[0.12em];
+    @apply inline-flex items-center whitespace-nowrap text-lg uppercase tracking-[0.08em] sm:text-2xl sm:tracking-[0.12em];
   }
 
   .card {
@@ -183,5 +183,13 @@
 
   .nav-dropdown-link[data-active="true"] {
     @apply text-foreground font-semibold;
+  }
+
+  .mobile-nav-link {
+    @apply flex min-h-[44px] items-center rounded-xl px-3 text-base font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60;
+  }
+
+  .mobile-nav-link[data-active="true"] {
+    @apply bg-secondary/60 font-semibold text-foreground;
   }
 }

@@ -7,7 +7,7 @@ export function UserButton() {
 
   if (!isSignedIn) {
     return (
-      <a href="/sign-in" className="nav-link">
+      <a href="/sign-in" className="nav-link whitespace-nowrap">
         Sign In
       </a>
     );

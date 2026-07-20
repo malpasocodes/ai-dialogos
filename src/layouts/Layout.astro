@@ -25,6 +25,7 @@ const navItems = [
 import '../styles/global.css';
 import Seo from '../components/Seo.astro';
 import { MainNav } from '../components/MainNav';
+import { MobileNav } from '../components/MobileNav';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { UserButton } from '../components/UserButton';
 const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
@@ -49,8 +50,11 @@ const PLAUSIBLE_DOMAIN = import.meta.env.PLAUSIBLE_DOMAIN;
         </a>
         <MainNav items={navItems} currentPath={currentPath} client:load />
         <div class="flex items-center gap-2">
-          <ThemeSelector client:load />
+          <div class="hidden md:block">
+            <ThemeSelector client:load />
+          </div>
           <UserButton client:only="react" />
+          <MobileNav items={navItems} currentPath={currentPath} client:load />
         </div>
       </div>
     </header>

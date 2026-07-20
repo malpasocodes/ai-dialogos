@@ -7,6 +7,31 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-07-20
+
+### Added
+- Mobile navigation (`src/components/MobileNav.tsx`): a hamburger button shown
+  below the `md` breakpoint opens a slide-in sheet with every nav item,
+  dropdown groups flattened under their parent label as section headings.
+  Previously `MainNav` was `hidden md:flex` with no mobile fallback, so the
+  entire menu was unreachable on phones.
+- Theme picker inside the mobile menu, so switching themes stays available on
+  small screens now that the header theme dropdown is desktop-only.
+
+### Changed
+- Theme state extracted to `src/lib/theme.ts` (`useTheme`, `applyTheme`,
+  `themes`), shared by `ThemeSelector` and `MobileNav`. Instances stay in sync
+  via a `themechange` window event.
+- Header packs down on small screens: brand drops to `text-lg` with tighter
+  tracking and `whitespace-nowrap` (it was wrapping to two lines), the "Sign
+  In" link no longer wraps, and the theme dropdown is `hidden md:block`.
+
+### Fixed
+- Hamburger was unreachable at 320px wide: the header row overflowed and the
+  "Sign In" link overlapped the button, swallowing taps. Verified with
+  Playwright at 320/390/412px that the trigger is fully in-viewport, has a
+  44px tap target, and the page has no horizontal overflow.
+
 ## 2026-07-19
 
 ### Added
