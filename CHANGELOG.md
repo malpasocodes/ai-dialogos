@@ -12,6 +12,9 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ### Added
 - Guest bio for Eulalia Flo (Equinix) published to the `guests` table at
   position 7. No episode title yet, so the card renders as "Coming soon".
+- Headshot for Eulalia Flo written to her `headshot` column (48 KB data URL,
+  305x313 JPEG — already under the 384px ceiling, so no resize was needed).
+  Original retained locally in the gitignored `scripts/backup-headshots/`.
 - Mobile navigation (`src/components/MobileNav.tsx`): a hamburger button shown
   below the `md` breakpoint opens a slide-in sheet with every nav item,
   dropdown groups flattened under their parent label as section headings.
