@@ -52,6 +52,9 @@ are grouped by the date the work landed on `main`.
   text and backfilled their previously empty short bios.
 
 ### Docs
+- Added `docs/spinoff-uncommon-books.md` — phased plan for spinning this site
+  off into "Uncommon Books for Uncommon Readers" (fork, fresh services, feed
+  repoint, `guests` → `authors` rename, rebrand). Plan only; no code changes.
 - Added a note in `CLAUDE.md` requiring `CHANGELOG.md` to be updated with every commit.
 
 ## 2026-06-30
