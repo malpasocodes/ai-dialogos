@@ -29,6 +29,8 @@ are grouped by the date the work landed on `main`.
   cards link out to YouTube (thumbnail, date, summary).
 
 ### Changed
+- Guests page intro no longer says the podcast "will lead off in May and June
+  2026" — episodes have published; the copy is now evergreen.
 - `episode_title` is now nullable, and a null title is the convention for
   upcoming guests: cards render a "Coming soon" badge instead of a title, the
   admin form and guest APIs no longer require an episode title, and the
