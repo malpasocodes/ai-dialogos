@@ -2,17 +2,17 @@
 
 All notable changes to this project are documented here.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-This project does not follow semantic versioning or cut tagged releases; entries
-are grouped by the date the work landed on `main`.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+section types (Added / Changed / Fixed / Removed / Security / Docs), but since
+every push to `main` deploys immediately there is no `[Unreleased]` section:
+entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
-## [Unreleased]
+## 2026-07-19
 
 ### Added
 - Optional `episode_url` column on `guests` (migration `0002`): when set, the
   episode title on the guest card links out to it (new-tab). Editable in the
   admin form and via `--episode-url` in `scripts/upsert-guest-bio.mjs`.
-
 - `guest-bio` Claude Code agent (`.claude/agents/guest-bio.md`): given a guest
   name and LinkedIn URL, researches the guest, drafts a full bio + short bio in
   house style (plain text only), and publishes them to the guests table via the
@@ -22,13 +22,11 @@ are grouped by the date the work landed on `main`.
 - Optional `short_bio` column on `guests` (Drizzle migration `0001`), editable
   via a new "Short Bio" field in the admin guest form and accepted by the
   guest POST/PUT API routes.
-- Homepage now lists published podcast episodes from the AI-Dialogos YouTube
-  playlist, fetched at build time via the playlist RSS feed (no API key) with a
-  JSON snapshot fallback in `src/data/youtube-cache.json` — same pattern as the
-  Substack feed. New `src/utils/youtube.ts` and `EpisodeCard.astro`; episode
-  cards link out to YouTube (thumbnail, date, summary).
 
 ### Changed
+- Changelog entries are now filed directly under dated sections instead of
+  accumulating in `[Unreleased]` (this site deploys on every push, so nothing
+  stays unreleased); `CLAUDE.md` instruction updated to match.
 - Guests page intro no longer says the podcast "will lead off in May and June
   2026" — episodes have published; the copy is now evergreen.
 - `episode_title` is now nullable, and a null title is the convention for
@@ -43,8 +41,6 @@ are grouped by the date the work landed on `main`.
 - Made migrations `0000`/`0001` idempotent (`IF NOT EXISTS`) so
   `drizzle-kit migrate` can adopt the existing database, which had been
   synced with `db:push` and had no migration-tracking table.
-- Homepage hero CTA now points at the YouTube playlist ("Watch on YouTube");
-  the podcast section links to Apple Podcasts and Spotify for audio.
 
 ### Fixed
 - Guest bios in the database contained literal `<em>` tags (visible on the page
@@ -55,6 +51,21 @@ are grouped by the date the work landed on `main`.
 - Added `docs/spinoff-uncommon-books.md` — phased plan for spinning this site
   off into "Uncommon Books for Uncommon Readers" (fork, fresh services, feed
   repoint, `guests` → `authors` rename, rebrand). Plan only; no code changes.
+
+## 2026-07-18
+
+### Added
+- Homepage now lists published podcast episodes from the AI-Dialogos YouTube
+  playlist, fetched at build time via the playlist RSS feed (no API key) with a
+  JSON snapshot fallback in `src/data/youtube-cache.json` — same pattern as the
+  Substack feed. New `src/utils/youtube.ts` and `EpisodeCard.astro`; episode
+  cards link out to YouTube (thumbnail, date, summary).
+
+### Changed
+- Homepage hero CTA now points at the YouTube playlist ("Watch on YouTube");
+  the podcast section links to Apple Podcasts and Spotify for audio.
+
+### Docs
 - Added a note in `CLAUDE.md` requiring `CHANGELOG.md` to be updated with every commit.
 
 ## 2026-06-30
