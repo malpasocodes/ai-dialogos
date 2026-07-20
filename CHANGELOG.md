@@ -10,6 +10,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-07-20
 
 ### Added
+- Guest bio for Eulalia Flo (Equinix) published to the `guests` table at
+  position 7. No episode title yet, so the card renders as "Coming soon".
 - Mobile navigation (`src/components/MobileNav.tsx`): a hamburger button shown
   below the `md` breakpoint opens a slide-in sheet with every nav item,
   dropdown groups flattened under their parent label as section headings.
