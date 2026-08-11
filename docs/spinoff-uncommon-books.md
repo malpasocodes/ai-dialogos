@@ -107,7 +107,7 @@ editing those token values + `tailwind.config.js`.
 2. Smoke-test: sign in → admin CRUD for authors → headshot upload → public
    listing → Substack cards → podcast links.
 3. `npm run build` (Pagefind postbuild indexes `dist/`).
-4. Point DNS at the new Netlify site; confirm the RSS watcher + cron build hook fire.
+4. Point DNS at the new Netlify site; confirm the cron build hook fires.
 
 ## Effort estimate
 

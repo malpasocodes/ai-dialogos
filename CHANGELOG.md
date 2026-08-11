@@ -7,6 +7,32 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-08-11
+
+### Removed
+- The Zapier/Make RSS watcher as a rebuild trigger. It keyed on the Substack
+  publish event, but the YouTube episode is usually not in the playlist yet at
+  that moment, so the "instant" rebuild shipped a half-complete update and a
+  second rebuild was needed anyway. One less external dependency.
+
+### Changed
+- `.github/workflows/scheduled-rebuild.yml` cron from daily (06:00 UTC) to
+  hourly, so dropping the instant trigger caps worst-case content lag at about
+  an hour instead of a day. The repo is public, so Actions minutes are free and
+  the job takes ~6s.
+
+### Docs
+- Rewrote `docs/auto-rebuild-setup.md` around the hourly cron plus a manual
+  `gh workflow run scheduled-rebuild.yml --ref main` after the playlist add,
+  which is when content is actually complete. Documents two gotchas found while
+  debugging the 2026-08-11 episode: the YouTube playlist feed is served with
+  `max-age=900` (a stale read looks identical to "video not in playlist" — use a
+  cache-busting query param to check), and unlisted/private videos are omitted
+  from the playlist feed entirely. Also notes that GitHub delays scheduled runs
+  under load and disables schedules in public repos after 60 days without a
+  commit.
+- Updated `CLAUDE.md` and `docs/spinoff-uncommon-books.md` to match.
+
 ## 2026-07-20
 
 ### Added

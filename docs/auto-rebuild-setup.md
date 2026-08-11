@@ -1,8 +1,8 @@
-# Auto-Rebuild on New Substack Posts
+# Auto-Rebuild on New Content
 
-The site fetches Substack essays at **build time**. New posts won't appear
-until the site is rebuilt. This guide sets up two complementary triggers so
-new content goes live automatically.
+The site fetches Substack essays and YouTube episodes at **build time**. New
+content won't appear until the site is rebuilt. This guide covers the two ways
+a rebuild gets triggered.
 
 ---
 
@@ -16,30 +16,9 @@ new content goes live automatically.
 
 ---
 
-## 2a. Instant trigger — Zapier / Make automation
+## 2. Scheduled rebuild — GitHub Actions
 
-This fires a rebuild within minutes of a new Substack post.
-
-### Zapier
-
-| Step | App | Action |
-|------|-----|--------|
-| 1 | **RSS by Zapier** | New Item in Feed — use `https://aidialogos.substack.com/feed` |
-| 2 | **Webhooks by Zapier** | POST to your Netlify build hook URL |
-
-### Make (Integromat)
-
-| Module | Config |
-|--------|--------|
-| **RSS** | Watch feed `https://aidialogos.substack.com/feed`, poll every 15 min |
-| **HTTP** | POST to Netlify build hook URL, empty body |
-
----
-
-## 2b. Daily fallback — GitHub Actions (already configured)
-
-A scheduled workflow runs daily at 06:00 UTC and triggers the same Netlify
-build hook. This catches anything the instant trigger misses.
+A scheduled workflow runs hourly and POSTs the Netlify build hook.
 
 ### Setup
 
@@ -50,23 +29,65 @@ build hook. This catches anything the instant trigger misses.
 
 The workflow is at `.github/workflows/scheduled-rebuild.yml`.
 
+Two things to know about GitHub's scheduler:
+
+- Scheduled runs are **delayed under load** — typically 5–20 minutes past the
+  nominal time, occasionally more. Treat the cadence as approximate.
+- GitHub **disables schedules in public repos after 60 days without a commit**.
+  If feeds go stale for weeks at a stretch, check whether the schedule was
+  auto-disabled in the Actions tab.
+
+---
+
+## 3. Manual trigger — the reliable path
+
+Publishing isn't finished when Substack posts. The episode also has to be added
+to the YouTube playlist (`PL2QoJOg_E8XBA9C_6uvNcUSOhQ2VEq9pn`) and be **public** —
+unlisted and private videos are omitted from the playlist RSS feed entirely.
+
+So the moment content is actually complete is *after* the playlist add, not at
+Substack publish time. Trigger the rebuild yourself then:
+
+```bash
+gh workflow run scheduled-rebuild.yml --ref main
+```
+
+One caveat: YouTube serves the playlist feed with `Cache-Control: max-age=900`,
+so a build starting within ~15 minutes of the playlist edit can still read a
+stale copy that omits the new video. If the episode doesn't appear, wait a few
+minutes and re-trigger. To check what the feed actually contains right now,
+bypass the cache with a throwaway query param:
+
+```bash
+curl -s "https://www.youtube.com/feeds/videos.xml?playlist_id=PL2QoJOg_E8XBA9C_6uvNcUSOhQ2VEq9pn&cb=$RANDOM" \
+  | grep -E "<yt:videoId>|  <title>"
+```
+
+The hourly cron is the safety net for when you forget.
+
+---
+
+## Why there's no instant RSS trigger
+
+An earlier setup used a Zapier/Make RSS watcher to fire the build hook within
+minutes of a Substack post. It was removed because it keys on the wrong signal:
+the YouTube episode usually isn't in the playlist yet at Substack-publish time,
+so the instant rebuild ships a half-complete update and a second rebuild is
+needed regardless. The hourly cron plus a manual trigger covers the same ground
+with one less external dependency.
+
 ---
 
 ## How it works end-to-end
 
 ```
-Substack publish ──► Zapier detects new RSS item ──► POST build hook
-                                                          │
-GitHub cron (daily) ──────────────────────────────────────┘
-                                                          │
-                                                          ▼
-                                                   Netlify rebuild
-                                                          │
-                                                          ▼
-                                              getSubstackPosts() fetches
-                                              live RSS → static HTML
+GitHub cron (hourly) ─────┐
+                          ├──► POST build hook ──► Netlify rebuild
+Manual gh workflow run ───┘                              │
+                                                         ▼
+                                    getSubstackPosts() + getPodcastEpisodes()
+                                    fetch live RSS → static HTML
 ```
 
-If the live RSS fetch fails during build, the site falls back to the
-cached `src/data/substack-cache.json` (currently empty — it will be
-populated once real posts exist and a build succeeds).
+If a live RSS fetch fails during the build, the site falls back to the cached
+snapshots in `src/data/substack-cache.json` and `src/data/youtube-cache.json`.
