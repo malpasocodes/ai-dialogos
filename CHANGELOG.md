@@ -9,6 +9,13 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
 ## 2026-08-11
 
+### Fixed
+- `scheduled-rebuild.yml` no longer swallows a failed build-hook POST into a
+  `::warning::` on an otherwise green run — a dead or rotated hook now fails the
+  job. The old form meant content-refresh builds could stop silently and only
+  surface as "the site didn't update" at the next publish. Matters ahead of
+  rotating the Netlify build hook, where the secret is briefly stale by design.
+
 ### Removed
 - The Zapier/Make RSS watcher as a rebuild trigger. It keyed on the Substack
   publish event, but the YouTube episode is usually not in the playlist yet at

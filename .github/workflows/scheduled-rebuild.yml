@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Netlify build hook
-        run: |
-          curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}" \
-            || echo "::warning::Netlify build hook failed — check the secret is set"
+        # Fail the job loudly on a dead or rotated hook. This used to swallow
+        # errors into a ::warning:: on an otherwise green run, which would let
+        # content-refresh builds stop silently.
+        run: curl -fsS -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}"
