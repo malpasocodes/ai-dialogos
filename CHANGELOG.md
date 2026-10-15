@@ -17,6 +17,11 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   closer) to `docs/interviews/<guest-slug>.md`. Read-only against the DB; no site
   changes.
 
+### Docs
+- First `interview-prep` output: `docs/interviews/matt-sigelman.md` — sourced
+  question set for the Matt Sigelman episode (AI and jobs over 2–5 years; AI's
+  impact on junior knowledge-worker roles; positioning advice for recent grads).
+
 ## 2026-08-11
 
 ### Fixed
