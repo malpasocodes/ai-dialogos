@@ -7,6 +7,16 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-10-15
+
+### Added
+- `interview-prep` Claude Code skill (`.claude/skills/interview-prep/SKILL.md`):
+  given a guest name and LinkedIn URL, asks the host for three themes, researches
+  the guest's public work on each, and writes a sourced question set (research
+  brief, opener, 4–6 questions per theme with follow-ups and "why ask" notes,
+  closer) to `docs/interviews/<guest-slug>.md`. Read-only against the DB; no site
+  changes.
+
 ## 2026-08-11
 
 ### Fixed
