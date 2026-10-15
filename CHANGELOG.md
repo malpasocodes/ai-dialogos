@@ -21,6 +21,7 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 - First `interview-prep` output: `docs/interviews/matt-sigelman.md` — sourced
   question set for the Matt Sigelman episode (AI and jobs over 2–5 years; AI's
   impact on junior knowledge-worker roles; positioning advice for recent grads).
+- `docs/interviews/matt-sigelman.pdf` — printable PDF of the same prep notes.
 
 ## 2026-08-11
 
