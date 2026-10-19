@@ -1,0 +1,44 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { AudienceStats } from '../../components/AudienceStats';
+import { fetchYouTubeSubscribers, recordSnapshot, getHistory, summarize } from '../../utils/audience';
+
+const { userId } = Astro.locals.auth();
+
+if (!userId) {
+  return Astro.redirect('/sign-in');
+}
+
+if (userId !== import.meta.env.ADMIN_USER_ID) {
+  return Astro.redirect('/');
+}
+
+// Record today's YouTube count on each visit (one row per day, so reloads overwrite).
+const youtubeCount = await fetchYouTubeSubscribers();
+if (youtubeCount !== null) {
+  await recordSnapshot({ platform: 'youtube', count: youtubeCount, source: 'api' });
+}
+
+const history = await getHistory();
+const summary = summarize(history);
+---
+<Layout title="Audience Stats">
+  <section class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-semibold text-foreground">Audience Stats</h1>
+      <a href="/admin" class="btn-secondary">Back to Admin</a>
+    </div>
+    <p class="max-w-2xl text-base leading-relaxed text-muted-foreground">
+      Subscribers and followers by channel. YouTube updates automatically when you open this page;
+      enter the others from each platform's dashboard.
+    </p>
+  </section>
+  <div class="mt-8">
+    <AudienceStats
+      client:load
+      initialSummary={summary}
+      initialHistory={history}
+      youtubeLive={youtubeCount !== null}
+    />
+  </div>
+</Layout>

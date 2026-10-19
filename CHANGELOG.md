@@ -7,6 +7,22 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-10-19
+
+### Added
+- `/admin/stats` audience page: subscriber/follower counts for YouTube,
+  Substack, Spotify and Apple Podcasts, stored as one snapshot per platform per
+  day in a new `audience_snapshots` table (migration `0003`). YouTube is fetched
+  from the YouTube Data API on each page load when `YOUTUBE_API_KEY` is set;
+  the other three have no public count API and are entered by hand from each
+  platform's dashboard (linked from the page). Shows latest count, change since
+  the previous snapshot, a combined-reach sum, and a history table. Backed by
+  admin-only `GET`/`POST /api/audience` and linked from the admin home.
+
+### Docs
+- `CLAUDE.md`: documented `YOUTUBE_API_KEY`, the `audience_snapshots` table, and
+  the admin-only exception for `GET /api/audience`.
+
 ## 2026-10-15
 
 ### Added

@@ -31,7 +31,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - `DATABASE_URL` — Neon Postgres connection string (pooled URL).
 - `PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — Clerk auth.
 - `ADMIN_USER_ID` — single Clerk user id allowed to hit admin routes / mutating APIs.
-- Optional: `SUBSTACK_RSS_URL`, `PLAUSIBLE_DOMAIN`.
+- Optional: `SUBSTACK_RSS_URL`, `PLAUSIBLE_DOMAIN`, `YOUTUBE_API_KEY` (Google Cloud key with YouTube Data API v3 enabled; powers the auto YouTube count on `/admin/stats` — without it YouTube becomes manual entry).
 
 ## Architecture
 
@@ -43,11 +43,12 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 ### Auth (Clerk)
 - `src/middleware.ts` is just `clerkMiddleware()` — **required**, without it `Astro.locals.auth()` is undefined on Netlify.
 - Admin gate pattern (used in `src/pages/admin/*.astro` and every mutating API route): compare `locals.auth().userId` against `import.meta.env.ADMIN_USER_ID`. There's no role system — it's literally one user id.
-- Read-only API routes (e.g. `GET /api/guests`) are intentionally public.
+- Read-only API routes (e.g. `GET /api/guests`) are intentionally public. Exception: `GET /api/audience` is admin-only (private numbers).
 
 ### Data layer
 - Drizzle ORM over Neon Postgres. Schema in `src/db/schema.ts`, client in `src/db/index.ts`, migrations in `drizzle/`.
-- Single table today: `guests`. Display order is controlled by the `position` integer column (ascending).
+- `guests`: display order is controlled by the `position` integer column (ascending).
+- `audience_snapshots`: one subscriber/follower count per platform (`youtube | substack | spotify | apple`) per day, unique on (`platform`, `recorded_on`) so re-entry overwrites. Read/write via `src/utils/audience.ts`; surfaced on `/admin/stats`. YouTube is recorded from the Data API each time the page loads (rounded to 3 sig figs by YouTube); Substack, Spotify for Creators and Apple Podcasts Connect have no public count API, so those are typed in. `GET /api/audience` is admin-only, unlike `GET /api/guests`.
 - Read paths go through `src/utils/guests.ts` — `getGuests()` deliberately excludes the binary `headshot` column and returns `hasHeadshot: boolean` instead. **Don't reintroduce inline base64 in list queries** — that's what caused the ~1.4 MB HTML payload the May 2026 cleanup fixed.
 
 ### Headshots

@@ -11,6 +11,7 @@ export interface PodcastEpisode {
 }
 
 export const YOUTUBE_PLAYLIST_ID = "PL2QoJOg_E8XBA9C_6uvNcUSOhQ2VEq9pn";
+export const YOUTUBE_CHANNEL_ID = "UCDx9LSSz1jwT4j0rmtXLkjw";
 export const YOUTUBE_PLAYLIST_URL =
   `https://www.youtube.com/playlist?list=${YOUTUBE_PLAYLIST_ID}`;
 
