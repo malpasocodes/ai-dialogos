@@ -15,6 +15,9 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   Re-enabled it, and the workflow now re-enables itself via the API on each run
   so the 60-day inactivity timer never expires.
 
+### Removed
+- `docs/phase1/astro_phase1_handoff_codex.md`, an obsolete Phase 1 handoff note.
+
 ## 2026-10-19
 
 ### Added
