@@ -9,6 +9,15 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
 ## 2026-10-26
 
+### Added
+- "Rebuild now" button on `/admin`, backed by an admin-only
+  `POST /api/rebuild` that fires the Netlify build hook. Needs the
+  `NETLIFY_BUILD_HOOK_URL` env var on Netlify (the hook URL stays server-side).
+
+### Changed
+- Scheduled rebuild runs daily (12:00 UTC) instead of hourly; the admin
+  button is now the primary way to publish new content.
+
 ### Fixed
 - Scheduled rebuild had been auto-disabled by GitHub for inactivity since
   2026-10-10, so new Substack posts and podcast episodes stopped appearing.

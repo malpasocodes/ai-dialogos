@@ -2,9 +2,10 @@ name: Scheduled site rebuild
 
 on:
   schedule:
-    # Rebuild hourly to pick up new Substack posts / podcast episodes.
+    # Daily safety-net rebuild to pick up new Substack posts / podcast episodes.
+    # The primary trigger is the "Rebuild now" button on /admin.
     # GitHub delays scheduled runs under load, so treat this as approximate.
-    - cron: "0 * * * *"
+    - cron: "0 12 * * *"
   workflow_dispatch: # Allow manual trigger from GitHub Actions UI
 
 permissions:

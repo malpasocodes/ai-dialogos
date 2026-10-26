@@ -31,6 +31,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - `DATABASE_URL` — Neon Postgres connection string (pooled URL).
 - `PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — Clerk auth.
 - `ADMIN_USER_ID` — single Clerk user id allowed to hit admin routes / mutating APIs.
+- `NETLIFY_BUILD_HOOK_URL` — Netlify build hook, used by the admin "Rebuild now" button (`POST /api/rebuild`). Also stored as a GitHub Actions secret for the daily scheduled rebuild.
 - Optional: `SUBSTACK_RSS_URL`, `PLAUSIBLE_DOMAIN`, `YOUTUBE_API_KEY` (Google Cloud key with YouTube Data API v3 enabled; powers the auto YouTube count on `/admin/stats` — without it YouTube becomes manual entry).
 
 ## Architecture
@@ -60,7 +61,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 - `src/utils/substack.ts` fetches the Substack RSS feed (`https://aidialogos.substack.com/feed`) at **build time** with an in-process memo, powering the `/substack` essays list and the homepage "Latest Substack" cards. If the live fetch fails or returns empty, it falls back to the JSON snapshot in `src/data/substack-cache.json`.
 - **The podcast is not hosted on-site**, but the homepage lists episodes. `src/utils/youtube.ts` fetches the YouTube playlist RSS feed (`https://www.youtube.com/feeds/videos.xml?playlist_id=PL2QoJOg_E8XBA9C_6uvNcUSOhQ2VEq9pn`, no API key, newest ~15 entries) at build time with the same memo + fallback pattern, falling back to `src/data/youtube-cache.json`. Episode cards link out to YouTube watch URLs; publishing flow is Substack → routes video to YouTube and audio to Spotify/Apple.
 - The Podcast nav menu links straight out to the listening services (Apple Podcasts `id1884134654`, Spotify show `033qQQeIiEKw63qWMdFmPI`, the Substack podcast page) — those URLs are hardcoded in the nav (`src/layouts/Layout.astro`) and duplicated on the homepage (`src/pages/index.astro`). Only `/podcast/guests` lives under `/podcast`.
-- Consequence: **new Substack posts and podcast episodes don't appear until the site rebuilds.** A Netlify build hook is triggered by an hourly GitHub Actions cron (`.github/workflows/`), or manually with `gh workflow run scheduled-rebuild.yml --ref main` — the manual trigger is the reliable path, since the YouTube episode is usually not in the playlist yet when Substack publishes. Details in `docs/auto-rebuild-setup.md`.
+- Consequence: **new Substack posts and podcast episodes don't appear until the site rebuilds.** A Netlify build hook is triggered by the admin-only "Rebuild now" button on `/admin` (`POST /api/rebuild`), a daily GitHub Actions cron (`.github/workflows/`), or `gh workflow run scheduled-rebuild.yml --ref main` — a manual trigger is the reliable path, since the YouTube episode is usually not in the playlist yet when Substack publishes. Details in `docs/auto-rebuild-setup.md`.
 
 ### Page structure
 - Top-level routes: `index`, `about`, `book`, `series`, `substack`, `search`, `podcast/guests`, `volumes/*`, `sign-in`, `admin/*`, `api/*`. (The Podcast nav menu otherwise links out to external listening services; there is no on-site `/podcast` index or episode page.)

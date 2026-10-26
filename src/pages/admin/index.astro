@@ -26,6 +26,36 @@ if (userId !== import.meta.env.ADMIN_USER_ID) {
         <h2 class="text-lg font-semibold text-foreground">Audience Stats</h2>
         <p class="text-sm text-muted-foreground">Subscribers and followers across YouTube, Substack, Spotify, and Apple.</p>
       </a>
+      <div class="card flex flex-col gap-3">
+        <h2 class="text-lg font-semibold text-foreground">Rebuild Site</h2>
+        <p class="text-sm text-muted-foreground">
+          Pull in new Substack posts and podcast episodes. Run it once the video is public in the YouTube playlist; the site updates in about 2 minutes.
+        </p>
+        <div class="flex items-center gap-3">
+          <button type="button" class="btn-primary" data-rebuild>Rebuild now</button>
+          <span class="text-sm text-muted-foreground" data-rebuild-status role="status"></span>
+        </div>
+      </div>
     </div>
   </section>
+  <script type="module">
+    const button = document.querySelector('[data-rebuild]');
+    const statusEl = document.querySelector('[data-rebuild-status]');
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      statusEl.textContent = 'Triggering build…';
+      try {
+        const res = await fetch('/api/rebuild', { method: 'POST' });
+        const body = await res.json().catch(() => ({}));
+        statusEl.textContent = res.ok
+          ? 'Build started. New content should be live in about 2 minutes.'
+          : `Failed: ${body.error ?? res.status}`;
+      } catch {
+        statusEl.textContent = 'Failed: network error';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
 </Layout>

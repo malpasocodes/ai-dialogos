@@ -2,7 +2,8 @@
 
 The site fetches Substack essays and YouTube episodes at **build time**. New
 content won't appear until the site is rebuilt. This guide covers the two ways
-a rebuild gets triggered.
+a rebuild gets triggered: the **Rebuild now** button on `/admin` (primary) and
+a daily scheduled rebuild (safety net).
 
 ---
 
@@ -18,7 +19,7 @@ a rebuild gets triggered.
 
 ## 2. Scheduled rebuild — GitHub Actions
 
-A scheduled workflow runs hourly and POSTs the Netlify build hook.
+A scheduled workflow runs daily (12:00 UTC) and POSTs the Netlify build hook.
 
 ### Setup
 
@@ -26,6 +27,9 @@ A scheduled workflow runs hourly and POSTs the Netlify build hook.
 2. Add a repository secret:
    - Name: `NETLIFY_BUILD_HOOK_URL`
    - Value: the build hook URL from step 1.
+3. Add the same URL as a Netlify environment variable (**Site configuration →
+   Environment variables**), also named `NETLIFY_BUILD_HOOK_URL`. The admin
+   button reads it server-side.
 
 The workflow is at `.github/workflows/scheduled-rebuild.yml`.
 
@@ -48,7 +52,9 @@ to the YouTube playlist (`PL2QoJOg_E8XBA9C_6uvNcUSOhQ2VEq9pn`) and be **public**
 unlisted and private videos are omitted from the playlist RSS feed entirely.
 
 So the moment content is actually complete is *after* the playlist add, not at
-Substack publish time. Trigger the rebuild yourself then:
+Substack publish time. Trigger the rebuild yourself then: sign in and click
+**Rebuild now** on `/admin` (it calls the admin-only `POST /api/rebuild`, which
+fires the build hook), or from a terminal:
 
 ```bash
 gh workflow run scheduled-rebuild.yml --ref main
@@ -65,7 +71,7 @@ curl -s "https://www.youtube.com/feeds/videos.xml?playlist_id=PL2QoJOg_E8XBA9C_6
   | grep -E "<yt:videoId>|  <title>"
 ```
 
-The hourly cron is the safety net for when you forget.
+The daily cron is the safety net for when you forget.
 
 ---
 
@@ -75,7 +81,7 @@ An earlier setup used a Zapier/Make RSS watcher to fire the build hook within
 minutes of a Substack post. It was removed because it keys on the wrong signal:
 the YouTube episode usually isn't in the playlist yet at Substack-publish time,
 so the instant rebuild ships a half-complete update and a second rebuild is
-needed regardless. The hourly cron plus a manual trigger covers the same ground
+needed regardless. The admin button plus a daily cron covers the same ground
 with one less external dependency.
 
 ---
@@ -83,8 +89,8 @@ with one less external dependency.
 ## How it works end-to-end
 
 ```
-GitHub cron (hourly) ─────┐
-                          ├──► POST build hook ──► Netlify rebuild
+/admin "Rebuild now" ─────┐
+GitHub cron (daily) ──────┼──► POST build hook ──► Netlify rebuild
 Manual gh workflow run ───┘                              │
                                                          ▼
                                     getSubstackPosts() + getPodcastEpisodes()
