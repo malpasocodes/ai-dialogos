@@ -13,5 +13,13 @@ export function UserButton() {
     );
   }
 
-  return <ClerkUserButton />;
+  // Shown to any signed-in user; /admin itself redirects anyone who isn't ADMIN_USER_ID.
+  return (
+    <>
+      <a href="/admin" className="nav-link whitespace-nowrap">
+        Admin
+      </a>
+      <ClerkUserButton />
+    </>
+  );
 }

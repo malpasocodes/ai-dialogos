@@ -10,6 +10,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-26
 
 ### Added
+- "Admin" link in the header next to the user button, shown only when signed
+  in (non-admins who follow it are still redirected by the `/admin` gate).
 - "Rebuild now" button on `/admin`, backed by an admin-only
   `POST /api/rebuild` that fires the Netlify build hook. Needs the
   `NETLIFY_BUILD_HOOK_URL` env var on Netlify (the hook URL stays server-side).
