@@ -7,6 +7,9 @@ on:
     - cron: "0 * * * *"
   workflow_dispatch: # Allow manual trigger from GitHub Actions UI
 
+permissions:
+  actions: write # needed by the keep-alive step to re-enable this workflow
+
 jobs:
   trigger-netlify-build:
     runs-on: ubuntu-latest
@@ -16,3 +19,11 @@ jobs:
         # errors into a ::warning:: on an otherwise green run, which would let
         # content-refresh builds stop silently.
         run: curl -fsS -X POST "${{ secrets.NETLIFY_BUILD_HOOK_URL }}"
+
+      - name: Keep scheduled workflow alive
+        # GitHub auto-disables schedules after 60 days without a commit, which
+        # silently stopped content refreshes in Oct 2026. Re-enabling from each
+        # run resets that inactivity timer.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/scheduled-rebuild.yml/enable"

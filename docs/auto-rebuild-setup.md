@@ -34,8 +34,10 @@ Two things to know about GitHub's scheduler:
 - Scheduled runs are **delayed under load** — typically 5–20 minutes past the
   nominal time, occasionally more. Treat the cadence as approximate.
 - GitHub **disables schedules in public repos after 60 days without a commit**.
-  If feeds go stale for weeks at a stretch, check whether the schedule was
-  auto-disabled in the Actions tab.
+  The workflow's last step re-enables itself via the API on every run to reset
+  that timer. If feeds still go stale, check with
+  `gh workflow list --all` (state `disabled_inactivity`) and recover with
+  `gh workflow enable scheduled-rebuild.yml` followed by a manual run.
 
 ---
 

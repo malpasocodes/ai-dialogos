@@ -7,6 +7,14 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-10-26
+
+### Fixed
+- Scheduled rebuild had been auto-disabled by GitHub for inactivity since
+  2026-10-10, so new Substack posts and podcast episodes stopped appearing.
+  Re-enabled it, and the workflow now re-enables itself via the API on each run
+  so the 60-day inactivity timer never expires.
+
 ## 2026-10-19
 
 ### Added
