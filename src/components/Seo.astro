@@ -62,15 +62,13 @@ const structuredItems = structuredData
     )}
   </>
 )}
-{structuredItems.map((data, idx) => (
-  <script key={idx} type="application/ld+json">
-    {JSON.stringify(
-      {
-        '@context': 'https://schema.org',
-        ...data,
-      },
-      null,
-      2,
-    )}
-  </script>
+{structuredItems.map((data) => (
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      ...data,
+    }).replace(/</g, '\\u003c')}
+  />
 ))}

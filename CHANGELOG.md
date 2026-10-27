@@ -9,7 +9,21 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
 ## 2026-10-27
 
+### Added
+- Homepage hero names the podcast's co-hosts: "Hosted by Alfred Essa and
+  Teresa Martín-Retortillo", linking to their bios on `/about#hosts`.
+- Homepage `PodcastSeries` structured data lists both co-hosts as `author`.
+
+### Fixed
+- JSON-LD structured data now renders as JSON. `Seo.astro` used `{…}` inside
+  the `<script>` tag, which Astro doesn't evaluate, so every page shipped the
+  literal template code instead of the data. It now uses `set:html` and
+  escapes `<` so data can't close the script tag early.
+
 ### Changed
+- `/about` calls Alfred Essa and Teresa Martín-Retortillo the podcast's
+  co-hosts: the intro says so, the bios section is now "Hosts & Series
+  Co-Editors", and the page meta description mentions both roles.
 - Homepage tagline reads "Dialogues with AI leaders" instead of
   "Conversations on AI for leaders".
 - Homepage subtitle reads "A podcast and Substack series exploring AI
