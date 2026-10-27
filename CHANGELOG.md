@@ -10,6 +10,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-27
 
 ### Added
+- Podcast nav menu has a "Hosts" item, above "Guests", linking to the co-host
+  bios on `/about#hosts`.
 - Homepage hero names the podcast's co-hosts: "Hosted by Alfred Essa and
   Teresa Martín-Retortillo", linking to their bios on `/about#hosts`.
 - Homepage `PodcastSeries` structured data lists both co-hosts as `author`.
@@ -43,6 +45,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   calling the site the series' "companion platform".
 
 ### Docs
+- `CLAUDE.md` notes that the Podcast menu's Hosts item links to
+  `/about#hosts`.
 - `CLAUDE.md` describes the site as AI-Dialogos-first and documents the new
   episode source order (YouTube Data API → playlist RSS → snapshot) and the
   homepage episode layout.
