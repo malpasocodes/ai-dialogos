@@ -16,7 +16,10 @@ const APPLE_PODCASTS_URL = 'https://podcasts.apple.com/us/podcast/ai-dialogos-po
 const SPOTIFY_URL = 'https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI';
 const SUBSTACK_URL = 'https://aidialogos.substack.com';
 
-const [latestEpisode, ...moreEpisodes] = await getPodcastEpisodes(13);
+const episodes = await getPodcastEpisodes(20);
+const latestEpisodes = episodes.slice(0, 2);
+const moreEpisodes = episodes.slice(2, 4);
+const olderEpisodes = episodes.slice(4);
 
 const substackPosts = await getSubstackPosts(3);
 const substackCards = substackPosts.map((post) => ({
@@ -90,7 +93,6 @@ const volumes = [
     title="AI-Dialogos"
     tagline="Conversations on AI for leaders"
     subtitle="A podcast and essay series exploring AI strategy, ethics, and adoption with the leaders and innovators shaping it."
-    episode={latestEpisode}
     ctas={[
       { label: "Watch on YouTube", href: YOUTUBE_PLAYLIST_URL, primary: true, analytics: "watch_youtube", analyticsValue: "hero_cta" },
       { label: "Apple Podcasts", href: APPLE_PODCASTS_URL, analytics: "listen_podcast", analyticsValue: "hero_apple" },
@@ -98,11 +100,11 @@ const volumes = [
       { label: "Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" }
     ]}
   />
-  {moreEpisodes.length > 0 && (
-    <section class="mt-4 space-y-5">
+  {latestEpisodes.length > 0 && (
+    <section class="space-y-5">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">More Episodes</h2>
+          <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">Latest Episodes</h2>
           <p class="mt-1 text-sm text-muted-foreground">
             Also available on
             <a href={APPLE_PODCASTS_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_apple">Apple Podcasts</a>
@@ -115,10 +117,47 @@ const volumes = [
         </a>
       </div>
       <div class="grid gap-6 sm:grid-cols-2">
-        {moreEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
+        {latestEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
       </div>
     </section>
   )}
+  {moreEpisodes.length > 0 && (
+    <section class="mt-12 space-y-5">
+      <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">More Episodes</h2>
+      <div class="space-y-4">
+        {moreEpisodes.map((episode) => <EpisodeCard episode={episode} compact />)}
+      </div>
+      {olderEpisodes.length > 0 && (
+        <>
+          <div id="older-episodes" class="space-y-4" hidden>
+            {olderEpisodes.map((episode) => <EpisodeCard episode={episode} compact />)}
+          </div>
+          <button
+            type="button"
+            class="btn-secondary"
+            aria-expanded="false"
+            aria-controls="older-episodes"
+            data-episodes-toggle
+            data-label-more={`Show ${olderEpisodes.length} more ${olderEpisodes.length === 1 ? 'episode' : 'episodes'}`}
+            data-label-less="Show fewer"
+          >
+            Show {olderEpisodes.length} more {olderEpisodes.length === 1 ? 'episode' : 'episodes'}
+          </button>
+        </>
+      )}
+    </section>
+  )}
+  <script>
+    const toggle = document.querySelector<HTMLButtonElement>('[data-episodes-toggle]');
+    const list = document.getElementById('older-episodes');
+    toggle?.addEventListener('click', () => {
+      if (!list) return;
+      const expand = list.hidden;
+      list.hidden = !expand;
+      toggle.setAttribute('aria-expanded', String(expand));
+      toggle.textContent = (expand ? toggle.dataset.labelLess : toggle.dataset.labelMore) ?? '';
+    });
+  </script>
   <CardGrid title="Latest Essays" items={substackCards} moreHref="/substack" compact />
   <section class="mt-12 rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8">
     <div class="flex flex-col gap-8 md:flex-row md:items-center">

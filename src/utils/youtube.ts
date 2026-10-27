@@ -37,7 +37,11 @@ const parser = new Parser<Record<string, unknown>, FeedItem>({
 });
 
 const summarize = (description: string): string => {
-  const firstParagraph = description.split(/\n\s*\n/)[0] ?? "";
+  // Skip leading disclaimers ("Note: The views expressed…") so the card shows
+  // what the episode is about.
+  const paragraphs = description.split(/\n\s*\n/);
+  const firstParagraph =
+    paragraphs.find((p) => p.trim() && !/^\s*note:/i.test(p)) ?? paragraphs[0] ?? "";
   const text = firstParagraph.replace(/\s+/g, " ").trim();
   return text.length > 280 ? `${text.slice(0, 277).trimEnd()}…` : text;
 };
@@ -59,6 +63,49 @@ const mapItem = (item: FeedItem): PodcastEpisode | null => {
   };
 };
 
+type ApiPlaylistItem = {
+  snippet?: { title?: string; description?: string; publishedAt?: string };
+  contentDetails?: { videoId?: string; videoPublishedAt?: string };
+};
+
+// The playlist RSS feed intermittently returns 404/500, so prefer the Data API
+// when a key is configured. Returns null if the key is unset or the call fails.
+const fetchFromApi = async (): Promise<PodcastEpisode[] | null> => {
+  const key = import.meta.env.YOUTUBE_API_KEY || process.env.YOUTUBE_API_KEY;
+  if (!key) return null;
+
+  try {
+    const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
+    url.searchParams.set("part", "snippet,contentDetails");
+    url.searchParams.set("maxResults", "50");
+    url.searchParams.set("playlistId", YOUTUBE_PLAYLIST_ID);
+    url.searchParams.set("key", key);
+
+    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) {
+      console.warn(`[youtube] Data API returned HTTP ${res.status}`);
+      return null;
+    }
+
+    const data = (await res.json()) as { items?: ApiPlaylistItem[] };
+    return (data.items ?? [])
+      // Private or deleted videos have no videoPublishedAt.
+      .filter((item) => item.contentDetails?.videoPublishedAt)
+      .map((item) =>
+        mapItem({
+          title: item.snippet?.title,
+          isoDate: item.contentDetails?.videoPublishedAt,
+          videoId: item.contentDetails?.videoId,
+          mediaGroup: { "media:description": [item.snippet?.description ?? ""] },
+        }),
+      )
+      .filter((item): item is PodcastEpisode => Boolean(item));
+  } catch (error) {
+    console.warn("[youtube] Data API request failed", error);
+    return null;
+  }
+};
+
 const cachedFallback = cacheData as PodcastEpisode[];
 
 let cachedEpisodes: PodcastEpisode[] | null = null;
@@ -67,6 +114,12 @@ export const getPodcastEpisodes = async (
   limit = 20,
 ): Promise<PodcastEpisode[]> => {
   if (cachedEpisodes) {
+    return cachedEpisodes.slice(0, limit);
+  }
+
+  const fromApi = await fetchFromApi();
+  if (fromApi && fromApi.length > 0) {
+    cachedEpisodes = fromApi.sort((a, b) => b.published.localeCompare(a.published));
     return cachedEpisodes.slice(0, limit);
   }
 

@@ -22,6 +22,11 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   Apple Podcasts, Spotify and Substack buttons), followed by "More Episodes",
   "Latest Essays", and a "From the book series" band with both volume covers.
   Nav is unchanged.
+- Homepage layout reworked: the AI-Dialogos intro spans the full width, the
+  two newest episodes sit directly below it as "Latest Episodes", and
+  "More Episodes" lists the next two as compact rows with a "Show N more"
+  button for the rest. Episode cards skip a leading "Note:" disclaimer when
+  picking the summary.
 - Default page title and meta description are AI-Dialogos-first (homepage
   `<title>` is now "AI-Dialogos"); homepage JSON-LD lists the podcast and an
   AI-Dialogos Organization ahead of the book.
@@ -29,6 +34,11 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   button is now the primary way to publish new content.
 
 ### Fixed
+- Homepage showed stale episodes (#2 and #1 only) because YouTube's playlist
+  RSS feed was returning 404/500 at build time, so the build fell back to an
+  outdated snapshot. Episodes now come from the YouTube Data API first (using
+  `YOUTUBE_API_KEY`), then the RSS feed, then the snapshot, which is refreshed
+  with all four current episodes.
 - Scheduled rebuild had been auto-disabled by GitHub for inactivity since
   2026-10-10, so new Substack posts and podcast episodes stopped appearing.
   Re-enabled it, and the workflow now re-enables itself via the API on each run

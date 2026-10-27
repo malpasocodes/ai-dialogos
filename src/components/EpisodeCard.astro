@@ -3,9 +3,10 @@ import type { PodcastEpisode } from "../utils/youtube";
 
 interface Props {
   episode: PodcastEpisode;
+  compact?: boolean;
 }
 
-const { episode } = Astro.props as Props;
+const { episode, compact = false } = Astro.props as Props;
 
 const publishedLabel = new Date(episode.published).toLocaleDateString(undefined, {
   month: "short",
@@ -17,11 +18,11 @@ const publishedLabel = new Date(episode.published).toLocaleDateString(undefined,
   href={episode.url}
   target="_blank"
   rel="noopener noreferrer"
-  class="card group block overflow-hidden p-0"
+  class:list={["card group block overflow-hidden p-0", compact && "sm:flex"]}
   data-analytics-event="watch_episode"
   data-analytics-value={episode.videoId}
 >
-  <div class="relative aspect-video overflow-hidden bg-secondary">
+  <div class:list={["relative aspect-video overflow-hidden bg-secondary", compact && "sm:w-56 sm:flex-none"]}>
     <img
       src={episode.thumbnail}
       alt={`Video thumbnail for ${episode.title}`}
@@ -30,20 +31,20 @@ const publishedLabel = new Date(episode.published).toLocaleDateString(undefined,
       class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
     />
     <span class="absolute inset-0 flex items-center justify-center">
-      <span class="flex h-14 w-14 items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="ml-1 h-6 w-6">
+      <span class:list={["flex items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground", compact ? "h-10 w-10" : "h-14 w-14"]}>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class:list={["ml-1", compact ? "h-5 w-5" : "h-6 w-6"]}>
           <path d="M8 5.14v13.72L19 12 8 5.14z" />
         </svg>
       </span>
     </span>
   </div>
-  <div class="space-y-3 p-6">
+  <div class:list={["space-y-3", compact ? "p-5" : "p-6"]}>
     <div class="flex items-start justify-between gap-3">
       <h3 class="text-lg font-semibold text-foreground">{episode.title}</h3>
       <span class="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-muted-foreground">{publishedLabel}</span>
     </div>
     {episode.summary && (
-      <p class="text-sm leading-relaxed text-muted-foreground">{episode.summary}</p>
+      <p class:list={["text-sm leading-relaxed text-muted-foreground", compact && "line-clamp-2"]}>{episode.summary}</p>
     )}
     <span class="inline-flex items-center gap-1 text-sm font-medium text-primary">
       Watch on YouTube

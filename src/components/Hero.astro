@@ -1,6 +1,4 @@
 ---
-import type { PodcastEpisode } from "../utils/youtube";
-
 interface CTA {
   label: string;
   href: string;
@@ -14,73 +12,27 @@ interface Props {
   tagline?: string;
   subtitle: string;
   ctas?: CTA[];
-  episode?: PodcastEpisode;
 }
 
-const { title, tagline, subtitle, ctas = [], episode } = Astro.props as Props;
-
-const publishedLabel = episode
-  ? new Date(episode.published).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    })
-  : null;
+const { title, tagline, subtitle, ctas = [] } = Astro.props as Props;
 ---
-<section class="py-10 md:py-16">
-  <div class:list={["grid items-center gap-10", episode && "md:grid-cols-[1fr,1.1fr]"]}>
-    <div>
-      <h1 class="text-4xl font-semibold leading-tight text-[#113e8c] md:text-6xl">{title}</h1>
-      {tagline && (
-        <p class="mt-3 text-xl font-medium text-foreground md:text-2xl">{tagline}</p>
-      )}
-      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground" set:html={subtitle}></p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        {ctas.map((c) => (
-          <a
-            href={c.href}
-            class={c.primary ? 'btn-primary' : 'btn-secondary'}
-            data-analytics-event={c.analytics}
-            data-analytics-value={c.analyticsValue}
-            {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          >
-            {c.label}
-          </a>
-        ))}
-      </div>
-    </div>
-    {episode && (
+<section class="py-10 md:py-14">
+  <h1 class="text-4xl font-semibold leading-tight text-[#113e8c] md:text-6xl">{title}</h1>
+  {tagline && (
+    <p class="mt-3 text-xl font-medium text-foreground md:text-2xl">{tagline}</p>
+  )}
+  <p class="mt-5 text-lg leading-relaxed text-muted-foreground" set:html={subtitle}></p>
+  <div class="mt-8 flex flex-wrap gap-3">
+    {ctas.map((c) => (
       <a
-        href={episode.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="card group block overflow-hidden p-0"
-        data-analytics-event="watch_episode"
-        data-analytics-value={episode.videoId}
+        href={c.href}
+        class={c.primary ? 'btn-primary' : 'btn-secondary'}
+        data-analytics-event={c.analytics}
+        data-analytics-value={c.analyticsValue}
+        {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       >
-        <div class="relative aspect-video overflow-hidden bg-secondary">
-          <img
-            src={episode.thumbnail}
-            alt={`Video thumbnail for ${episode.title}`}
-            decoding="async"
-            class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-          />
-          <span class="absolute inset-0 flex items-center justify-center">
-            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="ml-1 h-7 w-7">
-                <path d="M8 5.14v13.72L19 12 8 5.14z" />
-              </svg>
-            </span>
-          </span>
-        </div>
-        <div class="space-y-2 p-6">
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Latest episode</span>
-            <span class="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-muted-foreground">{publishedLabel}</span>
-          </div>
-          <h2 class="text-xl font-semibold text-foreground">{episode.title}</h2>
-        </div>
+        {c.label}
       </a>
-    )}
+    ))}
   </div>
 </section>
