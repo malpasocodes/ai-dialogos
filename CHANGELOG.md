@@ -29,12 +29,13 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 - Homepage tagline reads "What leaders need to know about AI" instead of
   "Conversations on AI for leaders".
 - Homepage subtitle reads "A podcast and Substack series exploring AI
-  strategy, implementation, and ethics." It drops the "with the leaders and
-  innovators shaping it" clause, which the new tagline already covers.
+  strategy, implementation, and ethics.", dropping the "with the leaders and
+  innovators shaping it" clause.
 - Default SEO meta description and the homepage `PodcastSeries` structured
   data say "strategy, implementation, and ethics" to match the new subtitle.
-- `/about` opens with the same "podcast and Substack series" description as
-  the homepage subtitle.
+- `/about` opens by calling AI-Dialogos "a podcast and Substack series on
+  what leaders need to know about AI: strategy, implementation, and ethics",
+  matching the homepage tagline and subtitle.
 - Homepage "Latest Essays" row uses three columns instead of four, so its
   three cards fill the width instead of leaving an empty slot.
 - Homepage title and section headings ("Latest Episodes", "More Episodes",
