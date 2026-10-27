@@ -12,6 +12,9 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ### Changed
 - Homepage tagline reads "Conversations with AI leaders" instead of
   "Conversations on AI for leaders".
+- Homepage subtitle reads "A podcast and Substack series exploring AI
+  strategy, implementation, and ethics." It drops the "with the leaders and
+  innovators shaping it" clause, which the new tagline already covers.
 - Homepage "Latest Essays" row uses three columns instead of four, so its
   three cards fill the width instead of leaving an empty slot.
 - Homepage title and section headings ("Latest Episodes", "More Episodes",
