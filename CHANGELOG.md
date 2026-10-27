@@ -10,6 +10,9 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-27
 
 ### Changed
+- Homepage title and section headings ("Latest Episodes", "More Episodes",
+  "Latest Essays") use the theme foreground color instead of hardcoded dark
+  blues that were hard to read on the dark, emerald and ocean themes.
 - `/about` now introduces AI-Dialogos as a podcast and essay series in its own
   right, with the *AI Essentials for Leaders* book series second, instead of
   calling the site the series' "companion platform".
