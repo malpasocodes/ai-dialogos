@@ -7,13 +7,16 @@ import EpisodeCard from '../components/EpisodeCard.astro';
 import Seo from '../components/Seo.astro';
 import { getSubstackPosts } from '../utils/substack';
 import { getPodcastEpisodes, YOUTUBE_PLAYLIST_URL } from '../utils/youtube';
+import innovationCover from '../../images/shaping-future-innovation.jpeg';
+import strategyCover from '../../images/rethinking-business-strategy.jpeg';
 
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
 const canonicalImage = `${SITE_URL}/images/ai-bookcover.jpeg`;
 const APPLE_PODCASTS_URL = 'https://podcasts.apple.com/us/podcast/ai-dialogos-podcast/id1884134654';
 const SPOTIFY_URL = 'https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI';
+const SUBSTACK_URL = 'https://aidialogos.substack.com';
 
-const episodes = await getPodcastEpisodes(12);
+const [latestEpisode, ...moreEpisodes] = await getPodcastEpisodes(13);
 
 const substackPosts = await getSubstackPosts(3);
 const substackCards = substackPosts.map((post) => ({
@@ -26,12 +29,43 @@ const substackCards = substackPosts.map((post) => ({
     year: 'numeric',
   }),
 }));
+
+const volumes = [
+  {
+    title: 'Shaping the Future of Innovation',
+    href: '/volumes/shaping-the-future-of-innovation',
+    cover: innovationCover,
+  },
+  {
+    title: 'Rethinking Business Strategy',
+    href: '/volumes/rethinking-business-strategy',
+    cover: strategyCover,
+  },
+];
 ---
 <Layout>
   <Fragment slot="head">
     <Seo
       renderMeta={false}
       structuredData={[
+        {
+          '@type': 'PodcastSeries',
+          name: 'AI-Dialogos Podcast',
+          description:
+            'Conversations with leaders and innovators on AI strategy, ethics, and adoption.',
+          url: APPLE_PODCASTS_URL,
+          sameAs: [YOUTUBE_PLAYLIST_URL, SPOTIFY_URL],
+          publisher: {
+            '@type': 'Organization',
+            name: 'AI-Dialogos',
+          },
+        },
+        {
+          '@type': 'Organization',
+          name: 'AI-Dialogos',
+          url: SITE_URL,
+          sameAs: [SUBSTACK_URL, YOUTUBE_PLAYLIST_URL, APPLE_PODCASTS_URL, SPOTIFY_URL],
+        },
         {
           '@type': 'Book',
           name: 'Artificial Intelligence: Shaping the Future of Innovation',
@@ -49,48 +83,73 @@ const substackCards = substackPosts.map((post) => ({
           image: canonicalImage,
           url: new URL(Astro.url.pathname, SITE_URL).toString(),
         },
-        {
-          '@type': 'PodcastSeries',
-          name: 'AI-Dialogos Podcast',
-          description:
-            'Conversations with leaders and innovators on AI strategy, ethics, and adoption.',
-          url: APPLE_PODCASTS_URL,
-          sameAs: [YOUTUBE_PLAYLIST_URL, SPOTIFY_URL],
-          publisher: {
-            '@type': 'Organization',
-            name: 'AI-Dialogos',
-          },
-        },
       ]}
     />
   </Fragment>
   <Hero
-    title="AI Essentials for Leaders"
-    subtitle="The <em>AI Essentials for Leaders</em> book series offers concise, non-technical primers for navigating the complex world of Artificial Intelligence. Watch the AI-Dialogos podcast conversations below, or explore the companion Substack essays."
+    title="AI-Dialogos"
+    tagline="Conversations on AI for leaders"
+    subtitle="A podcast and essay series exploring AI strategy, ethics, and adoption with the leaders and innovators shaping it."
+    episode={latestEpisode}
     ctas={[
       { label: "Watch on YouTube", href: YOUTUBE_PLAYLIST_URL, primary: true, analytics: "watch_youtube", analyticsValue: "hero_cta" },
-      { label: "Subscribe on Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" }
+      { label: "Apple Podcasts", href: APPLE_PODCASTS_URL, analytics: "listen_podcast", analyticsValue: "hero_apple" },
+      { label: "Spotify", href: SPOTIFY_URL, analytics: "listen_podcast", analyticsValue: "hero_spotify" },
+      { label: "Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" }
     ]}
   />
-  <section class="mt-4 space-y-5">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">Podcast Episodes</h2>
-        <p class="mt-1 text-sm text-muted-foreground">
-          Conversations with leaders and innovators on AI strategy, ethics, and adoption.
-          Also available on
-          <a href={APPLE_PODCASTS_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_apple">Apple Podcasts</a>
-          and
-          <a href={SPOTIFY_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_spotify">Spotify</a>.
-        </p>
+  {moreEpisodes.length > 0 && (
+    <section class="mt-4 space-y-5">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold tracking-tight text-[#1f4c9a]">More Episodes</h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            Also available on
+            <a href={APPLE_PODCASTS_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_apple">Apple Podcasts</a>
+            and
+            <a href={SPOTIFY_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_spotify">Spotify</a>.
+          </p>
+        </div>
+        <a href="/podcast/guests" class="text-sm font-medium text-muted-foreground transition hover:text-foreground">
+          Meet the guests →
+        </a>
       </div>
-      <a href="/podcast/guests" class="text-sm font-medium text-muted-foreground transition hover:text-foreground">
-        Meet the guests →
-      </a>
-    </div>
-    <div class="grid gap-6 sm:grid-cols-2">
-      {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+      <div class="grid gap-6 sm:grid-cols-2">
+        {moreEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
+      </div>
+    </section>
+  )}
+  <CardGrid title="Latest Essays" items={substackCards} moreHref="/substack" compact />
+  <section class="mt-12 rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8">
+    <div class="flex flex-col gap-8 md:flex-row md:items-center">
+      <div class="flex flex-none gap-4">
+        {volumes.map((v) => (
+          <a href={v.href} class="block w-24 transition hover:-translate-y-0.5 sm:w-28">
+            <img
+              src={v.cover.src}
+              width={v.cover.width}
+              height={v.cover.height}
+              alt={`${v.title} cover`}
+              loading="lazy"
+              decoding="async"
+              class="w-full rounded-xl shadow-card"
+            />
+          </a>
+        ))}
+      </div>
+      <div class="space-y-3">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">From the book series</p>
+        <h2 class="text-2xl font-semibold tracking-tight text-foreground">AI Essentials for Leaders</h2>
+        <p class="text-base leading-relaxed text-muted-foreground">
+          Concise, non-technical primers on artificial intelligence for business leaders, practitioners, and policymakers, published by De Gruyter Brill and co-edited by Alfred Essa and Teresa Martín-Retortillo.
+        </p>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium">
+          <a href="/series" class="text-primary hover:underline">Series overview →</a>
+          {volumes.map((v) => (
+            <a href={v.href} class="text-muted-foreground transition hover:text-foreground">{v.title}</a>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
-  <CardGrid title="Latest Substack" items={substackCards} moreHref="/substack" compact />
 </Layout>

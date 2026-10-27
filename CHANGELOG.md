@@ -17,6 +17,14 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   `NETLIFY_BUILD_HOOK_URL` env var on Netlify (the hook URL stays server-side).
 
 ### Changed
+- Homepage now leads with AI-Dialogos instead of the book series: the hero
+  pairs the AI-Dialogos name and tagline with the newest episode (plus YouTube,
+  Apple Podcasts, Spotify and Substack buttons), followed by "More Episodes",
+  "Latest Essays", and a "From the book series" band with both volume covers.
+  Nav is unchanged.
+- Default page title and meta description are AI-Dialogos-first (homepage
+  `<title>` is now "AI-Dialogos"); homepage JSON-LD lists the podcast and an
+  AI-Dialogos Organization ahead of the book.
 - Scheduled rebuild runs daily (12:00 UTC) instead of hourly; the admin
   button is now the primary way to publish new content.
 
