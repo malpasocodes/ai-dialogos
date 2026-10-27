@@ -10,7 +10,7 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-27
 
 ### Changed
-- Homepage tagline reads "Conversations with AI leaders" instead of
+- Homepage tagline reads "Dialogues with AI leaders" instead of
   "Conversations on AI for leaders".
 - Homepage subtitle reads "A podcast and Substack series exploring AI
   strategy, implementation, and ethics." It drops the "with the leaders and
