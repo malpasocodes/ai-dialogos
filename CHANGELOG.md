@@ -10,6 +10,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-27
 
 ### Changed
+- Homepage tagline reads "Conversations with AI leaders" instead of
+  "Conversations on AI for leaders".
 - Homepage "Latest Essays" row uses three columns instead of four, so its
   three cards fill the width instead of leaving an empty slot.
 - Homepage title and section headings ("Latest Episodes", "More Episodes",
