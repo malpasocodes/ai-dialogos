@@ -15,6 +15,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 - Homepage subtitle reads "A podcast and Substack series exploring AI
   strategy, implementation, and ethics." It drops the "with the leaders and
   innovators shaping it" clause, which the new tagline already covers.
+- Default SEO meta description and the homepage `PodcastSeries` structured
+  data say "strategy, implementation, and ethics" to match the new subtitle.
 - Homepage "Latest Essays" row uses three columns instead of four, so its
   three cards fill the width instead of leaving an empty slot.
 - Homepage title and section headings ("Latest Episodes", "More Episodes",
