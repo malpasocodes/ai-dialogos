@@ -7,6 +7,18 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-10-27
+
+### Changed
+- `/about` now introduces AI-Dialogos as a podcast and essay series in its own
+  right, with the *AI Essentials for Leaders* book series second, instead of
+  calling the site the series' "companion platform".
+
+### Docs
+- `CLAUDE.md` describes the site as AI-Dialogos-first and documents the new
+  episode source order (YouTube Data API → playlist RSS → snapshot) and the
+  homepage episode layout.
+
 ## 2026-10-26
 
 ### Added
