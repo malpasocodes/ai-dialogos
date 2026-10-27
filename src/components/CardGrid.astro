@@ -11,7 +11,7 @@ import Card from './Card.astro';
       </a>
     )}
   </div>
-  <div class={`grid gap-5 ${compact ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 md:grid-cols-3'}`}>
+  <div class={`grid gap-5 ${compact ? 'md:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-3'}`}>
     {items.map((it) => <Card {...it} compact={compact} />)}
   </div>
 </section>

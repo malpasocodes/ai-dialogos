@@ -10,6 +10,8 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-10-27
 
 ### Changed
+- Homepage "Latest Essays" row uses three columns instead of four, so its
+  three cards fill the width instead of leaving an empty slot.
 - Homepage title and section headings ("Latest Episodes", "More Episodes",
   "Latest Essays") use the theme foreground color instead of hardcoded dark
   blues that were hard to read on the dark, emerald and ocean themes.
