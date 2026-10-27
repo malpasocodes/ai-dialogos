@@ -1,9 +1,14 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
+import Seo from '../../components/Seo.astro';
+import { innovationBook } from '../../utils/books';
 import bookCover from '../../../images/shaping-future-innovation.jpeg';
 ---
 <Layout title="Shaping the Future of Innovation" description="Volume overview for Artificial Intelligence: Shaping the Future of Innovation.">
+  <Fragment slot="head">
+    <Seo renderMeta={false} structuredData={innovationBook} />
+  </Fragment>
   <section class="mx-auto mt-8 max-w-4xl space-y-10 rounded-3xl bg-card p-8 shadow-card sm:p-10">
     <header class="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
       <div class="flex-1 space-y-2">

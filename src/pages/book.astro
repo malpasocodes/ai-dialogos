@@ -2,29 +2,11 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Seo from '../components/Seo.astro';
-
-const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
+import { innovationBook } from '../utils/books';
 ---
 <Layout title="Book">
   <Fragment slot="head">
-    <Seo
-      renderMeta={false}
-      structuredData={{
-        '@type': 'Book',
-        name: 'Artificial Intelligence: Shaping the Future of Innovation',
-        description: 'A concise, non-technical primer on artificial intelligence for business leaders, practitioners, and policymakers.',
-        author: {
-          '@type': 'Person',
-          name: 'Alfred Essa',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'De Gruyter',
-        },
-        datePublished: '2025-01-15',
-        url: new URL(Astro.url.pathname, SITE_URL).toString(),
-      }}
-    />
+    <Seo renderMeta={false} structuredData={innovationBook} />
   </Fragment>
   <section class="prose prose-invert max-w-none">
     <h1>Book</h1>

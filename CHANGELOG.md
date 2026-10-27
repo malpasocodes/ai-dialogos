@@ -17,6 +17,13 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 - Homepage `PodcastSeries` structured data lists both co-hosts as `author`.
 
 ### Fixed
+- Book structured data uses the publisher's Crossref records, shared from the
+  new `src/utils/books.ts`. The old homepage and `/book` entries had the wrong
+  publication date (2025-01-15; actual 2025-10-03), the old "De Gruyter"
+  name, a 404 cover image, and the homepage as the book's URL, and they left
+  out *Rethinking Business Strategy*. The homepage now describes the
+  *AI Essentials for Leaders* `BookSeries` with both volumes, and each volume
+  page carries its own `Book` record with ISBN, DOI, cover, and series.
 - JSON-LD structured data now renders as JSON. `Seo.astro` used `{…}` inside
   the `<script>` tag, which Astro doesn't evaluate, so every page shipped the
   literal template code instead of the data. It now uses `set:html` and

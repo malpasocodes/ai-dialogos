@@ -7,11 +7,11 @@ import EpisodeCard from '../components/EpisodeCard.astro';
 import Seo from '../components/Seo.astro';
 import { getSubstackPosts } from '../utils/substack';
 import { getPodcastEpisodes, YOUTUBE_PLAYLIST_URL } from '../utils/youtube';
+import { bookSeries, innovationBook, strategyBook } from '../utils/books';
 import innovationCover from '../../images/shaping-future-innovation.jpeg';
 import strategyCover from '../../images/rethinking-business-strategy.jpeg';
 
 const SITE_URL = import.meta.env.SITE_URL ?? 'https://ai-dialogos.com';
-const canonicalImage = `${SITE_URL}/images/ai-bookcover.jpeg`;
 const APPLE_PODCASTS_URL = 'https://podcasts.apple.com/us/podcast/ai-dialogos-podcast/id1884134654';
 const SPOTIFY_URL = 'https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI';
 const SUBSTACK_URL = 'https://aidialogos.substack.com';
@@ -73,23 +73,7 @@ const volumes = [
           url: SITE_URL,
           sameAs: [SUBSTACK_URL, YOUTUBE_PLAYLIST_URL, APPLE_PODCASTS_URL, SPOTIFY_URL],
         },
-        {
-          '@type': 'Book',
-          name: 'Artificial Intelligence: Shaping the Future of Innovation',
-          description:
-            'A concise, non-technical primer on artificial intelligence for business leaders, practitioners, and policymakers.',
-          author: {
-            '@type': 'Person',
-            name: 'Alfred Essa',
-          },
-          publisher: {
-            '@type': 'Organization',
-            name: 'De Gruyter',
-          },
-          datePublished: '2025-01-15',
-          image: canonicalImage,
-          url: new URL(Astro.url.pathname, SITE_URL).toString(),
-        },
+        { ...bookSeries, hasPart: [innovationBook, strategyBook] },
       ]}
     />
   </Fragment>

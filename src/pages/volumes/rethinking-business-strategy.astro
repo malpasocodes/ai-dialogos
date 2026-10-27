@@ -1,9 +1,14 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
+import Seo from '../../components/Seo.astro';
+import { strategyBook } from '../../utils/books';
 import bookCover from '../../../images/rethinking-business-strategy.jpeg';
 ---
 <Layout title="Rethinking Business Strategy" description="Volume overview for Artificial Intelligence: Rethinking Business Strategy.">
+  <Fragment slot="head">
+    <Seo renderMeta={false} structuredData={strategyBook} />
+  </Fragment>
   <section class="mx-auto mt-8 max-w-4xl space-y-10 rounded-3xl bg-card p-8 shadow-card sm:p-10">
     <header class="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
       <div class="flex-1 space-y-2">
