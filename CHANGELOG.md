@@ -26,7 +26,7 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 - `/about` calls Alfred Essa and Teresa Martín-Retortillo the podcast's
   co-hosts: the intro says so, the bios section is now "Hosts & Series
   Co-Editors", and the page meta description mentions both roles.
-- Homepage tagline reads "Dialogues with AI leaders" instead of
+- Homepage tagline reads "What leaders need to know about AI" instead of
   "Conversations on AI for leaders".
 - Homepage subtitle reads "A podcast and Substack series exploring AI
   strategy, implementation, and ethics." It drops the "with the leaders and
