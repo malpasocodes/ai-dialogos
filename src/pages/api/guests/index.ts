@@ -35,7 +35,6 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const episodeUrl = formData.get('episodeUrl') as string | null;
     const initials = formData.get('initials') as string | null;
     const imageFile = formData.get('headshot') as File | null;
-    const positionStr = formData.get('position') as string | null;
 
     if (!name || !bio) {
       return new Response(JSON.stringify({ error: 'Name and bio are required' }), { status: 400 });
@@ -62,7 +61,6 @@ export const POST: APIRoute = async ({ locals, request }) => {
       episodeUrl: episodeUrl?.trim() || null,
       initials: initials || undefined,
       headshot,
-      position: positionStr ? parseInt(positionStr, 10) : undefined,
     });
 
     return new Response(JSON.stringify(guest), {

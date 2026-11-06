@@ -16,10 +16,10 @@ database, and a report showing exactly what was published.
    node --input-type=module -e "
    import 'dotenv/config'; import postgres from 'postgres';
    const sql = postgres(process.env.DATABASE_URL);
-   console.log(JSON.stringify(await sql\`SELECT id, name, bio, short_bio, episode_title, position FROM guests WHERE lower(name) = lower('GUEST NAME')\`, null, 2));
+   console.log(JSON.stringify(await sql\`SELECT id, name, bio, short_bio, episode_title FROM guests WHERE lower(name) = lower('GUEST NAME')\`, null, 2));
    await sql.end();"
    ```
-   If the guest exists, you are updating; preserve their episode title and position
+   If the guest exists, you are updating; preserve their episode title
    unless told otherwise. If not, you are creating a new guest.
 
 2. **Research.** Fetch the LinkedIn URL with WebFetch first. LinkedIn frequently
@@ -57,7 +57,8 @@ database, and a report showing exactly what was published.
      --short-bio "One-line short bio." [--episode-title "..."] [--episode-url "https://..."]
    ```
    The script matches by name (case-insensitive), updates bio + short_bio for
-   existing guests, and creates new guests (position defaults to last). Omit
+   existing guests, and creates new guests. Card order on the page is automatic (upcoming guests
+   first, then by episode number, newest first). Omit
    `--episode-title` when the episode isn't out yet — a null title is the
    convention for upcoming guests and renders a "Coming soon" badge on the
    card. `--episode-url` (usually a YouTube watch URL) makes the episode title

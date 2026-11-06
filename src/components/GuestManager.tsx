@@ -9,7 +9,6 @@ interface Guest {
   episodeTitle: string | null;
   episodeUrl: string | null;
   hasHeadshot: boolean;
-  position: number;
 }
 
 const headshotUrl = (id: string) => `/api/headshots/${id}?t=${Date.now()}`;
@@ -21,10 +20,9 @@ interface GuestForm {
   shortBio: string;
   episodeTitle: string;
   episodeUrl: string;
-  position: string;
 }
 
-const emptyForm: GuestForm = { name: '', initials: '', bio: '', shortBio: '', episodeTitle: '', episodeUrl: '', position: '0' };
+const emptyForm: GuestForm = { name: '', initials: '', bio: '', shortBio: '', episodeTitle: '', episodeUrl: '' };
 
 export function GuestManager() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -67,7 +65,6 @@ export function GuestManager() {
       shortBio: guest.shortBio ?? '',
       episodeTitle: guest.episodeTitle ?? '',
       episodeUrl: guest.episodeUrl ?? '',
-      position: String(guest.position),
     });
     setImagePreview(guest.hasHeadshot ? headshotUrl(guest.id) : null);
     setImageFile(null);
@@ -122,7 +119,6 @@ export function GuestManager() {
     body.append('episodeTitle', form.episodeTitle);
     body.append('episodeUrl', form.episodeUrl);
     if (form.initials) body.append('initials', form.initials);
-    body.append('position', form.position);
     if (imageFile) body.append('headshot', imageFile);
     if (removeHeadshot) body.append('removeHeadshot', 'true');
 
@@ -200,7 +196,7 @@ export function GuestManager() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-1">
               <span className="text-sm font-medium text-foreground">Name <span className="text-red-500">*</span></span>
               <input
@@ -218,17 +214,6 @@ export function GuestManager() {
                 maxLength={3}
                 placeholder="e.g. AO"
                 onChange={(e) => updateField('initials', e.target.value.toUpperCase())}
-                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
-              />
-            </label>
-            <label className="space-y-1">
-              <span className="text-sm font-medium text-foreground">Position</span>
-              <input
-                type="number"
-                value={form.position}
-                min={0}
-                placeholder="0"
-                onChange={(e) => updateField('position', e.target.value)}
                 className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
               />
             </label>
@@ -253,7 +238,7 @@ export function GuestManager() {
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-1">
-              <span className="text-sm font-medium text-foreground">Episode Title <span className="text-xs text-muted-foreground">(blank = upcoming guest)</span></span>
+              <span className="text-sm font-medium text-foreground">Episode Title <span className="text-xs text-muted-foreground">(start with the number, e.g. "#6: …"; blank = upcoming guest)</span></span>
               <input
                 type="text"
                 value={form.episodeTitle}
@@ -304,7 +289,6 @@ export function GuestManager() {
             )}
             <div className="flex-1 space-y-1">
               <h3 className="text-base font-semibold text-foreground">
-                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded bg-primary/15 text-xs font-medium text-primary">{guest.position}</span>
                 {guest.name}
               </h3>
               <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">{guest.bio}</p>

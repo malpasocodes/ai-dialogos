@@ -10,6 +10,10 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-11-06
 
 ### Changed
+- Guests are ordered automatically: "Coming soon" guests first (newest added
+  first), then by episode number taken from the episode title, newest first;
+  co-guests on the same episode go by name. Applies to `/podcast/guests` and
+  the admin list.
 - Homepage hero subtitle reads "AI Essentials for Leaders Podcast" (was
   "What leaders need to know about AI"). The About intro and structured data
   keep the longer description.
@@ -20,6 +24,11 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
   takes the newest episode, so it updates on each rebuild.
 - Refreshed the YouTube episode snapshot (`src/data/youtube-cache.json`) so the
   build-time fallback includes episode #5 and the current episode titles.
+
+### Removed
+- Manual guest reordering: the Position field in the admin guest form and
+  `--position` in `scripts/upsert-guest-bio.mjs`. The `position` column stays
+  in the database but is no longer read or written.
 
 ## 2026-10-27
 

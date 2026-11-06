@@ -48,7 +48,7 @@ Path alias: `@/*` → `src/*` (tsconfig strict).
 
 ### Data layer
 - Drizzle ORM over Neon Postgres. Schema in `src/db/schema.ts`, client in `src/db/index.ts`, migrations in `drizzle/`.
-- `guests`: display order is controlled by the `position` integer column (ascending).
+- `guests`: display order is automatic, computed in `getGuests()` (`src/utils/guests.ts`): upcoming guests (null `episode_title`, shown as "Coming soon") first, newest added first; then by the episode number parsed from the title (`#5: …` / `# 5: …`), newest first; ties by name. The legacy `position` column is still in the table but unused — there is no manual reordering.
 - `audience_snapshots`: one subscriber/follower count per platform (`youtube | substack | spotify | apple`) per day, unique on (`platform`, `recorded_on`) so re-entry overwrites. Read/write via `src/utils/audience.ts`; surfaced on `/admin/stats`. YouTube is recorded from the Data API each time the page loads (rounded to 3 sig figs by YouTube); Substack, Spotify for Creators and Apple Podcasts Connect have no public count API, so those are typed in. `GET /api/audience` is admin-only, unlike `GET /api/guests`.
 - Read paths go through `src/utils/guests.ts` — `getGuests()` deliberately excludes the binary `headshot` column and returns `hasHeadshot: boolean` instead. **Don't reintroduce inline base64 in list queries** — that's what caused the ~1.4 MB HTML payload the May 2026 cleanup fixed.
 
