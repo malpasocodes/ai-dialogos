@@ -10,6 +10,9 @@ entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 ## 2026-11-06
 
 ### Changed
+- Homepage hero subtitle reads "AI Essentials for Leaders Podcast" (was
+  "What leaders need to know about AI"). The About intro and structured data
+  keep the longer description.
 - Homepage features the newest podcast episode in a single large card under
   "Latest Episode" (thumbnail beside the title, full summary and a "Watch on
   YouTube" button). The next four episodes are listed under "More Episodes",
