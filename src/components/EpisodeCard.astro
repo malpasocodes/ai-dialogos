@@ -4,51 +4,102 @@ import type { PodcastEpisode } from "../utils/youtube";
 interface Props {
   episode: PodcastEpisode;
   compact?: boolean;
+  featured?: boolean;
 }
 
-const { episode, compact = false } = Astro.props as Props;
+const { episode, compact = false, featured = false } = Astro.props as Props;
 
 const publishedLabel = new Date(episode.published).toLocaleDateString(undefined, {
   month: "short",
   day: "numeric",
   year: "numeric",
 });
+
+// The featured card renders much wider than other cards, so use the 640px
+// thumbnail; it's missing for some videos, so fall back to the default one.
+const featuredThumbnail = `https://i.ytimg.com/vi/${episode.videoId}/sddefault.jpg`;
 ---
-<a
-  href={episode.url}
-  target="_blank"
-  rel="noopener noreferrer"
-  class:list={["card group block overflow-hidden p-0", compact && "sm:flex"]}
-  data-analytics-event="watch_episode"
-  data-analytics-value={episode.videoId}
->
-  <div class:list={["relative aspect-video overflow-hidden bg-secondary", compact && "sm:w-56 sm:flex-none"]}>
-    <img
-      src={episode.thumbnail}
-      alt={`Video thumbnail for ${episode.title}`}
-      loading="lazy"
-      decoding="async"
-      class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-    />
-    <span class="absolute inset-0 flex items-center justify-center">
-      <span class:list={["flex items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground", compact ? "h-10 w-10" : "h-14 w-14"]}>
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class:list={["ml-1", compact ? "h-5 w-5" : "h-6 w-6"]}>
-          <path d="M8 5.14v13.72L19 12 8 5.14z" />
-        </svg>
+{featured ? (
+  <a
+    href={episode.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="card group block overflow-hidden p-0 md:grid md:grid-cols-5"
+    data-analytics-event="watch_episode"
+    data-analytics-value={episode.videoId}
+  >
+    <!-- Black matches the thumbnails' background, so when the text column is
+         taller the image sits centered without a visible band below it. -->
+    <div class="flex items-center bg-black md:col-span-3">
+    <div class="relative aspect-video w-full overflow-hidden">
+      <img
+        src={featuredThumbnail}
+        alt={`Video thumbnail for ${episode.title}`}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        data-fallback={episode.thumbnail}
+        onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) this.src = this.dataset.fallback;"
+        class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+      />
+      <span class="absolute inset-0 flex items-center justify-center">
+        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="ml-1 h-7 w-7">
+            <path d="M8 5.14v13.72L19 12 8 5.14z" />
+          </svg>
+        </span>
       </span>
-    </span>
-  </div>
-  <div class:list={["space-y-3", compact ? "p-5" : "p-6"]}>
-    <div class="flex items-start justify-between gap-3">
-      <h3 class="text-lg font-semibold text-foreground">{episode.title}</h3>
-      <span class="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-muted-foreground">{publishedLabel}</span>
     </div>
-    {episode.summary && (
-      <p class:list={["text-sm leading-relaxed text-muted-foreground", compact && "line-clamp-2"]}>{episode.summary}</p>
-    )}
-    <span class="inline-flex items-center gap-1 text-sm font-medium text-primary">
-      Watch on YouTube
-      <span aria-hidden="true">→</span>
-    </span>
-  </div>
-</a>
+    </div>
+    <div class="flex flex-col justify-center space-y-4 p-6 sm:p-8 md:col-span-2">
+      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{publishedLabel}</span>
+      <h3 class="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{episode.title}</h3>
+      {episode.summary && (
+        <p class="text-base leading-relaxed text-muted-foreground">{episode.summary}</p>
+      )}
+      <span class="btn btn-primary self-start">
+        Watch on YouTube
+        <span aria-hidden="true">→</span>
+      </span>
+    </div>
+  </a>
+) : (
+  <a
+    href={episode.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class:list={["card group block overflow-hidden p-0", compact && "sm:flex"]}
+    data-analytics-event="watch_episode"
+    data-analytics-value={episode.videoId}
+  >
+    <div class:list={["relative aspect-video overflow-hidden bg-secondary", compact && "sm:w-56 sm:flex-none"]}>
+      <img
+        src={episode.thumbnail}
+        alt={`Video thumbnail for ${episode.title}`}
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+      />
+      <span class="absolute inset-0 flex items-center justify-center">
+        <span class:list={["flex items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur transition group-hover:bg-primary group-hover:text-primary-foreground", compact ? "h-10 w-10" : "h-14 w-14"]}>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class:list={["ml-1", compact ? "h-5 w-5" : "h-6 w-6"]}>
+            <path d="M8 5.14v13.72L19 12 8 5.14z" />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div class:list={["space-y-3", compact ? "p-5" : "p-6"]}>
+      <div class="flex items-start justify-between gap-3">
+        <h3 class="text-lg font-semibold text-foreground">{episode.title}</h3>
+        <span class="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-muted-foreground">{publishedLabel}</span>
+      </div>
+      {episode.summary && (
+        <p class:list={["text-sm leading-relaxed text-muted-foreground", compact && "line-clamp-2"]}>{episode.summary}</p>
+      )}
+      <span class="inline-flex items-center gap-1 text-sm font-medium text-primary">
+        Watch on YouTube
+        <span aria-hidden="true">→</span>
+      </span>
+    </div>
+  </a>
+)}

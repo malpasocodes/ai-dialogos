@@ -7,6 +7,17 @@ section types (Added / Changed / Fixed / Removed / Security / Docs), but since
 every push to `main` deploys immediately there is no `[Unreleased]` section:
 entries go directly under a `## YYYY-MM-DD` heading for the date they land.
 
+## 2026-11-06
+
+### Changed
+- Homepage features the newest podcast episode in a single large card under
+  "Latest Episode" (thumbnail beside the title, full summary and a "Watch on
+  YouTube" button). The next four episodes are listed under "More Episodes",
+  with any older ones behind the "Show more" toggle. The featured slot always
+  takes the newest episode, so it updates on each rebuild.
+- Refreshed the YouTube episode snapshot (`src/data/youtube-cache.json`) so the
+  build-time fallback includes episode #5 and the current episode titles.
+
 ## 2026-10-27
 
 ### Added

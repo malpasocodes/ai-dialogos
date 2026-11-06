@@ -17,9 +17,9 @@ const SPOTIFY_URL = 'https://open.spotify.com/show/033qQQeIiEKw63qWMdFmPI';
 const SUBSTACK_URL = 'https://aidialogos.substack.com';
 
 const episodes = await getPodcastEpisodes(20);
-const latestEpisodes = episodes.slice(0, 2);
-const moreEpisodes = episodes.slice(2, 4);
-const olderEpisodes = episodes.slice(4);
+const featuredEpisode = episodes[0];
+const moreEpisodes = episodes.slice(1, 5);
+const olderEpisodes = episodes.slice(5);
 
 const substackPosts = await getSubstackPosts(3);
 const substackCards = substackPosts.map((post) => ({
@@ -88,11 +88,11 @@ const volumes = [
       { label: "Substack", href: "/substack", analytics: "subscribe_substack", analyticsValue: "hero_cta" }
     ]}
   />
-  {latestEpisodes.length > 0 && (
+  {featuredEpisode && (
     <section class="space-y-5">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-semibold tracking-tight text-foreground">Latest Episodes</h2>
+          <h2 class="text-2xl font-semibold tracking-tight text-foreground">Latest Episode</h2>
           <p class="mt-1 text-sm text-muted-foreground">
             Also available on
             <a href={APPLE_PODCASTS_URL} target="_blank" rel="noopener noreferrer" class="font-medium text-primary hover:underline" data-analytics-event="listen_podcast" data-analytics-value="episodes_apple">Apple Podcasts</a>
@@ -104,9 +104,7 @@ const volumes = [
           Meet the guests →
         </a>
       </div>
-      <div class="grid gap-6 sm:grid-cols-2">
-        {latestEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
-      </div>
+      <EpisodeCard episode={featuredEpisode} featured />
     </section>
   )}
   {moreEpisodes.length > 0 && (
